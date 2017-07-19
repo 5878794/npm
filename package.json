@@ -1,0 +1,28 @@
+{
+  "name": "bens",
+  "version": "1.0.8",
+  "description": "cmd test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/5878794/npm.git"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "bens",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/5878794/npm/issues"
+  },
+  "homepage": "https://github.com/5878794/npm#readme",
+  "dependencies": {
+    "commander": "^2.11.0"
+  },
+  "bin": {
+    "bens": "bin/bens.js"
+  }
+}
