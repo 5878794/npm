@@ -5,7 +5,8 @@ var path = require("path"),
 	runPath = process.cwd(),
 	program = require('commander'),
 	json = require("../package.json"),
-	exec = require("../lib/exec");
+	exec = require("../lib/exec"),
+	isRun = false;
 
 
 program
@@ -15,6 +16,7 @@ program
 program
 	.command('install')
 	.action(function () {
+		isRun = true;
 		var url = path.join(__dirname,"../files");
 
 		exec("cp -r "+url+"\/ " + runPath,function(){
@@ -28,3 +30,7 @@ program
 	.parse(process.argv);
 
 
+
+if(!isRun){
+	program.help();
+}
