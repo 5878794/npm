@@ -19,9 +19,25 @@ program
 		isRun = true;
 		var url = path.join(__dirname,"../files");
 
-		exec("cp -r "+url+"\/ " + runPath,function(){
-			console.log("success");
-		},function(rs){console.log(rs)});
+
+		var platform = process.platform.toString();
+		if(platform.substring(0,3) == "win"){
+		// ﻿xcopy aaa  c:\Users\bens\Desktop\bbb\ /E/Q/H/C/Y
+			console.log("xcopy  "+url+" " + runPath+"\\ \/E\/Q\/H\/C\/Y")
+			exec("xcopy  "+url+" " + runPath+"\\ \/E\/Q\/H\/C\/Y",function(){
+				console.log("success");
+			},function(rs){
+				console.log("err");
+				console.log(rs);
+			});
+		}else{
+			exec("cp -r "+url+"\/ " + runPath,function(){
+				console.log("success");
+			},function(rs){
+				console.log("err");
+				console.log(rs);
+			});
+		}
 	});
 
 
