@@ -1,7 +1,7 @@
 
 //触摸事件基础类
 
-let device = require("device"),
+let device = require("../device"),
 	addEvent = Symbol(),
 	startEventFn = Symbol(),
 	moveEventFn = Symbol(),

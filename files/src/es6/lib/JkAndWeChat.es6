@@ -225,7 +225,8 @@ let JkAndWeChat = {
 									'closeWindow',
 									'onMenuShareTimeline',
 									'onMenuShareAppMessage',
-									'showAllNonBaseMenuItem'
+									'showAllNonBaseMenuItem',
+									'scanQRCode'
 									// 'chooseImage',
 									// 'uploadImage'
 								]
@@ -363,7 +364,7 @@ let JkAndWeChat = {
 			text = "系统错误，请稍后在试";
 		}
 		this.alert(text,function(){
-			if(_this.isApp){
+			if(_this.isApp && !this.isDebug){
 				YJH.H5NativeAppInfo.goToRootPage(0);
 			}
 		});
@@ -534,8 +535,71 @@ let JkAndWeChat = {
 		},false);
 		history.replaceState({input_change:true},"",window.location.href);
 		history.pushState("", "", window.location.href);
+	},
+	delHtmlTag(str){
+		return str.replace(/<[^>]+>/g,"");    //去掉所有的html标记
+	},
+	//页面缓存
+	pageCatch : {
+		async get(key){
+			return new Promise((success,error)=>{
+				if(SETTING.isAPP){
+					YJH.H5ModuleManager.getValue(
+						function(aa){
+							aa = aa.result || "";
+							//统一android和ios统一返回字符串
+							if(typeof aa != "string"){
+								aa = JSON.stringify(aa);
+							}
+							success(aa);
+						},function(bb){
+							success("");
+						},
+						key
+					);
+				}else{
+					let val = localStorage.getItem(key) || "";
+					success(val);
+				}
+			})
+		},
+		async save(key,val){
+			return new Promise((success,error)=>{
+				if(SETTING.isAPP){
+					YJH.H5ModuleManager.setValueForKey(
+						function(){
+							success();
+						},function(bb){
+							error("app内部错误");
+						},
+						key,
+						val
+					)
+				}else{
+					localStorage.setItem(key,val);
+					success();
+				}
+			});
+		},
+		async del(key){
+			return new Promise((success,error)=>{
+				if(SETTING.isAPP){
+					YJH.H5ModuleManager.setValueForKey(
+						function(){
+							success();
+						},function(bb){
+							error("app内部错误");
+						},
+						key,
+						""
+					)
+				}else{
+					localStorage.removeItem(key);
+					success();
+				}
+			})
+		}
 	}
-
 };
 
 
@@ -550,19 +614,27 @@ $(document).ready(function(){
 	// });
 
 	//微信自动保存userToken
-	JkAndWeChat.saveUserToken();
+	// JkAndWeChat.saveUserToken();
 
 	//自动检测链接地址带__close__参数等于yes的，点后退关闭app
-	JkAndWeChat.autoBackClose();
+	// JkAndWeChat.autoBackClose();
 
 	//处理链接传过来的缓存参数
-	JkAndWeChat.urlCache._autoSave();
+	// JkAndWeChat.urlCache._autoSave();
 
 	JkAndWeChat.run();
 });
 
 document.addEventListener("deviceready", function() {
-	JkAndWeChat.run();
+	YJH.H5ModuleManager.getValue(function(rs){
+		rs = rs.result;
+		rs = rs.substr(0,rs.length-1);
+		rs = rs.substr(0,rs.lastIndexOf("\/")+1);
+		SETTING.serverUrl = rs;
+		JkAndWeChat.run();
+	},function(){
+		JkAndWeChat.alert("无法获取服务器地址");
+	},"AppNetWorkBaseUrl");
 }, false);
 
 
