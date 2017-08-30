@@ -38,13 +38,13 @@ let setFn = function(psdWidth){
 	//有些浏览器viewport宽度获取不准确
 	//因此初始不停刷新页面字体
 	let temp_interval = setInterval(function () {
+
 		win_width = window.innerWidth;
 		let _rem = win_width/psd_width*100;
+		console.log(win_width,psd_width,rem)
 		if(rem != _rem){
 			rem = _rem;
-			$("html").css({
-				"font-size":rem+"px"
-			});
+			style.innerHTML = "html{font-size:"+rem+"px!important;}";
 		}
 	},500);
 	//10秒后取消自动刷新

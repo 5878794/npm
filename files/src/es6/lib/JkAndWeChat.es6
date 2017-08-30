@@ -13,6 +13,18 @@ let JkAndWeChat = {
 	needReady:(SETTING.isAPP)? 2 : 1,
 	readyFn:[],
 	isApp:SETTING.isAPP,
+	getJsConfig(){
+		return new Promise(success=>{
+			var url = SETTING.serverUrl;
+			url += "config/js/config.js";
+
+			$.getScript(url,function(){
+				success();
+				console.log("config load ok;");
+			})
+		});
+
+	},
 	//页面准备好
 	isReady:function(fn){
 		this.readyFn.push(fn);
@@ -401,7 +413,7 @@ let JkAndWeChat = {
 			$.ajax({
 				type: "get",
 				cache: false,
-				url: "template/"+templateName+".js",
+				url: "../template/"+templateName+".js",
 				//contentType:"application/json",
 				dataType: "script",
 				timeout: 60000,
@@ -536,6 +548,7 @@ let JkAndWeChat = {
 		history.replaceState({input_change:true},"",window.location.href);
 		history.pushState("", "", window.location.href);
 	},
+	//删除html标签
 	delHtmlTag(str){
 		return str.replace(/<[^>]+>/g,"");    //去掉所有的html标记
 	},
@@ -599,6 +612,15 @@ let JkAndWeChat = {
 				}
 			})
 		}
+	},
+	//等待几秒执行后续  单位：秒
+	sleep(stamp){
+		stamp = stamp * 1000;
+		return new Promise(success=>{
+			setTimeout(function(){
+				success();
+			},stamp)
+		})
 	}
 };
 

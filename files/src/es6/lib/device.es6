@@ -494,4 +494,14 @@ var DEVICE = {};
 })();
 
 
+
+DEVICE.rem2Px = function(psdWidth,val){
+	let winWidth = window.innerWidth,
+		rem = winWidth/psdWidth*100;
+
+	return rem*val;
+};
+
+
+
 module.exports = DEVICE;
