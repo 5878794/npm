@@ -46,6 +46,7 @@ var getEs6List = function(){
 var getEs6List1 = function(){
 	//获取es6文件夹的绝对地址
 	var es6Src = __dirname+"/src/es6/";
+	es6Src = es6Src.replace(/\\/ig,"/");
 	//获取es6文件夹下第2层目录中的所有es6文件  并返回数组
 	var entryFiles = glob.sync(es6Src+"*.es6");
 	var map = {};
@@ -70,7 +71,6 @@ var getEs6List1 = function(){
 
 	return map;
 };
-
 
 
 module.exports = {
