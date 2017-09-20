@@ -93,5 +93,72 @@ $.css3 = function(css){
 	return DEVICE.fixCss(css);
 };
 
+//div添加滚动
+$.fn.addScroll = function(){
+	$(this).css({
+		"overflow-x":"hidden",
+		"overflow-y":"scroll",
+		"-webkit-overflow-scrolling" :"touch"
+	});
+};
+
+
+//禁止所有input输入     参数type=true
+//取消禁止(之前禁止的)      type=false
+$.allInputCanNotUse = function(type){
+	if(type){
+		//不可用
+		var input = $("input"),
+			textarea = $("textarea"),
+			select = $("select"),
+			setFn = function(dom){
+				let dis = dom.attr("disabled");
+				if(!dis){
+					dom.attr({
+						disabled:"disabled"
+					}).data({
+						__set_disabled__:"yes"
+					});
+				}
+			};
+
+		input.each(function(){
+			setFn($(this));
+		});
+		textarea.each(function(){
+			setFn($(this));
+		});
+		select.each(function(){
+			setFn($(this));
+		});
+
+	}else{
+		//可用
+		var input1 = $("input"),
+			textarea1 = $("textarea"),
+			select1 = $("select"),
+			setFn1 = function(dom){
+				var hasSet = dom.data("__set_disabled__");
+				if(hasSet == "yes"){
+					dom.removeAttr("disabled").data({
+						__set_disabled__:""
+					})
+				}
+			};
+
+		input1.each(function(){
+			setFn1($(this));
+		});
+		textarea1.each(function(){
+			setFn1($(this));
+		});
+		select1.each(function(){
+			setFn1($(this));
+		});
+
+	}
+};
+
+
 
 module.exports = null;

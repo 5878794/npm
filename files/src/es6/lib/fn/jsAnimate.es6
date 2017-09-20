@@ -16,8 +16,8 @@
 //    infinite:false            //@param:boolean  动画是否循环执行，默认：false
 //                                                设置该参数endFn将失效
 // })
-
-//a.play();
+//
+// a.play();
 //a.stop();
 
 

@@ -29,6 +29,7 @@
 
 
 let DEVICE = require("./../device");
+require("../jq/extend");
 
 var touch = function(opt){
 	opt = opt || {};
@@ -37,6 +38,7 @@ var touch = function(opt){
 	this.startFn = opt.startFn || function(){};
 	this.moveFn = opt.moveFn || function(){};
 	this.endFn = opt.endFn || function(){};
+	this.bodyNotScroll = $.isBoolean(opt.bodyNotScroll)? opt.bodyNotScroll : false;
 	this.slideLeftFn = opt.slideLeftFn || function(){};
 	this.slideRightFn = opt.slideRightFn || function(){};
 	this.slideUpFn = opt.slideUpFn || function(){};
@@ -78,11 +80,14 @@ touch.prototype = {
 		this.clearPoint();
 		this.savePoint(e);
 		this.touchTime = new Date().getTime();
-		this.startFn();
+		this.startFn(e);
 	},
 	move:function(e){
 		if(!this.isTouched){return;}
-		//e.preventDefault();
+
+		if(this.bodyNotScroll){
+			e.preventDefault();
+		}
 		//e.stopPropagation();
 
 		this.savePoint(e);

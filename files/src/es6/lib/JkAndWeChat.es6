@@ -413,7 +413,7 @@ let JkAndWeChat = {
 			$.ajax({
 				type: "get",
 				cache: false,
-				url: "../template/"+templateName+".js",
+				url: "./template/"+templateName+".js",
 				//contentType:"application/json",
 				dataType: "script",
 				timeout: 60000,

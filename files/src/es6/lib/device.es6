@@ -494,12 +494,29 @@ var DEVICE = {};
 })();
 
 
-
+//rem转px
 DEVICE.rem2Px = function(psdWidth,val){
 	let winWidth = window.innerWidth,
 		rem = winWidth/psdWidth*100;
 
 	return rem*val;
+};
+
+//删除html标签
+DEVICE.delHtmlTag = function(str){
+	return str.replace(/<[^>]+>/g,"");    //去掉所有的html标记
+};
+
+
+
+//等待几秒执行后续  单位：秒   需要在异步函数中带await调用
+DEVICE.sleep = function(stamp){
+	stamp = stamp * 1000;
+	return new Promise(success=>{
+		setTimeout(function(){
+			success();
+		},stamp)
+	})
 };
 
 

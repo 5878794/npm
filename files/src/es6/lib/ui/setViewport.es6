@@ -19,7 +19,7 @@ let setFn = function(psdWidth){
 		// scale = 1 / dpr,
 		rem;
 
-	//设置meta
+	// 设置meta
 	if(viewport){
 		viewport.setAttribute('content', 'width= device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no');
 	}else{
