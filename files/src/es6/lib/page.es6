@@ -91,6 +91,11 @@ let page = {
 		let _this = this;
 
 		return new Promise(async (success,error)=>{
+			if(_this[isApp]){
+				success();
+				return;
+			}
+
 			if(this[needWeChatApi].length == 0){
 				success();
 				return;
