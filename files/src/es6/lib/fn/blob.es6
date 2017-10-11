@@ -1,4 +1,4 @@
-``//手机不支持
+//手机不支持
 
 //base64转blob对象
 let fromBase64 = function(base64){
