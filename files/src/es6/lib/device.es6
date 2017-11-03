@@ -16,15 +16,34 @@ window.cancelAnimationFrame =   window.cancelAnimationFrame ||
 								clearTimeout;
 
 
-navigator.getUserMedia =    navigator.getUserMedia ||
-							navigator.webkitGetUserMedia ||
-							navigator.mozGetUserMedia ||
-							navigator.msGetUserMedia;
+window.navigator.getUserMedia =    window.navigator.getUserMedia ||
+									window.navigator.webkitGetUserMedia ||
+									window.navigator.mozGetUserMedia ||
+									window.navigator.msGetUserMedia;
 
 window.PeerConnection = window.PeerConnection ||
 						window.webkitPeerConnection ||
 						window.webkitRTCPeerConnection ||
 						window.mozRTCPeerConnection;
+
+window.indexedDB = window.indexedDB ||
+					window.mozIndexedDB ||
+					window.webkitIndexedDB ||
+					window.msIndexedDB;
+
+
+window.IDBTransaction = window.IDBTransaction ||
+						window.webkitIDBTransaction ||
+						window.msIDBTransaction;
+
+window.IDBKeyRange = window.IDBKeyRange ||
+					window.webkitIDBKeyRange ||
+					window.msIDBKeyRange;
+
+window.AudioContext = window.AudioContext ||
+						window.webkitAudioContext ||
+						window.mozAudioContext ||
+						window.msAudioContext;
 
 
 
