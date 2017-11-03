@@ -327,6 +327,18 @@ let page = {
 		};
 	})(),
 
+	//后退刷新页面  //待测试
+	//  必须页面打开就执行不能放到ready里面
+	historyBackRefresh:function(){
+		window.onpageshow=function(e){
+			console.log(e.persisted)
+			//从缓存加载页面 e.persisted=true
+			if(e.persisted){
+				window.location.reload();
+			}
+		}
+	},
+
 	//获取用户token
 	//如果非app需要使用，要在setting中设置
 	//tokenKeyFromUrl中需要设置获取时的key
@@ -597,14 +609,14 @@ let page = {
 		var _this = this;
 		console.log(text);
 
-		if(this[isDebug]){
+		// if(this[isDebug]){
 			text = text || "系统错误，请稍后在试";
-		}else{
-			text = "系统错误，请稍后在试";
-		}
+		// }else{
+		// 	text = "系统错误，请稍后在试";
+		// }
 
 		this.alert(text,function(){
-			if(_this[isApp] && !this[isDebug]){
+			if(!_this[isDebug]){
 				_this.goBack();
 			}
 		});

@@ -103,6 +103,16 @@ $.fn.addScroll = function(){
 };
 
 
+//设置3d视窗 会自动包裹一层
+$.fn.set3dDom = function(a){
+	var b = $("<div></div>");
+	b.css({'transform-style':'preserve-3d'});
+	b.append($(this).children());
+	$(this).css({perspective:a+'px'}).append(b);
+};
+
+
+
 //禁止所有input输入     参数type=true
 //取消禁止(之前禁止的)      type=false
 $.allInputCanNotUse = function(type){

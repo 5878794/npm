@@ -136,7 +136,7 @@ module.exports = {
 			output: {
 				comments: false
 			},
-			except: ['$super', '$', 'exports', 'require','super','window']    //排除关键字
+			except: ['$super', '$', 'exports', 'navigator','require','super','window']    //排除关键字
 		}),
 		//合并公共部分生成单独的文件,需要单独引用  pub.bundle.js
 		// new webpack.optimize.CommonsChunkPlugin('pub'),
