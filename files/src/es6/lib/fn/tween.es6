@@ -5,7 +5,7 @@
 //d:1(固定写1)
 
 
-var tween = {
+module.exports = {
 	//线性
 	Linear: function(t,b,c,d){
 		return c*t/d + b;
@@ -162,5 +162,3 @@ var tween = {
 		}
 	}
 };
-
-module.exports = tween;

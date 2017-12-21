@@ -2,6 +2,7 @@
 
 
 //获取摄像头照相，获取到的图片比例4：3
+//新api已出 需要重新写
 //var a = new DEVICE.getUserMedia({
 //    dom:dom,                  //@param:jqdom   要实时显示的dom容器
 //    errorFn:function(msg){}   //@param:fn      出错时回调

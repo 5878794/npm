@@ -1,14 +1,18 @@
-//时间选择控件
+//双数字选择
 //需要 all.css
 
-// let date = require("date");
-// new date({
-// 	titleText:"请选择日期",       //@param:str    标题
-// 	selected:"2016-12-12",      //@param:str    初始显示的日期， 默认：当前日期
-// 	minDate:"1950-1-1",         //@param:str    最小显示时间 默认：1950-1-1
-// 	maxDate:"2050-12-12",       //@param:str    最大显示时间 默认：2050-12-12
-//  isShowDay:true,               //@param:bool   是否显示日,默认：true
-// 	viewPort:750m,                //@param:number 设置psd的大小，布局需要使用rem 默认：750
+// let numberSelect = require("numberSelect");
+// new numberSelect({
+// 	titleText:"请选择体重",       //@param:str    标题
+// 	viewPort:750,                //@param:number 设置psd的大小，布局需要使用rem 默认：750
+//  selected:[10,1],            //@param:array  选中的值
+//  units:['.','kg'],           //@param:array  2列的单位
+//  unit2Left:'90%',            //@param:str    第2列单位距左边屏幕的位置,默认90%;
+//  textAlign:['center','center'],         //@param:array    文字对齐方式,同css,默认居中
+//  values:[                    //@param:array
+//      [1,2,3,4,5,6,7,8]  ,             //第一列的值
+//      [0,1,2,3,4,5,6,7,8,9]           //第二列的值
+//  ],
 //  success:function(rs){
 //          //rs返回选择的年月日   yyyy-mm-dd
 //  },
@@ -28,10 +32,9 @@ let zz = require("./bodyStyle"),
 	animateTemp = Symbol("animateTemp"),
 	init = Symbol("init3"),
 	createDataMain = Symbol("createDataMain"),
-	createListYear = Symbol("createListYear"),
+	createListCel1 = Symbol("createListCel1"),
 	createRowDiv = Symbol("createRowDiv"),
-	createListMonth = Symbol("createListMonth"),
-	createListDay = Symbol("createListDay"),
+	createListCel2 = Symbol("createListCel2"),
 	addEvent = Symbol("addEvent"),
 	createDateZZ = Symbol("createDateZZ"),
 	touchEventFn = Symbol("touchEventFn"),
@@ -43,35 +46,26 @@ let zz = require("./bodyStyle"),
 	bodyDomHeight = Symbol("bodyDomHeight"),
 	maxScrollValue = Symbol("maxScrollValue"),
 	autoToScrollEnd = Symbol("autoToScrollEnd"),
-	changeList = Symbol("changeList"),
-	rollBackTop = Symbol("rollBackTop"),
 	{abs} = Math,
-	getDateNumber = Symbol("getDateNumber"),
-	handlerYearData = Symbol("handlerYearData"),
-	getCelVal = Symbol("getCelVal"),
-	getMonthData = Symbol("getMonthData"),
-	handlerMinMaxDate = Symbol("handlerMinMaxDate"),
-	getNowDate = Symbol("getNowDate");
+	getCelVal = Symbol("getCelVal");
 
 
 class dateChoose extends zz{
 	constructor(opt={}){
 		super(opt);
+
+
 		//当前选中的值
-		let data = opt.selected || this[getNowDate]();
-		data = data.split("-");
-		//选中的时间
-		this.year = data[0] || "";
-		this.month = data[1] || "";
-		this.day = data[2] || "";
-		this.minDate = opt.minDate || "1950-1-1";
-		this.maxDate = opt.maxDate || "2050-12-12";
-		this.isShowDay = $.isBoolean(opt.isShowDay)? opt.isShowDay : true;
+		this.titleText = opt.titleText || '请选择';
+		this.selected = opt.selected || [];             //[10,1]
+		this.units = opt.units || [];                   //['.','kg']
+		this.values = opt.values || [];                 //[[1,2,3],[2,3,4]]
+		this.textAlign = opt.textAlign || ['center','center'];
+		this.unit2Left = opt.unit2Left || '90%';
+
 		this.callback = opt.success || function(){};
 		this.error = opt.error || function(){};
 
-		this.minDates = [];     //生成处理好的最小日期
-		this.maxDates = [];     //生成处理好的最大日期
 
 		//颜色
 		this.rowColor = opt.rowColor || "#666";
@@ -81,28 +75,23 @@ class dateChoose extends zz{
 		this.showRows = opt.showRows || 5;
 
 
-
 		//主体显示区域的高度
 		this[bodyDomHeight] = this.domBody.height();
 		//行高
 		this.rowHeight = this[bodyDomHeight]/this.showRows;
-		//年的包裹层
-		this.yearBodyDom = null;
-		//月的包裹层
-		this.monthBodyDom = null;
-		//日的包裹层
-		this.dayBodyDom = null;
+		//列1的包裹层
+		this.cel1BodyDom = null;
+		//列2的包裹层
+		this.cel2BodyDom = null;
 		//点击的列对象是哪一个
 		this[touchDomN] = 0;
 		//滚动列的宽度
-		this[celWidth] = (this.isShowDay)?
-							window.innerWidth/3 :
-						    window.innerWidth/2;
+		this[celWidth] = window.innerWidth/2;
 
-		//dom排列顺序，用于判断点击的是年月日中的哪一列
+		//dom排列顺序，用于判断点击的是哪一列
 		this[touchDomList] = [];
-		//年月日列Y轴移动的距离
-		this[touchDomY] = [0,0,0];
+		//列Y轴移动的距离
+		this[touchDomY] = [0,0];
 		//最大的滚动距离
 		this[maxScrollValue] = [];
 		//临时动画函数对象赋值
@@ -112,26 +101,17 @@ class dateChoose extends zz{
 	}
 
 	[init](){
-		this[handlerMinMaxDate]();
 
 		this[createDataMain]();
 
 		this.domBody
-			.append(this.yearBodyDom)
-			.append(this.monthBodyDom);
-		this[touchDomList] = [this.yearBodyDom,this.monthBodyDom];
+			.append(this.cel1BodyDom)
+			.append(this.cel2BodyDom);
+		this[touchDomList] = [this.cel1BodyDom,this.cel2BodyDom];
+		
 
-		if(this.isShowDay){
-			this.domBody.append(this.dayBodyDom);
-			this[touchDomList].push(this.dayBodyDom);
-		}
-
-		this[createListYear](this.year);
-		this[createListMonth](this.month);
-
-		if(this.isShowDay){
-			this[createListDay](this.day);
-		}
+		this[createListCel1]();
+		this[createListCel2]();
 
 
 		this[createDateZZ]();
@@ -141,53 +121,20 @@ class dateChoose extends zz{
 		this[addEvent]();
 	}
 
-	//获取当前时间
-	[getNowDate](){
-		let now = new Date(),
-			year = now.getFullYear(),
-			month = now.getMonth()+1,
-			day = now.getDate();
-
-		return  year+"-"+month+"-"+day;
-	}
-
-	//处理最小最大日期,默认时间
-	[handlerMinMaxDate](){
-		let min = this.minDate,
-			max = this.maxDate;
-
-		min = this.minDate.split("-");
-		max = this.maxDate.split("-");
-
-		let minYear = parseInt(min[0]) || 1950,
-			minMonth = parseInt(min[1]) || 1,
-			minDay = parseInt(min[2]) || 1,
-			maxYear = parseInt(max[0]) || 2050,
-			maxMonth = parseInt(max[1]) || 12,
-			maxDay = parseInt(max[2]) || 28;
-
-		this.minDates = [minYear,minMonth,minDay];
-		this.maxDates = [maxYear,maxMonth,maxDay];
-	}
-
-	//创建3个包裹层
+	//创建2个包裹层
 	[createDataMain](){
 		this.domBody
 			.addClass("box_h");
 
 		let div = $("<div><p></p></div>"),
-			width = (this.isShowDay)? '33.333333%' : '50%';
+			width = '50%';
 		div.css({
 			width:width,
 			overflow:"hidden"
 		});
 
-		this.yearBodyDom = div.clone();
-		this.monthBodyDom = div.clone();
-
-		if(this.isShowDay){
-			this.dayBodyDom = div.clone();
-		}
+		this.cel1BodyDom = div.clone();
+		this.cel2BodyDom = div.clone();
 	}
 
 	//创建效果遮罩层
@@ -209,6 +156,34 @@ class dateChoose extends zz{
 			"box-sizing":"border-box",
 			"z-index":100
 		});
+
+		//创建第一列的单位
+		let unit1Div = $('<div>'+this.units[0]+'</div>');
+		unit1Div.css({
+			width:'10%',
+			height:this.rowHeight+'px',
+			position:'absolute',
+			left:'40%',top:0,
+			'text-align':'center',
+			color:'rgb(0, 125, 242)',
+			"font-size":this.rowFontSize+"px",
+			'line-height':this.rowHeight+"px"
+		});
+		//创建第二列的单位
+		let unit2Div = $('<div>'+this.units[1]+'</div>');
+		unit2Div.css({
+			width:'10%',
+			height:this.rowHeight+'px',
+			position:'absolute',
+			left:this.unit2Left,
+			top:0,
+			'text-align':'center',
+			color:'rgb(0, 125, 242)',
+			"font-size":this.rowFontSize+"px",
+			'line-height':this.rowHeight+"px"
+		});
+		centerDiv.append(unit1Div).append(unit2Div);
+
 
 		//上部分遮罩层
 		let divZZ = $("<div class='__temp__zz__'></div>");
@@ -238,11 +213,11 @@ class dateChoose extends zz{
 
 	//创建行
 	[createRowDiv](){
-		var div = $("<div></div>");
+		var div = $("<div class='border_box'></div>");
 		div.css({
 			width:"100%",
 			height:this.rowHeight+"px",
-			"text-align":"center",
+			'padding-right':'20%',
 			"line-height":this.rowHeight+"px",
 			color:this.rowColor,
 			"font-size":this.rowFontSize+"px"
@@ -250,10 +225,10 @@ class dateChoose extends zz{
 		return div;
 	}
 
-	//创建年的数据
-	[createListYear](year){
-		let body = this.yearBodyDom.find("p"),
-			data = this[handlerYearData]();
+	//创建数据列1
+	[createListCel1](){
+		let body = this.cel1BodyDom.find("p"),
+			data = this.values[0];
 
 		let emptyRow = (this.showRows - 1)/2;
 
@@ -264,16 +239,17 @@ class dateChoose extends zz{
 		}
 
 
-		//生成年列表
-		let i = -1,
-			n = 0;
-		data.map(rs=>{
-			i++;
+		//生成列表
+		let n = 0;
+		data.map((rs,i)=>{
 			let this_div = this[createRowDiv]();
-			if(year == rs){
+			if(this.selected[0] == rs){
 				n = i;
 			}
-			this_div.text(rs+"年").data({data:rs});
+			this_div.text(rs).data({data:rs});
+			this_div.css({
+				"text-align":this.textAlign[0],
+			});
 			body.append(this_div);
 		});
 
@@ -294,25 +270,13 @@ class dateChoose extends zz{
 		}
 	}
 
-	//生成年的数组
-	[handlerYearData](){
-		let start = this.minDates[0],
-			end = this.maxDates[0];
 
-		let data = [];
-		for(var i=start,l=end;i<=l;i++){
-			data.push(i);
-		}
 
-		return data;
-	}
+	//创建数据列2
+	[createListCel2](){
+		let body = this.cel2BodyDom.find("p"),
+			data = this.values[1];
 
-	//创建月的数据
-	[createListMonth](month){
-		let body = this.monthBodyDom.find("p"),
-			data = this[getMonthData]();
-
-		body.html("");
 
 		let emptyRow = (this.showRows - 1)/2;
 
@@ -323,15 +287,16 @@ class dateChoose extends zz{
 		}
 
 		//创建月到列表
-		let i=-1,
-			n=0;
-		data.map(rs=>{
-			i++;
+		let n=0;
+		data.map((rs,i)=>{
 			let this_div = this[createRowDiv]();
-			if(month == rs){
+			if(this.selected[1] == rs){
 				n=i;
 			}
-			this_div.text(rs+"月").data({data:rs});
+			this_div.text(rs).data({data:rs});
+			this_div.css({
+				"text-align":this.textAlign[1],
+			});
 			body.append(this_div);
 		});
 
@@ -352,159 +317,17 @@ class dateChoose extends zz{
 		}
 	}
 
-	//获取要显示的月
-	[getMonthData](){
-		let year = this[getCelVal](0),
-			minYear = this.minDates[0],
-			maxYear = this.maxDates[0],
-			minMonth = this.minDates[1],
-			maxMonth = this.maxDates[1],
-			start = 1,
-			end = 12,
-			data = [];
 
-		if(year == minYear){
-			start = minMonth;
-		}
-		if(year == maxYear){
-			end = maxMonth;
-		}
-
-		for(let i=start,l=end;i<=l;i++){
-			data.push(i);
-		}
-
-		return data;
-	}
-
-	//创建日的数据
-	[createListDay](day){
-		let body = this.dayBodyDom.find("p");
-
-		body.html("");
-
-		let emptyRow = (this.showRows - 1)/2;
-
-		//补前面的空行
-		for(let i=0,l=emptyRow;i<l;i++){
-			let this_div = this[createRowDiv]();
-			body.append(this_div);
-		}
-
-
-		//创建日到列表
-		let year = this[getCelVal](0),
-			month = this[getCelVal](1);
-		let dateNumber = this[getDateNumber](year,month);
-
-
-		let i = -1,
-			n = 0;
-		dateNumber.map(rs=>{
-			i++;
-			let this_div = this[createRowDiv]();
-			if(rs == day){
-				n = i;
-			}
-			this_div.text(rs+"日").data({data:rs});
-			body.append(this_div);
-		});
-
-		//补后面的空行
-		for(let i=0,l=emptyRow;i<l;i++){
-			let this_div = this[createRowDiv]();
-			body.append(this_div);
-		}
-
-
-		//定位到选定到行
-		if(n != 0){
-			let length = -this.rowHeight * n;
-			this[touchDomList][2].find("p").css3({
-				transform:"translate3d(0,"+length+"px,0)"
-			});
-			this[touchDomY][2] = length;
-		}
-
-	}
-
-	//获取日的天数
-	[getDateNumber](year,month){
-		//获取这个月的最大天数
-		let day = 0;
-		switch(month){
-			case 1:
-			case 3:
-			case 5:
-			case 7:
-			case 8:
-			case 10:
-			case 12:
-				day = 31;
-				break;
-			case 4:
-			case 6:
-			case 9:
-			case 11:
-				day = 30;
-				break;
-			case 2:
-				if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
-					day = 29;
-				}else{
-					day = 28;
-				}
-				break;
-			default:
-				day = 31;
-		}
-
-		//设定的值限定判断
-		let minYear = this.minDates[0],
-			minMonth = this.minDates[1],
-			minDay = this.minDates[2],
-			maxYear = this.maxDates[0],
-			maxMonth = this.maxDates[1],
-			maxDay = this.maxDates[2],
-			nowYear = this[getCelVal](0),
-			nowMonth = this[getCelVal](1),
-			min = 1,
-			max = day;
-
-
-		if(nowYear == minYear && nowMonth == minMonth){
-			min = minDay;
-			min = app.getBetweenNumber(min,minDay,maxDay);
-		}
-		if(nowYear == maxYear && nowMonth == maxMonth){
-			max = maxDay;
-			max = app.getBetweenNumber(max,min,maxDay)
-		}
-
-		let data = [];
-		for(let i=min,l=max;i<=l;i++){
-			data.push(i);
-		}
-
-		return data;
-	}
 
 	//刷新参数
 	[refreshParam](){
-		let yearDomHeight = this.yearBodyDom.find("p").height(),
-			monthDomHeight = this.monthBodyDom.find("p").height();
+		let cel1DomHeight = this.cel1BodyDom.find("p").height(),
+			cel2DomHeight = this.cel2BodyDom.find("p").height();
 
 		this[maxScrollValue] = [
-			yearDomHeight - this[bodyDomHeight],
-			monthDomHeight - this[bodyDomHeight]
+			cel1DomHeight - this[bodyDomHeight],
+			cel2DomHeight - this[bodyDomHeight]
 		];
-
-		if(this.isShowDay){
-			let dayDomHeight = this.dayBodyDom.find("p").height();
-			this[maxScrollValue].push(dayDomHeight - this[bodyDomHeight])
-		}
-
-
 	}
 
 	//创建事件监听
@@ -627,7 +450,6 @@ class dateChoose extends zz{
 					transform:"translate3d(0,"+end+"px,0)"
 				});
 				_this[touchDomY][n] = end;
-				_this[changeList](n);
 			},
 			alternate:false,          //@param:boolean  动画结束时是否反向运行，默认：false
 			infinite:false            //@param:boolean  动画是否循环执行，默认：false
@@ -636,32 +458,6 @@ class dateChoose extends zz{
 		this[animateTemp].play();
 	}
 
-	//更改列表
-	[changeList](n){
-		if(n==0){
-			this[createListMonth]();
-			this[rollBackTop](1);
-			if(this.isShowDay){
-				this[createListDay]();
-				this[rollBackTop](2);
-			}
-			this[refreshParam]();
-		}
-		if(n==1){
-			if(this.isShowDay){
-				this[createListDay]();
-				this[rollBackTop](2);
-			}
-			this[refreshParam]();
-		}
-	}
-
-	//回滚到顶部
-	[rollBackTop](n){
-		let nowY = this[touchDomY][n];
-
-		this[animateFn](n,nowY,0,200);
-	}
 
 	//获取列的值
 	[getCelVal](n){
@@ -673,18 +469,10 @@ class dateChoose extends zz{
 	}
 
 	success(){
-		if(this.isShowDay){
-			let year = this[getCelVal](0),
-				month = this[getCelVal](1),
-				day = this[getCelVal](2);
+		let year = this[getCelVal](0),
+			month = this[getCelVal](1);
 
-			this.callback(year+"-"+month+"-"+day);
-		}else{
-			let year = this[getCelVal](0),
-				month = this[getCelVal](1);
-
-			this.callback(year+"-"+month);
-		}
+		this.callback([year,month]);
 	}
 
 	cancel(){

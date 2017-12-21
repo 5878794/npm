@@ -10,40 +10,40 @@ window.requestAnimationFrame =  window.requestAnimationFrame ||
 window.cancelAnimationFrame =   window.cancelAnimationFrame ||
 								window.webkitCancelAnimationFrame ||
 								window.webkitCancelRequestAnimationFrame ||
-								window.mozCancelRequestAnimationFrame ||
-								window.oCancelRequestAnimationFrame ||
-								window.msCancelRequestAnimationFrame ||
+								// window.mozCancelRequestAnimationFrame ||
+								// window.oCancelRequestAnimationFrame ||
+								// window.msCancelRequestAnimationFrame ||
 								clearTimeout;
 
 
-window.navigator.getUserMedia =    window.navigator.getUserMedia ||
-									window.navigator.webkitGetUserMedia ||
-									window.navigator.mozGetUserMedia ||
-									window.navigator.msGetUserMedia;
+// window.navigator.getUserMedia =    window.navigator.getUserMedia ||
+// 									window.navigator.webkitGetUserMedia ||
+// 									window.navigator.mozGetUserMedia ||
+// 									window.navigator.msGetUserMedia;
 
-window.PeerConnection = window.PeerConnection ||
-						window.webkitPeerConnection ||
-						window.webkitRTCPeerConnection ||
-						window.mozRTCPeerConnection;
-
-window.indexedDB = window.indexedDB ||
-					window.mozIndexedDB ||
-					window.webkitIndexedDB ||
-					window.msIndexedDB;
-
-
-window.IDBTransaction = window.IDBTransaction ||
-						window.webkitIDBTransaction ||
-						window.msIDBTransaction;
-
-window.IDBKeyRange = window.IDBKeyRange ||
-					window.webkitIDBKeyRange ||
-					window.msIDBKeyRange;
-
-window.AudioContext = window.AudioContext ||
-						window.webkitAudioContext ||
-						window.mozAudioContext ||
-						window.msAudioContext;
+// window.PeerConnection = window.PeerConnection ||
+// 						window.webkitPeerConnection ||
+// 						window.webkitRTCPeerConnection ||
+// 						window.mozRTCPeerConnection;
+//
+// window.indexedDB = window.indexedDB ||
+// 					window.mozIndexedDB ||
+// 					window.webkitIndexedDB ||
+// 					window.msIndexedDB;
+//
+//
+// window.IDBTransaction = window.IDBTransaction ||
+// 						window.webkitIDBTransaction ||
+// 						window.msIDBTransaction;
+//
+// window.IDBKeyRange = window.IDBKeyRange ||
+// 					window.webkitIDBKeyRange ||
+// 					window.msIDBKeyRange;
+//
+// window.AudioContext = window.AudioContext ||
+// 						window.webkitAudioContext ||
+// 						window.mozAudioContext ||
+// 						window.msAudioContext;
 
 
 

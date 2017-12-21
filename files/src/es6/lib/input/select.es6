@@ -18,7 +18,7 @@
 //  error:function(){
 //          //取消选择
 //  };
-//})
+// })
 
 
 
@@ -135,13 +135,18 @@ class select extends zz{
 	[bindData](){
 		let body = this.domBody,
 			data = this.data,
-			listDom = this[createListDom]();
+			listDom = this[createListDom](),
+			find=false,n=0;
 
-		data.map(list=>{
+		data.map((list,i)=>{
 			let this_dom = listDom.clone(),
 				this_key = list.key;
 
 			if(this.selected.indexOf(this_key)>-1){
+				if(!find){
+					find = true;
+					n = i;
+				}
 				this[setSelectStyle](this_dom);
 			}
 
@@ -153,6 +158,10 @@ class select extends zz{
 		});
 
 		this.domBody.addScroll();
+
+		//滚动到第一个选中的地方
+		n = (n>2)? n-2 : 0;
+		this.domBody.get(0).scrollTop = n * this.listLineHeight;
 
 	}
 

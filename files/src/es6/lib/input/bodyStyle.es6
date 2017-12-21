@@ -107,7 +107,8 @@ class bodyStyle{
 			height:"100%",
 			position:"fixed",
 			left:0,top:0,
-			background:"rgba(0,0,0,0.5)"
+			background:"rgba(0,0,0,0.5)",
+			'z-index':1000
 		});
 
 		this.domZZ = div;
@@ -125,7 +126,8 @@ class bodyStyle{
 			display:"box",
 			"box-orient":"vertical",
 			color:this.fontColor,
-			"font-size":this.fontSize+"px"
+			"font-size":this.fontSize+"px",
+			'z-index':1001
 		});
 
 		this.domMain = div;

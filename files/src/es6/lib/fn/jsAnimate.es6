@@ -1,6 +1,6 @@
 //h5动画函数
 //由于未传dom进来，未使用willChange属性，需要在stepFn中自己添加
-// var a = new DEVICE.jsAnimate({
+//var a = new DEVICE.jsAnimate({
 //    start:0,                  //@param:number   初始位置
 //    end:1,                    //@param:number   结束位置
 //    time:800,                 //@param:number   动画执行时间  ms
@@ -15,9 +15,9 @@
 //    alternate:false,          //@param:boolean  动画结束时是否反向运行，默认：false
 //    infinite:false            //@param:boolean  动画是否循环执行，默认：false
 //                                                设置该参数endFn将失效
-// })
-//
-// a.play();
+//})
+
+//a.play();
 //a.stop();
 
 

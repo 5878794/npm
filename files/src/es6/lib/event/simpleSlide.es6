@@ -1,6 +1,7 @@
 //touch滑动事件封装（简单版）
 // var a = new DEVICE.touchSlideEvent({
 //    dom:$("#div"),          //@param:jqobj   要监听的dom
+//    bodyNotScroll:false       //@param:bool  body是否可以滚动
 //    startFn:function(){},   //@param:fn      手指按下时执行
 //    moveFn:function(opt){   //@param:fn      手指滑动时执行
 //        //opt.start.x   初始点 x，y

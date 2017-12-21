@@ -1,3 +1,6 @@
+let device = require('../device');
+
+
 //stamp2time和time2stamp   2个时间转换的毫秒数会被忽略。
 let getDateTime = function(b){
 	b = b || new Date().getTime();
@@ -52,6 +55,23 @@ let getStamp = function(a){
 };
 
 
+//a=20110104
+let getStamp1 = function(a){
+	if(!a){return new Date().getTime();}
+	a = a.toString();
+	let year = a.substr(0,4),
+		month = a.substr(4,2),
+		day = a.substr(6,2),
+		date = year + '-' + month +'-'+day;
+
+	if(device.isIpad || device.isIphone){
+		date = date.replace(/\-/ig,'\/');
+	}
+
+	return new Date(date).getTime();
 
 
-module.exports = {getDateTime,getDate,getStamp};
+};
+
+
+module.exports = {getDateTime,getDate,getStamp,getStamp1};

@@ -33,8 +33,8 @@ var svgObj = function(opt){
 	this.id = opt.id || "";
 	this.isHide = (opt.isHide === true);
 
-	this.bodyWidth = parseInt(this.body.width());
-	this.bodyHeight = parseInt(this.body.height());
+	this.bodyWidth = opt.width || parseInt(this.body.width());
+	this.bodyHeight = opt.height || parseInt(this.body.height());
 	this.viewBoxWidth = opt.viewBoxWidth || this.bodyWidth;
 	this.viewBoxHeight = opt.viewBoxHeight || this.bodyHeight;
 

@@ -22,7 +22,6 @@ let toURI = function(blob){
 
 
 //text转blob对象
-// TODO 中文要乱码
 let fromText = function(text){
 	return new Blob([text]);
 

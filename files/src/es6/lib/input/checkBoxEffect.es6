@@ -1,7 +1,7 @@
 
 //ios的checkbox的  开关按钮
 
-// new DEVICE.iosCheckBox({
+// let a = new DEVICE.iosCheckBox({
 //    dom:$("body"),                    //要放置的容器
 //    isCheck:false,                    //默认状态是否选中
 //    selectBg:"green",                 //选中后的边框颜色
@@ -14,6 +14,9 @@
 //        console.log(state);           //输出选中状态 true /false
 //    }
 // });
+
+// a.check(true);            //手动选中
+// a.check(false);           //手动不选中
 
 
 require("./../jq/extend");
@@ -146,7 +149,7 @@ class checkBox{
 		},false);
 	}
 
-	_animate(){
+	_animate(notCallback){
 		var _this = this;
 
 		if(this.isAnimate){return;}
@@ -169,7 +172,9 @@ class checkBox{
 			},this.spd,function(){
 				_this.state = true;
 				_this.isAnimate = false;
-				_this.callback(true);
+				if(!notCallback){
+					_this.callback(true);
+				}
 			},false,"easein","transform")
 		}else{
 			this.body.css({
@@ -186,10 +191,41 @@ class checkBox{
 			},this.spd,function(){
 				_this.state = false;
 				_this.isAnimate = false;
-				_this.callback(false);
+				if(!notCallback){
+					_this.callback(false);
+				}
 			},false,"easein","transform")
 		}
 	}
+
+
+
+	//手动设置开关状态
+	//true:选中
+	//false:不选中
+	check(state){
+		if(state == this.state){
+			return;
+		}
+
+		if(this.isAnimate){
+			let _this = this;
+			setTimeout(function(){
+				_this.check(state);
+			},100);
+			return;
+		}
+
+		if(state){
+			this.state = false;
+			this._animate(true);
+		}else{
+			this.state = true;
+			this._animate(true);
+		}
+	}
+
+
 }
 
 
