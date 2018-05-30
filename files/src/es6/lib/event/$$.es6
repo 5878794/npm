@@ -134,12 +134,12 @@ class $${
 	trigger(type){
 		for(let i= 0,l=this[idArray].length;i<l;i++){
 			let id = this[idArray][i],
-				obj = eventFnCatch.get(id);
+				obj1 = eventFnCatch.get(id);
 
-			if(obj){
-				let fn = obj.get(type);
+			if(obj1){
+				let fn = obj1.get(type);
 				if(fn){
-					fn();
+					fn.call(this[obj].get(0));
 				}
 			}
 		}

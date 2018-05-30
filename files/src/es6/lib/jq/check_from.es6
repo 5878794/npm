@@ -15,6 +15,8 @@
 //idCard    身份证
 //chinese   中文
 //nickname  中文、英文、数字、下划线
+//fileType  文件类型  eg:image
+//fileSize  文件大小  eg:3     单位M
 
 
 //验证时执行
@@ -29,17 +31,19 @@
 	let rules = {
 		//不大于多少个字符
 		max:function(str,number){
+			let str1 = str.replace(/\n/ig,' ');
 			let regStr = "^.{0,"+number+"}$",
 				reg = new RegExp(regStr);
 
-			return reg.test(str);
+			return reg.test(str1);
 		},
 		//不少于多少个字符
 		min:function(str,number){
+			let str1 = str.replace(/\n/ig,' ');
 			let regStr = "^.{"+number+",}$",
 				reg = new RegExp(regStr);
 
-			return reg.test(str);
+			return reg.test(str1);
 		},
 		//判断非空
 		must:function(str){
@@ -128,6 +132,29 @@
 
 			var reg = /^[\u4e00-\u9fa5a-zA-Z0-9_]+$/;
 			return reg.test(str);
+		},
+        //附文本
+        pick: function(str) {
+            if (str.length == 0) {
+                return true;
+            }
+
+            var reg = /^[\u4e00-\u9fa5a-zA-Z0-9,。，！？:：‘’"!]+$/;
+            return reg.test(str);
+        },
+		//文件大小
+		fileType:function(file,type){
+			let fileType = file.type;
+
+			return (fileType.indexOf(type+'\/')>-1);
+		},
+		//文件类型
+		fileSize:function(file,size){
+			let fileSize = file.size;
+			size = size*1024*1024;
+
+			return (size>=fileSize);
+
 		}
 	};
 
@@ -143,7 +170,8 @@
 		checkInput.each(function(){
 			let that_rule = $(this).data("rule"),
 				this_val = $.trim($(this).val()),
-				this_id = $(this).attr("id");
+				this_id = $(this).attr("id"),
+				this_dom = $(this);
 
 			that_rule = that_rule.split(",");
 			data[this_id] = this_val;
@@ -166,7 +194,18 @@
 						}else{
 							if(!rules[_this_rule](this_val,_n)){
 								errorDom.push($(this));
+								break;
 							}
+						}
+					}else if(this_rule.indexOf('fileType:')>-1 || this_rule.indexOf('fileSize:')>-1){
+						let file = this_dom.get(0).files[0],
+							_this_rule = this_rule.split(':'),
+							_rule = _this_rule[0],
+							_n = _this_rule[1];
+
+						if(!rules[_rule](file,_n)){
+							errorDom.push($(this));
+							break;
 						}
 					}else{
 						if(!rules[this_rule]){
@@ -174,6 +213,7 @@
 						}else{
 							if(!rules[this_rule](this_val)){
 								errorDom.push($(this));
+								break;
 							}
 						}
 					}

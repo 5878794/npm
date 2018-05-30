@@ -171,4 +171,20 @@ $.allInputCanNotUse = function(type){
 
 
 
+let scrollEvent = null;
+//body可以滚动和不可滚动
+//需要设置参数   passive:false  否则preventDefault无效
+
+$.bodyNotScroll = function(){
+	document.body.addEventListener('touchmove',scrollEvent=function(e){
+		e.preventDefault();
+	},{passive:false});
+
+};
+$.bodyCanScroll = function(){
+	document.body.removeEventListener('touchmove',scrollEvent,{passive:false});
+};
+
+
+
 module.exports = null;
