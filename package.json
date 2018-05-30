@@ -1,6 +1,6 @@
 {
   "name": "bens",
-  "version": "1.0.22",
+  "version": "1.0.31",
   "description": "cmd test",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/5878794/npm#readme",
   "dependencies": {
-    "commander": "^2.11.0"
+    "commander": "^2.15.1"
   },
   "bin": {
     "bens": "bin/bens.js"

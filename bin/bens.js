@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-//当前运行的地址
+//当前运行的地址 1
 var path = require("path"),
 	runPath = process.cwd(),
 	program = require('commander'),
