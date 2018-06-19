@@ -36,7 +36,7 @@
 
 
 
-
+let textChangeEffect = require('./textChangeEffect');
 
 
 let btnSendSmsInterval = function(opt){
@@ -49,6 +49,8 @@ let btnSendSmsInterval = function(opt){
 	this.ajaxFn = opt.ajaxFn || function(){};
 	this.intervalTime = opt.intervalTime || 60;
 	this.intervalText = opt.intervalText || "{x}秒后重试";
+	//不要启用 手机canvas有锯齿问题没解决
+	this.useAnimate = opt.useAnimate || false;
 
 	if(!this.btn || !this.phoneInputId){
 		console.log("btnSendSmsInterval 参数错误！");
@@ -59,6 +61,8 @@ let btnSendSmsInterval = function(opt){
 	this.phoen = $("#"+this.phoneInputId);
 	this._interval = null;
 	this.startText = this.dom.text();
+
+	this.textEffectFn = null;
 
 	this.init();
 };
@@ -105,6 +109,17 @@ btnSendSmsInterval.prototype = {
 
 		//计时器开始
 		var _time = 0;
+
+
+
+		if(_this.useAnimate){
+			_this.dom.text('');
+			_this.textEffectInterval(_this.dom);
+			_this.textEffectFn.show(_this.intervalTime);
+		}
+
+
+
 		this._interval = setInterval(function(){
 			_time++;
 			if(_time >= _this.intervalTime){
@@ -114,16 +129,37 @@ btnSendSmsInterval.prototype = {
 					.text(_this.startText);
 				//事件绑定
 				_this.bindEvent();
+				if(_this.useAnimate){
+					_this.textEffectFn.destroy();
+				}
+
 
 				//清除定时器
 				clearInterval(_this._interval);
 			}else{
 				var __time = _this.intervalTime - _time,
 					_text = _this.intervalText.replace("{x}",__time);
-				_this.dom.text(_text);
+				// _this.dom.text(_text);
+				// console.log(_text)
+				if(_this.useAnimate){
+					_this.textEffectFn.show(_text);
+				}else{
+					_this.dom.text(_text);
+				}
+
 			}
 		},1000)
 
+	},
+	textEffectInterval:function(btnDom){
+		this.textEffectFn = new textChangeEffect({
+			dom:btnDom,                 //容器dom @param:jqobj
+			bg:'rgb(255,255,255)',      //背景色  必须rgb  默认:rgb(255,255,255)
+			fontSize:16,                //字体大小 @param:number  单位px
+			fontColor:'rgb(0,202,174)',     //字体颜色 @param:rgb    默认:rgb(0,0,0)
+			textAlign:'center',
+			fontSizeUnit:'px'          //字体大小使用单位 @param:str  默认:rem
+		});
 	}
 };
 

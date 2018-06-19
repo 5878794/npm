@@ -28,7 +28,7 @@ let page = {
     //是否是健康成都app内的h5页面
     [isApp]:SETTING.isAPP || false,
     //是否需要加载微信js
-    [needWeChatApi]:SETTING.weChatUseApiList || [],
+    [needWeChatApi]:(!SETTING.isAPP && SETTING.weChatUseApiList && SETTING.weChatUseApiList.length!=0)? SETTING.weChatUseApiList : [],
     //页面是否已经ready
     [hasAllReady]:false,
 
@@ -888,7 +888,7 @@ page[init](function(){
 
     //自动缓存参数，非app用
     page[autoSaveUrlParam]();
-    page.mdfSoftKeyBoardBug();
+    // page.mdfSoftKeyBoardBug();
 
 }).then(()=>{
     if(page[isDebug]){

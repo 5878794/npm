@@ -20,6 +20,7 @@ let setFn = function(psdWidth){
 		rem;
 
 	// 设置meta
+	// 由于cordova app内嵌初始屏幕宽度获取有问题,只能设置width=device-width 不能设置实际的像素宽度在缩放
 	if(viewport){
 		viewport.setAttribute('content', 'width= device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no');
 	}else{
