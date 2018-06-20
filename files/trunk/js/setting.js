@@ -8,13 +8,15 @@
 	//正式
 	// var serverUrl = "//phr.care4u.cn/";
 	//测试
-	var serverUrl = "//118.123.173.101:7001/";
+	// var serverUrl = "//118.123.173.101:7001/";
+	var serverUrl = "//172.16.1.35:8090/";
 
 	window.SETTING = {
+		serverUrl:serverUrl,
 
 		//-----------------------------------------------
 		//是否是app
-		isAPP : false,
+		isAPP : true,
 
 
 
@@ -41,7 +43,7 @@
 		weChatCertificationApi:serverUrl+"healthweixin/wx/getJsapi.do",
 		//微信功能需要api列表,数组有值会自动加载js，和请求权限
 		weChatUseApiList:[
-			// 'closeWindow'
+			'closeWindow'
 			// 'onMenuShareTimeline',
 			// 'onMenuShareAppMessage',
 			// 'showAllNonBaseMenuItem'
