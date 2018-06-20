@@ -29,7 +29,10 @@ let ajax = {
 				success(rs.data);
 
 			},
-			error: function() {
+			error: function(e) {
+				if(e.status == 0){
+					return;
+				}
 				error("网络错误,无法连接服务器。");
 			}
 		});
