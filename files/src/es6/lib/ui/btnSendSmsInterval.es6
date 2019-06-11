@@ -4,6 +4,8 @@
 
 //按钮发送短信后倒计时功能
 //var sms = new DEVICE.btnSendSmsInterval({
+//    //android有闪烁 不要用 ,ios可以用
+//    useAnimate:(device.isIos || device.isIpad),
 //    //按钮id
 //    btnId:"send_sms",
 //    //电话号码输入框id
@@ -49,7 +51,7 @@ let btnSendSmsInterval = function(opt){
 	this.ajaxFn = opt.ajaxFn || function(){};
 	this.intervalTime = opt.intervalTime || 60;
 	this.intervalText = opt.intervalText || "{x}秒后重试";
-	//不要启用 手机canvas有锯齿问题没解决
+	//android 有闪烁 不要启用
 	this.useAnimate = opt.useAnimate || false;
 
 	if(!this.btn || !this.phoneInputId){

@@ -21,6 +21,11 @@ class loading{
 		this.circle = null;
 		this.createDom();
 		this.createClass();
+
+		this.showTime = null;
+		this.showNumber = 0;
+		this.timeoutFn = null;
+
 	}
 
 	createDom(){
@@ -80,11 +85,43 @@ class loading{
 	}
 
 	show(){
-		this.body.css3({display:"box"});
+		if(this.timeoutFn){
+			clearTimeout(this.timeoutFn);
+			this.timeoutFn = null;
+		}
+
+		//调用了几次显示
+		this.showNumber ++;
+
+		//记录显示时的时间戳
+		if(this.showTime){
+
+		}else{
+			this.showTime = new Date().getTime();
+			this.body.css3({display:"box"});
+		}
 	}
 
 	hide(){
-		this.body.css3({display:"none"});
+		let _this = this;
+		this.showNumber--;
+
+		if(this.showNumber == 0){
+			let nowTime = new Date().getTime(),
+				showTime = nowTime - this.showTime;
+
+			if(showTime > 1000){
+				this.body.css3({display:"none"});
+				this.showTime = null;
+			}else{
+				this.timeoutFn = setTimeout(function(){
+					_this.body.css3({display:"none"});
+					_this.showTime = null;
+					_this.timeoutFn = null;
+				},1000-showTime)
+			}
+		}
+
 	}
 }
 

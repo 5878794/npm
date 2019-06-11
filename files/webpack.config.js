@@ -106,7 +106,10 @@ module.exports = {
 				exclude: /node_modules/,
 				query: {
 					presets: ['env','stage-3'],
-					plugins: ["transform-decorators-legacy"]
+					plugins: [
+						"transform-custom-element-classes",
+						"transform-decorators-legacy"
+					]
 				}
 			}
 		]

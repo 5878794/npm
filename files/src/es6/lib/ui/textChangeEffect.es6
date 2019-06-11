@@ -114,6 +114,7 @@ class textChangeEffect{
 			'-webkit-transform':'scale('+1/this.scale+')'
 		});
 
+		// console.log(this.dom)
 		this.dom.append(this.canvas);
 	}
 
@@ -127,24 +128,44 @@ class textChangeEffect{
 
 	//显示字符
 	show(str){
-			//在canvas上写文字,转成图片数据
+		// let __t = new Date().getTime();
+		//在canvas上写文字,转成图片数据
 		let imgData = this[textToImageData](str),
 			//获取图片上非背景色的像素点集合
 			{imageData,array} = this[getTextPointArray](imgData),
-			_this = this,
-			//将不需要移动的点对齐
-			points = this[handlerAnimatePoints](this.nowPoints,array),
-			//获取变换前后点的位置
-			{startArray,endArray} = this[getChangeArray](points.startArray,points.endArray);
+			_this = this;
+
+		//将不需要移动的点对齐
+		let	points = this[handlerAnimatePoints](this.nowPoints,array);
+
+		// window.start = JSON.parse(JSON.stringify(this.nowPoints));
+		// window.end = JSON.parse(JSON.stringify(array));
+
+		this.nowPoints = JSON.parse(JSON.stringify(array));
+		this.nowImageData = imageData;
 
 
-		// console.log(startArray,endArray)
+		//获取变换前后点的位置
+		let	{startArray,endArray} = this[getChangeArray](points.startArray,points.endArray);
 
 
-		//动画变换这些点
-		this[animatePoint](startArray,endArray,700,function(){
-			_this.nowPoints = endArray;
-			_this.nowImageData = imageData;
+		//
+		// // console.log(startArray,endArray)
+		//
+		// // console.log(new Date().getTime()-__t);
+		//
+		// this[drawPoint](endArray);
+		//
+		// window.start = JSON.parse(JSON.stringify(points.startArray));
+		// window.end = JSON.parse(JSON.stringify(points.endArray));
+		//
+		// //动画变换这些点
+
+
+
+		this[animatePoint](startArray,endArray,300,function(){
+			// _this.nowPoints = points.endArray;
+			// _this.nowImageData = imageData;
 		});
 	}
 
@@ -236,8 +257,8 @@ class textChangeEffect{
 
 		//点出现或消失的位置,根据位置对齐方式调整x坐标
 		let pX = (this.textAlign == 'left')? 0 :
-			     (this.textAlign == 'right')? this.canvasWidth :
-				 centerX;
+			(this.textAlign == 'right')? this.canvasWidth :
+				centerX;
 
 
 		//最后显示的像素点与开始显示像素点的多少比较
@@ -290,9 +311,12 @@ class textChangeEffect{
 			start:0,                  //@param:number   初始位置
 			end:1,                    //@param:number   结束位置
 			time:time,                 //@param:number   动画执行时间  ms
-			type:"Quint",             //@param:str      tween动画类别,默认：Linear 详见函数内tween函数
-			class:"easeIn",           //@param:str      tween动画方式,默认：easeIn 详见函数内tween函数
+			type:"Linear",             //@param:str      tween动画类别,默认：Linear 详见函数内tween函数
+			class:"",           //@param:str      tween动画方式,默认：easeIn 详见函数内tween函数
 			stepFn:function(per){     //@param:fn       每步执行函数,返回当前属性值
+				per = per.toFixed(9);
+				// console.log(per)
+
 				let newArray = [];
 				for(let i=0,l=startArray.length;i<l;i++){
 					let SP = startArray[i],
@@ -303,14 +327,14 @@ class textChangeEffect{
 						y:SP.y+(EP.y-SP.y)*per,
 						r:SP.r+(EP.r-SP.r)*per,
 						g:SP.g+(EP.g-SP.g)*per,
-						b:SP.b+(EP.b-SP.b)*per,
-						a:SP.a+(EP.a-SP.a)*per
-					})
+						b:SP.b+(EP.b-SP.b)*per
+					});
 				}
 
 				_this[drawPoint](newArray);
 			},
 			endFn:function(){         //@param:fn       动画结束执行
+				// console.log('end')
 				callback();
 				setTimeout(function(){
 					_this.animate = null;

@@ -1,6 +1,8 @@
 
 //* andorid 4+
 // *  new DEVICE.editPicture({
+// 			width:130,              //输出图片宽度
+// 			height:189,             //输出图片高度
 // 	*      id:str/obj,                 //要显示的地方   id，dom，jqdom
 // *      src:str,                    //图片地址
 // *      success:function(src),      //清除对象，返回图片的base64,类型为  png
@@ -54,6 +56,11 @@ var editPicture=function(data){
 	this.roteleft = null;
 	this.roteright = null;
 
+	//图片的宽横比
+	this.imgAspectRatio = 1;
+	//剪切框的宽横比
+	this.cutBoxAspectRatio = this.imgOutWidth/this.imgOutHeight;
+
 //        this.div1 = null;           //下遮早
 //        this.div2 = null;
 
@@ -77,7 +84,7 @@ var editPicture=function(data){
 
 
 	this.touchstarts = {};      //点击开始时
-	this.types = null;          //移动的方式  放大或移动
+	this.types = 'move';          //移动的方式  放大或移动
 	this.cutboscenter = {};     //剪切框中心点
 
 
@@ -150,6 +157,8 @@ editPicture.prototype={
 			_this.imgPosition.y=tempdata1.top;
 			_this.imgPosition.width=tempdata.width;
 			_this.imgPosition.height=tempdata.height;
+
+			_this.imgAspectRatio = tempdata.width/tempdata.height;
 		};
 		this.img.src = this.src;
 
@@ -237,25 +246,25 @@ editPicture.prototype={
 
 	},
 	createZZ:function(){
-//            var div1 = document.createElement("div"),
-//                div2 = document.createElement("div"),
-//                div3 = document.createElement("div"),
-//                div4 = document.createElement("div"),
-//                borderwidth = (this.cvHeight>this.cvWidth)? this.cvHeight : this.cvWidth ;
-//
-//            div1.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:100%;height:"+borderwidth+"px;top:"+ -borderwidth+"px;left:0;";
-//            div2.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:"+borderwidth+"px;height:"+borderwidth*3+"px;top:"+ -borderwidth+"px;left:"+ -borderwidth+"px;";
-//            div3.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:"+borderwidth+"px;height:"+borderwidth*3+"px;top:"+ -borderwidth+"px;right:"+ -borderwidth+"px;";
-//            div4.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:100%;height:"+borderwidth+"px;bottom:"+-borderwidth+"px;left:0;";
-//
-//            $(this.cutbox).append(div1).append(div2).append(div3).append(div4);
-//            this.div1 = div1;
-//            this.div2 = div4;
+           var div1 = document.createElement("div"),
+               div2 = document.createElement("div"),
+               div3 = document.createElement("div"),
+               div4 = document.createElement("div"),
+               borderwidth = (this.cvHeight>this.cvWidth)? this.cvHeight : this.cvWidth ;
 
-		var div = document.createElement("div"),
-			borderwidth = (this.cvHeight>this.cvWidth)? this.cvHeight : this.cvWidth ;
-		div.style.cssText = "width:100%;height:100%;border:"+borderwidth+"px solid rgba(0,0,0,0.5);position:absolute;left:"+ -borderwidth+"px;top:"+ -borderwidth+"px";
-		$(this.cutbox).append(div);
+           div1.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:100%;height:"+borderwidth+"px;top:"+ -borderwidth+"px;left:0;";
+           div2.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:"+borderwidth+"px;height:"+borderwidth*3+"px;top:"+ -borderwidth+"px;left:"+ -borderwidth+"px;";
+           div3.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:"+borderwidth+"px;height:"+borderwidth*3+"px;top:"+ -borderwidth+"px;right:"+ -borderwidth+"px;";
+           div4.style.cssText = "background:rgba(0,0,0,0.5);position:absolute;width:100%;height:"+borderwidth+"px;bottom:"+-borderwidth+"px;left:0;";
+
+           $(this.cutbox).append(div1).append(div2).append(div3).append(div4);
+           this.div1 = div1;
+           this.div2 = div4;
+
+		// var div = document.createElement("div"),
+		// 	borderwidth = (this.cvHeight>this.cvWidth)? this.cvHeight : this.cvWidth ;
+		// div.style.cssText = "width:100%;height:100%;border:"+borderwidth+"px solid rgba(0,0,0,0.5);position:absolute;left:"+ -borderwidth+"px;top:"+ -borderwidth+"px";
+		// $(this.cutbox).append(div);
 	},
 	//添加按钮
 	createButton:function(){
@@ -340,17 +349,21 @@ editPicture.prototype={
 		this.touchstarts.left=getleft;
 		this.touchstarts.top=gettop;
 
-		var minx=this.touchstarts.left;
-		var maxx=this.touchstarts.left+this.touchstarts.width;
-		var miny=this.touchstarts.top;
-		var maxy=this.touchstarts.top+this.touchstarts.height;
 
-		if( x>minx && x<maxx &&  y>miny && y<maxy ){
-			this.types="move";
-		}else{
-			this.types="scale";
-			cutbox.find("img").css({display:"block"});
+		if(device){
+			var minx=this.touchstarts.left;
+			var maxx=this.touchstarts.left+this.touchstarts.width;
+			var miny=this.touchstarts.top;
+			var maxy=this.touchstarts.top+this.touchstarts.height;
+
+			if( x>minx && x<maxx &&  y>miny && y<maxy ){
+				this.types="move";
+			}else{
+				this.types="scale";
+				cutbox.find("img").css({display:"block"});
+			}
 		}
+
 
 	},
 	touchMoveHandler:function(e){
@@ -364,6 +377,16 @@ editPicture.prototype={
 			x=e.pageX;
 			y=e.pageY;
 		}
+
+		if(device.isPhone){
+			if(e.touches.length == 1){
+				this.types = 'move';
+			}else if(e.touches.length==2){
+				this.types = 'scale';
+			}
+		}
+
+
 
 		//是移动
 		if(this.types=="move"){
@@ -411,20 +434,34 @@ editPicture.prototype={
 
 			//var length=( Math.abs(x-this.touchstarts.x) > Math.abs(y-this.touchstarts.y)  )? Math.abs(x-this.touchstarts.x): Math.abs(y-this.touchstarts.y);
 
-			var temp_top,temp_left,temp_width,
+			var temp_top,temp_left,temp_width,temp_height,
 				length = Math.sqrt(Math.abs(nowlength-this.cutboscenter.oldlength))/2;
 
 			if(nowlength>this.cutboscenter.oldlength){
 				//放大
 
 				temp_width = length + this.touchstarts.width;
+				temp_height = length + this.touchstarts.height;
 
-				//控制最大宽度
-				var temp_maxlength=(this.imgPosition.width>this.imgPosition.height)? this.imgPosition.height : this.imgPosition.width;
-				temp_width=( temp_width> temp_maxlength-4 )? temp_maxlength-4 : temp_width;
+				//控制最大宽度或高度
+				// var temp_maxlength=(this.imgPosition.width>this.imgPosition.height)? this.imgPosition.height : this.imgPosition.width;
+				if(this.imgAspectRatio > this.cutBoxAspectRatio){
+					//图片宽横比大于剪切框的宽横比
+					let imgMaxHeight = this.imgPosition.height-4;
+					temp_height = (temp_height>imgMaxHeight)? imgMaxHeight : temp_height;
+					temp_width =  temp_height*this.imgOutWidth/this.imgOutHeight;
 
-				temp_top = this.touchstarts.top - parseInt((temp_width - this.touchstarts.width)/2);
-				temp_left= this.touchstarts.left - parseInt((temp_width - this.touchstarts.height)/2);
+				}else{
+					let imgMaxWidth = this.imgPosition.width - 4;
+					temp_width = (temp_width>imgMaxWidth)? imgMaxWidth : temp_width;
+					temp_height = temp_width*this.imgOutHeight/this.imgOutWidth;
+				}
+
+				// temp_width=( temp_width> this.imgPosition.width-4 )? this.imgPosition.width-4 : temp_width;
+				// temp_height =  temp_width*this.imgOutHeight/this.imgOutWidth;
+
+				temp_top = this.touchstarts.top - parseInt((temp_height - this.touchstarts.height)/2);
+				temp_left= this.touchstarts.left - parseInt((temp_width - this.touchstarts.width)/2);
 
 				//限制顶点位置
 				temp_top= (temp_top<this.imgPosition.y)? this.imgPosition.y : temp_top;
@@ -437,9 +474,11 @@ editPicture.prototype={
 				temp_width = this.touchstarts.width-length;
 				//控制最小宽度
 				temp_width=(temp_width<this.imgOutWidth/2)? this.imgOutWidth/2 :temp_width;
+				temp_height=temp_width*this.imgOutHeight/this.imgOutWidth;
+
 				//计算顶点
 				temp_top = this.touchstarts.top + parseInt((this.touchstarts.width - temp_width)/2);
-				temp_left= this.touchstarts.left + parseInt((this.touchstarts.height - temp_width)/2);
+				temp_left= this.touchstarts.left + parseInt((this.touchstarts.height - temp_height)/2);
 
 
 			}
@@ -455,7 +494,7 @@ editPicture.prototype={
 			$(this.cutbox).css({
 				"-webkit-transform":"translate3d("+temp_left+"px,"+temp_top+"px,0)",
 				width:temp_width+"px",
-				height:temp_width+"px"
+				height:temp_height+"px"
 			});
 //                $(this.div1).css({height:temp_width+"px"});
 //                $(this.div2).css({height:temp_width+"px"});

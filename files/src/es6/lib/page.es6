@@ -4,11 +4,14 @@ let device = require("./device"),
     getUrlParam = require("./fn/getParamFromUrl"),
     session = require("./h5/sessionData"),
     localData = require('./h5/localData'),
+    alertFn = require('./ui/alert'),
+    confirmFn = require('./ui/confirm'),
     isDebug = Symbol("isDebug"),
     isApp = Symbol("isApp"),
     hasAllReady = Symbol("hasAllReady"),
     readyFns = Symbol("readyFns"),
     init = Symbol("init"),
+    $$ = require('./event/$$'),
     pageReady = Symbol("pageReady"),
     appReady = Symbol("appReady"),
     needWeChatApi = Symbol("needWeChatApi"),
@@ -16,7 +19,10 @@ let device = require("./device"),
     weChatCertification = Symbol("weChatCertification"),
     loadScripts = Symbol("loadScripts"),
     autoSaveUrlParam = Symbol("autoSaveUrlParam"),
+    base64Fn = require('./fn/base64'),
     appAutoGetUrl = Symbol("appAutoGetUrl");
+
+require('./jq/extend');
 
 let path = require('path');
 window.path = path;
@@ -71,6 +77,7 @@ let page = {
     [pageReady](){
         return new Promise(success=>{
             $(document).ready(function(){
+                console.log('page ok')
                 success();
             });
         })
@@ -83,13 +90,14 @@ let page = {
                 document.addEventListener("deviceready", function() {
 
                     //app自动设置服务器地址
-                    _this[appAutoGetUrl](function(){
-                        success();
-                    });
-
+                    // _this[appAutoGetUrl](function(){
+                    //     success();
+                    // });
+                    success();
 
                 }, false);
             }else{
+                console.log('app ok')
                 success();
             }
         })
@@ -115,9 +123,9 @@ let page = {
             await _this[weChatCertification](
                 SETTING.weChatCertificationApi,
                 SETTING.weChatUseApiList
-            ).catch(e=>{
+            ).catch(async e=>{
                 if(_this[isDebug]){
-                    _this.alert(e);
+                    await _this.alert(e);
                     error(e);
                 }else{
                     console.log(e);
@@ -125,10 +133,10 @@ let page = {
                 }
             });
 
-
-            wx.ready(function(){
-                success();
-            });
+            success();
+            // wx.ready(function(){
+            //     success();
+            // });
         })
     },
     //加载配置文件、字典等
@@ -158,7 +166,7 @@ let page = {
                     url : window.location.href
                 },
                 success : function(data) {
-                    if(data.stateCode == 'success'){
+                    if(data.code == '200'){
                         wx.config({
                             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
                             appId: data.appId, // 必填，公众号的唯一标识
@@ -220,44 +228,49 @@ let page = {
         })
     },
 
-    //alert
-    alert(text,callback){
-        callback = callback || function() {};
-
-        if(this[isApp]){
-            YJH.H5Dialogs.alert(text.toString(), callback, "提示");
-        }else{
-            alert(text);
-            callback();
-        }
+    //alert        async
+    alert(text,title,icon,iconWidth,iconHeight){
+        return new Promise(async success=>{
+            if(this[isApp]){
+                YJH.H5Dialogs.alert(text.toString(), success, "提示");
+            }else{
+                // alert(text);
+                // callback();
+                await alertFn(true,text,title,icon,iconWidth,iconHeight);
+                success();
+            }
+        });
     },
 
     //confirm
-    confirm(msg, success,error) {
-        msg = msg || "";
-        success = success || function(){};
-        error = error || function(){};
-        if(this[isApp]){
-            YJH.H5Dialogs.confirm(
-                msg,
-                function(aa) {
-                    aa = aa.buttonIndex;
-                    if(aa == 1) {
-                        error();
-                    } else {
-                        success();
-                    }
-                },
-                "提示",
-                ["取消", "确定"]
-            )
-        }else{
-            if(confirm(msg)){
-                success();
+    confirm(msg,title,icon,iconWidth,iconHeight) {
+        return new Promise(async success=>{
+            msg = msg || "";
+            if(this[isApp]){
+                YJH.H5Dialogs.confirm(
+                    msg,
+                    function(aa) {
+                        aa = aa.buttonIndex;
+                        if(aa == 1) {
+                            error();
+                        } else {
+                            success();
+                        }
+                    },
+                    "提示",
+                    ["取消", "确定"]
+                )
             }else{
-                error();
+                // if(confirm(msg)){
+                //     success();
+                // }else{
+                //     error();
+                // }
+
+                let state = await alertFn(false,msg,title,icon,iconWidth,iconHeight);
+                success(state);
             }
-        }
+        });
     },
     //相对地址转绝对地址
     getFullUrl(url){
@@ -290,7 +303,11 @@ let page = {
                 YJH.H5ModuleManager.openWebInApp(newUrl);
             }
         }else{
-            window.location.href=url;
+            if(type == 'noCatch'){
+                window.location.replace(url);
+            }else{
+                window.location.href=url;
+            }
         }
     },
 
@@ -642,7 +659,7 @@ let page = {
     },
 
     //报错提示并返回
-    error(text){
+    async error(text){
         var _this = this;
         console.log(text);
 
@@ -652,11 +669,11 @@ let page = {
         // 	text = "系统错误，请稍后在试";
         // }
 
-        this.alert(text,function(){
-            if(!_this[isDebug]){
-                _this.goBack();
-            }
-        });
+        await this.alert(text);
+
+        if(!_this[isDebug]){
+            _this.goBack();
+        }
     },
 
     //生成条形码 app才能调用
@@ -743,13 +760,19 @@ let page = {
     //表单是否变化需要自己判断
     inputChangeBackAlert(){
         let _this = this;
-        window.addEventListener("popstate",function(e){
+        window.addEventListener("popstate",async function(e){
             if(e.state && e.state.input_change){
-                _this.confirm("确定放弃保存？",function(){
+                if(await _this.confirm("确定放弃保存？")){
                     _this.goBack();
-                },function(){
+                }else{
                     _this.inputChangeBackAlert();
-                });
+                }
+
+                // _this.confirm("确定放弃保存？",function(){
+                //     _this.goBack();
+                // },function(){
+                //     _this.inputChangeBackAlert();
+                // });
             }
         },false);
         history.replaceState({input_change:true},"",window.location.href);
@@ -878,9 +901,50 @@ let page = {
         document.body.addEventListener('touchstart',function(){
             $('input').blur();
         },false)
+    },
+
+
+    //微信中  获取图片base64
+    wxGetImageBase64FromLocal(){
+        return new Promise((success,error)=>{
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['compressed'], // original原图   compressed压缩
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    let localIds = res.localIds,
+                        src= localIds[0];
+
+                    wx.getLocalImgData({
+                        localId: src, // 图片的localID
+                        success: function (res) {
+                            var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+
+
+                            if(device.isAndroid){
+                                // let base64 = new base64Fn();
+                                // localData = base64.encode(localData);
+                                localData = 'data:image/jpg;base64,'+localData;
+                            }
+                            if(device.isIphone || device.isIpad){
+                                localData = localData.split('base64,') || [];
+                                localData = localData[1] || '';
+                                localData = 'data:image/jpg;base64,'+localData;
+                            }
+
+                            success(localData);
+                        }
+                    });
+                }
+            });
+        });
     }
 
 };
+
+
+
+
 
 
 page[init](function(){
@@ -894,14 +958,13 @@ page[init](function(){
     if(page[isDebug]){
         console.log("初始化完成");
     }
-}).catch(e=>{
+}).catch(async e=>{
     if(page[isDebug]){
         console.log(e);
-        page.alert("网络连接出现了一点问题，请重新尝试");
+        await page.alert("网络连接出现了一点问题，请重新尝试");
     }else{
-        page.alert("网络连接出现了一点问题，请重新尝试;",function(){
-            page.goBack();
-        });
+        await page.alert("网络连接出现了一点问题，请重新尝试;");
+        page.goBack();
     }
 });
 module.exports = page;

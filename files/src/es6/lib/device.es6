@@ -16,6 +16,20 @@ window.cancelAnimationFrame =   window.cancelAnimationFrame ||
 								clearTimeout;
 
 
+var passiveSupported = false;
+
+try {
+	var options = Object.defineProperty({}, "passive", {
+		get: function() {
+			passiveSupported = true;
+		}
+	});
+
+	window.addEventListener("test", null, options);
+} catch(err) {}
+
+
+
 // window.navigator.getUserMedia =    window.navigator.getUserMedia ||
 // 									window.navigator.webkitGetUserMedia ||
 // 									window.navigator.mozGetUserMedia ||
@@ -522,6 +536,8 @@ var DEVICE = {};
 		return val;
 	};
 
+	DEVICE.eventParam = (passiveSupported)? {passive:false} : false;
+
 })();
 
 
@@ -548,6 +564,15 @@ DEVICE.sleep = function(stamp){
 			success();
 		},stamp)
 	})
+};
+
+
+DEVICE.inputBlur = function(){
+	//input移除焦点
+	$('input').blur();
+	//解决ios页面顶上去后不能恢复的问题，导致页面焦点错位
+	let top = $(document).scrollTop();
+	$(document).scrollTop(top);
 };
 
 

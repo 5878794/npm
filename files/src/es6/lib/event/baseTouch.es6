@@ -2,6 +2,7 @@
 //触摸事件基础类
 
 let device = require("../device"),
+	eventParam = device.eventParam,
 	addEvent = Symbol(),
 	startEventFn = Symbol(),
 	moveEventFn = Symbol(),
@@ -46,17 +47,17 @@ class BaseTouch{
 	[addEvent](){
 		this.dom.get(0).addEventListener(device.START_EV,this[startEventFn] = (e)=>{
 			this.startFn(e);
-		},false);
+		},eventParam);
 		this.dom.get(0).addEventListener(device.MOVE_EV,this[moveEventFn] = (e)=>{
 			this.moveFn(e);
-		},false);
+		},eventParam);
 		this.dom.get(0).addEventListener(device.END_EV,this[endEventFn] = (e)=>{
 			this.endFn(e);
-		},false);
+		},eventParam);
 		this.dom.get(0).addEventListener(device.CANCEL_EV,this[cancelEventFn] = (e)=>{
 
 			this.endFn(e);
-		},false);
+		},eventParam);
 	}
 
 	//保存点

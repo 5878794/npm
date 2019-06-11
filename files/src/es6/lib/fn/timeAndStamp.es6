@@ -20,6 +20,40 @@ let getDateTime = function(b){
 	return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
 };
 
+let getDateTime1 = function(b){
+	if(!b){
+		return '时间待定';
+	}
+	// b = b || new Date().getTime();
+	var a = new Date(parseInt(b));
+	var year = a.getFullYear();
+	var month = parseInt(a.getMonth()) + 1;
+	month = (month < 10) ? "0" + month : month;
+	var date = a.getDate();
+	date = (date < 10) ? "0" + date : date;
+
+	return year+"年"+month+"月"+date+"日";
+
+};
+
+let getDateTime2 = function(b){
+	b = b || new Date().getTime();
+	var a = new Date(parseInt(b));
+	var year=a.getFullYear();
+	var month=parseInt(a.getMonth())+1;
+	month= (month<10)? "0"+month : month;
+	var date=a.getDate();
+	date= (date<10)? "0"+date : date;
+	var hours=a.getHours();
+	hours= (hours<10)? "0"+hours : hours;
+	var minutes=a.getMinutes();
+	minutes= (minutes<10)? "0"+minutes : minutes;
+	var seconds=a.getSeconds();
+	seconds= (seconds<10)? "0"+seconds : seconds;
+
+	return year+"-"+month+"-"+date+" "+hours+":"+minutes;
+};
+
 
 //传入时间戳，输出日期部分
 let getDate = function (b) {
@@ -69,9 +103,34 @@ let getStamp1 = function(a){
 	}
 
 	return new Date(date).getTime();
-
-
 };
 
 
-module.exports = {getDateTime,getDate,getStamp,getStamp1};
+//倒计时用
+//大于1天只返回天数
+//小于1天 返回   时：分：秒
+let getDataTime3 = function(stamp){
+	let day = 86400000, //1000*60*60*24
+		hour = 3600000, //1000*60*60
+		minute = 60000; //1000*60
+
+	//大于1天
+	if(stamp > day){
+		return parseInt(stamp/day);
+	}
+
+	let s,f,m;
+	s = parseInt(stamp/hour);
+	stamp = stamp - hour*s;
+	f = parseInt(stamp/minute);
+	stamp = stamp - minute*f;
+	m = parseInt(stamp/1000);
+
+	f = (f<10)? '0'+f : f;
+	m = (m<10)? '0'+m : m;
+
+	return s+':'+f+':'+m;
+};
+
+
+module.exports = {getDateTime,getDateTime1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3};
