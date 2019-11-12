@@ -1,6 +1,16 @@
 
 //触摸事件基础类
 
+//eventParam 改成  DEVICE.eventParam1 可以加e.stopPropagation() 阻止dom元素上的onclick事件
+
+
+// eventParam1 = {passive:true,capture:true}
+// passive:true   忽略默认事件的阻止
+// capture:true   使用事件的捕获，事件中的执行优先级最高
+//                阻止冒泡可以使dom及其的子元素接收不到事件
+
+
+
 let device = require("../device"),
 	eventParam = device.eventParam,
 	addEvent = Symbol(),

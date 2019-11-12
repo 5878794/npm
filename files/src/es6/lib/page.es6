@@ -11,6 +11,7 @@ let device = require("./device"),
     hasAllReady = Symbol("hasAllReady"),
     readyFns = Symbol("readyFns"),
     init = Symbol("init"),
+    run = Symbol('run'),
     $$ = require('./event/$$'),
     pageReady = Symbol("pageReady"),
     appReady = Symbol("appReady"),
@@ -20,9 +21,12 @@ let device = require("./device"),
     loadScripts = Symbol("loadScripts"),
     autoSaveUrlParam = Symbol("autoSaveUrlParam"),
     base64Fn = require('./fn/base64'),
-    appAutoGetUrl = Symbol("appAutoGetUrl");
+    myFetch = require('./resLoader/myFetch'),
+    appAutoGetUrl = Symbol("appAutoGetUrl"),
+    signPage = require('../lib/signPage/b_page_rout');
 
 require('./jq/extend');
+
 
 let path = require('path');
 window.path = path;
@@ -41,12 +45,26 @@ let page = {
     //缓存的readyFn的调用
     [readyFns]:[],
     //页面初始执行入口
-    isReady(fn){
+    run(obj){
         if(!this[hasAllReady]){
-            this[readyFns].push(fn);
+            this[readyFns].push(obj);
         }else{
-            fn();
+            this[run](obj);
         }
+    },
+    [run](obj){
+        //注册函数到最近创建的<b-page>对象上
+        // b-page.pageInit          obj.init
+        // b-page.pageDestroy       obj.pageDestroy
+        // b-page.pageShow          obj.pageShow
+        // b-page.pageHide          obj.pageHide
+        // b-page.pageRefresh       obj.pageRefresh
+        if((window.location.href.indexOf('\/#\/') > -1)){
+            signPage.registerFn(obj);
+        }
+
+        //运行
+        obj.init();
     },
 
 
@@ -66,8 +84,8 @@ let page = {
         callback();
 
         //运行队列中的函数
-        this[readyFns].map(fn=>{
-            fn();
+        this[readyFns].map(obj=>{
+            this[run](obj);
         });
 
 
@@ -77,7 +95,7 @@ let page = {
     [pageReady](){
         return new Promise(success=>{
             $(document).ready(function(){
-                console.log('page ok')
+                console.log('page ok');
                 success();
             });
         })
@@ -93,11 +111,12 @@ let page = {
                     // _this[appAutoGetUrl](function(){
                     //     success();
                     // });
+                    console.log('app ok');
                     success();
 
                 }, false);
             }else{
-                console.log('app ok')
+                console.log('is not app');
                 success();
             }
         })
@@ -105,17 +124,25 @@ let page = {
     //微信ready
     [weChatReady](){
         let _this = this;
-
         return new Promise(async (success,error)=>{
             if(_this[isApp]){
+                console.log('app not need wx js');
                 success();
                 return;
             }
 
             if(this[needWeChatApi].length == 0){
+                console.log('not need wx api');
                 success();
                 return;
             }
+
+            if(!device.isWeChat){
+                console.log('not in wx');
+                success();
+                return;
+            }
+
 
             //加载微信js
             await _this.loadScript(SETTING.weChatJsUrl);
@@ -132,7 +159,7 @@ let page = {
                     success();
                 }
             });
-
+            console.log('wx api ok');
             success();
             // wx.ready(function(){
             //     success();
@@ -303,13 +330,51 @@ let page = {
                 YJH.H5ModuleManager.openWebInApp(newUrl);
             }
         }else{
-            if(type == 'noCatch'){
-                window.location.replace(url);
+
+            if(window.location.href.indexOf('\/#\/') > -1){
+                //单页面的
+                let pageUrl = window.location.href;
+                signPage.openUrl(pageUrl,url);
             }else{
-                window.location.href=url;
+                //非单页面
+                if(type == 'noCatch'){
+                    window.location.replace(url);
+                }else{
+                    window.location.href=url;
+                }
             }
         }
     },
+
+    async test(url){
+        let div = $('<div></div>');
+        div.css({
+            position:'fixed',
+            left:'100%',
+            width:'100%',
+            'min-height':'100vh',
+            top:0,
+            background:'#cfcfcf',
+            'z-index':1000000
+        }).addClass('hover_animate');
+
+        let html = await myFetch.getBodyHtml('./hospital_info.html');
+        let css = await myFetch.catchFile('./css/hospital_list.css');
+        let js = await myFetch.catchFile('./js/dist/hospital_info.min.js');
+
+
+
+        div.html(html);
+        $('body').append(div);
+        $('head').append('<script src="'+js+'"></script>');
+        $('head').append('<link rel="stylesheet" type="text/css" href="'+css+'">');
+
+        device.sleep(0.1);
+        div.css({
+            transform:'translateX(-414px)'
+        })
+    },
+
 
     //关闭子应用回到主界面，微信需要注入接口
     closeApp(){
@@ -349,34 +414,51 @@ let page = {
         var isHiddened = false,
             fn = [];
 
-        if(SETTING.isAPP && device.isAndroid){
-            //原生提供
-            window.addEventListener('view_visibilitychange', function(e) {
-                setTimeout(function(){
+        //app页面跳转是新开webView
+        //所有使用是否显示判断
+        if(SETTING.isAPP){
+            if(device.isAndroid){
+                //原生提供api
+                window.addEventListener('view_visibilitychange', function(e) {
+                    setTimeout(function(){
+                        for(var i= 0,l=fn.length;i<l;i++){
+                            fn[i]();
+                        }
+                    },100)
+                }, false);
+            }else{
+                document.addEventListener('visibilitychange', function(e) {
+                    if(document.hidden){
+                        isHiddened = true;
+                    }else{
+                        if(isHiddened){
+                            setTimeout(function(){
+                                for(var i= 0,l=fn.length;i<l;i++){
+                                    fn[i]();
+                                }
+                            },100);
+                        }
+                    }
+                }, false);
+            }
+        }else{
+            //浏览器是当前窗口地址跳转
+            window.addEventListener('pageshow',function(e){
+                //第一次加载时 persisted 为false
+                //从缓存读取时 persisted 为true
+                if(e.persisted){
                     for(var i= 0,l=fn.length;i<l;i++){
                         fn[i]();
                     }
-                },100)
-            }, false);
-        }else{
-            document.addEventListener('visibilitychange', function(e) {
-                if(document.hidden){
-                    isHiddened = true;
-                }else{
-                    if(isHiddened){
-                        setTimeout(function(){
-                            for(var i= 0,l=fn.length;i<l;i++){
-                                fn[i]();
-                            }
-                        },100);
-                    }
                 }
-            }, false);
+            },false);
         }
 
 
         return function(callback){
-            callback = callback || function(){};
+            callback = callback || function(){
+                window.location.reload();
+            };
             fn.push(callback);
         };
     })(),

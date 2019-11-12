@@ -19,6 +19,7 @@
 
 
 
+require('../css/all');
 require("../jq/extend");
 let zz = require("./bodyStyle"),
 	app = require("../device"),
@@ -173,7 +174,7 @@ class dateChoose extends zz{
 	//创建3个包裹层
 	[createDataMain](){
 		this.domBody
-			.addClass("box_h");
+			.addClass("box_hlt");
 
 		let div = $("<div><p></p></div>"),
 			width = (this.isShowDay)? '33.333333%' : '50%';

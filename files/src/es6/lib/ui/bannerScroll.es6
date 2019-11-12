@@ -38,6 +38,8 @@ var scrollBanner = function (data) {
 	this.pointSelectBg = "#000";
 	this.changeStartFn = data.changeStartFn || function(){};
 	this.changeEndFn = data.changeEndFn || function(){};
+	this.pointMarginBottom = data.pointMarginBottom || '40px';
+
 
 	this.winWidth = parseInt(this.win.width());
 	this.winHeight = parseInt(this.win.height());
@@ -101,7 +103,7 @@ scrollBanner.prototype = {
 			width: width + "px",
 			height: "10px",
 			position: "absolute",
-			bottom: "40px",
+			bottom: this.pointMarginBottom,
 			left: "50%",
 			"margin-left": -width / 2 + "px",
 			display:display,
@@ -117,7 +119,8 @@ scrollBanner.prototype = {
 			background: this.pointBg,
 			"border-radius": "5px",
 			float: "left",
-			border:"1pt solid transparent"
+			border:"1pt solid transparent",
+			'box-sizing':'border-box'
 		}).addClass("border_box");
 
 		for (var i = 0, l = this.imgLength; i < l; i++) {
@@ -205,7 +208,7 @@ scrollBanner.prototype = {
 				_this.leftPx = parseInt(_this.body.css("left"));
 				_this.intervalFn = null;
 				_this.startEvent(e);
-			}, false);
+			}, device.eventParam);
 			win_obj.addEventListener(device.MOVE_EV, _this.moveEventFn = function (e) {
 				_this.savePoint(e);
 
@@ -225,7 +228,7 @@ scrollBanner.prototype = {
 					_this.moveEvent(e, pointsx);
 				}
 
-			}, false);
+			}, device.eventParam);
 			win_obj.addEventListener(device.END_EV, _this.endEventFn = function (e) {
 				_this.endEvent(e);
 				if (!_this.intervalFn) {

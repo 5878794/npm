@@ -24,7 +24,7 @@ $.isObject = function(str){
 };
 //判断是否是数组   jqmobi有
 $.isArray = function (arr){
-	return arr.constructor === Array;
+	return (arr)? arr.constructor === Array : false;
 };
 //判断是函数    jqmobi有
 $.isFunction = function(fn){
@@ -42,6 +42,24 @@ $.isUrl = function(url){
 };
 $.isJson = function(obj){
 	return (typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length)
+};
+
+$.isImageSrc = function(str){
+	let isImg = false;
+	if(!str){return false;}
+	if(str == 'null' || str == 'undefined'){return false;}
+
+	if(str.indexOf('data:image\/') == 0){
+		isImg = true;
+	}else if(
+		str.indexOf('.png') != -1 ||
+		str.indexOf('.jpg') != -1 ||
+		str.indexOf('.png') != -1 ||
+		str.indexOf('.jpeg') != -1
+	){
+		isImg = true;
+	}
+	return isImg;
 };
 
 

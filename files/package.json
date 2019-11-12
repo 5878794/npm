@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "js min": "webpack --display-error-details ",
-    "js dev": "webpack --display-error-details -d",
+    "js min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.",
+    "js dev": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.",
     "jade": "pug -o ./trunk/  -P -w ./src/pug/.",
     "jadeTemplate": "pug -c -D --name-after-file -o ./trunk/template  ./src/pug_template",
     "browser-sync": "browser-sync start --server --files 'css/*.css,*.html'"
@@ -19,6 +19,7 @@
     "babel-plugin-transform-custom-element-classes": "^0.1.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-stage-3": "^6.22.0",
     "jade": "^1.11.0",

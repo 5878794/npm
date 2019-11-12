@@ -18,6 +18,7 @@ let DEVICE = require("./../device"),
 class multiTouchEvent{
 	constructor(opt){
 		this.changeFn= opt.changeFn || function(){};
+		this.touchEndFn = opt.touchEndFn || function(){};
 
 		//this.startRotateDeg = 5;
 		//this.startZoomLength = 10;
@@ -35,23 +36,23 @@ class multiTouchEvent{
 	}
 
 	_addEvent(){
-		window.addEventListener(DEVICE.START_EV,(e)=>{
+		window.addEventListener(DEVICE.START_EV,this.startFn = (e)=>{
 			e = e.touches || e;
 			this._startEvent(e);
-		},false);
-		window.addEventListener(DEVICE.MOVE_EV,(e)=>{
+		},DEVICE.eventParam1);
+		window.addEventListener(DEVICE.MOVE_EV,this.moveFn = (e)=>{
 			e.preventDefault();
-			e = e.touches || e;
+			// e = e.touches || e;
 			this._moveEvent(e);
-		},false);
-		window.addEventListener(DEVICE.END_EV,(e)=>{
+		},DEVICE.eventParam1);
+		window.addEventListener(DEVICE.END_EV,this.endFn = (e)=>{
 			e = e.touches || e;
 			this._endEvent(e);
-		},false);
-		window.addEventListener(DEVICE.CANCEL_EV,(e)=>{
+		},DEVICE.eventParam1);
+		window.addEventListener(DEVICE.CANCEL_EV,this.cancelFn = (e)=>{
 			e = e.touches || e;
 			this._endEvent(e);
-		},false);
+		},DEVICE.eventParam1);
 	}
 
 	_startEvent(e){
@@ -60,15 +61,16 @@ class multiTouchEvent{
 
 	}
 	_moveEvent(e){
+		let _e = e.touches || e;
 		if(this.touchBeforeMoveNumber == 0){
-			this.touchBeforeMoveNumber = e.length;
+			this.touchBeforeMoveNumber = _e.length;
 			this.startPoints = this.points[this.points.length - 1];
 		}
 
 
-		this._savePoint(e);
 
-		if(e.length == 2 && this.touchBeforeMoveNumber == 2){
+		if(_e.length == 2 && this.touchBeforeMoveNumber == 2){
+			this._savePoint(_e);
 			//判断是缩放还是旋转
 			this._handler2Touches();
 		}
@@ -81,6 +83,7 @@ class multiTouchEvent{
 		//手指全部离开
 		if(e.length == 0){
 			this._delPoint();
+			this.touchEndFn();
 		}else{
 			this._savePoint(e);
 		}
@@ -88,8 +91,21 @@ class multiTouchEvent{
 
 
 	_savePoint(e){
-		var new_e = JSON.parse(JSON.stringify(e));
-		this.points.push(new_e);
+		// var new_e = JSON.parse(JSON.stringify(e));
+		// console.log(new_e)
+		if(e.length != 2){return;}
+
+		let p1 = {
+				screenX:e[0].screenX,
+				screenY:e[0].screenY
+			},
+			p2 = {
+				screenX:e[1].screenX,
+				screenY:e[1].screenY
+			};
+
+
+		this.points.push([p1,p2]);
 	}
 	_delPoint(){
 		this.points = [];
@@ -100,11 +116,14 @@ class multiTouchEvent{
 	_handler2Touches(){
 		if(this.points.length < 2){return;}
 
+
 		let points = this.points,
 			//startPoints = this.startPoints,
 			startPoints = points[points.length-2],
 			endPoints = points[points.length-1];
-
+		// console.log(points);
+		// console.log(JSON.stringify(startPoints));
+		// console.log(JSON.stringify(endPoints))
 		if(startPoints.length != 2 || endPoints.length != 2 ){
 			return;
 		}
@@ -130,8 +149,12 @@ class multiTouchEvent{
 			touch1IsClockwise = this._clockwise({x:s1_x,y:s1_y},{x:c_x,y:c_y},{x:e1_x,y:e1_y}),
 			touch2IsClockwise = this._clockwise({x:s1_x,y:s1_y},{x:c_x,y:c_y},{x:e1_x,y:e1_y});
 
+		// console.log('----------------')
+		// console.log(s1_x,s1_y,s2_x,s2_y);
+		// console.log(e1_x,e1_y,e2_x,e2_y);
+		// console.log('----------------')
 
-		let scale = ( move >= 0)? this.scale + move/100 : this.scale + move/100;
+		let scale = ( move >= 0)? this.scale + move/200 : this.scale + move/200;
 		scale = DEVICE.getBetweenNumber(scale,this.minScale,this.maxScale);
 		this.scale = scale;
 
@@ -144,6 +167,7 @@ class multiTouchEvent{
 		}else{
 			deg = this.deg;
 		}
+
 
 		this.changeFn(scale,deg);
 
@@ -160,6 +184,13 @@ class multiTouchEvent{
 
 		return (dx>0);
 
+	}
+
+	destroy(){
+		window.removeEventListener(DEVICE.START_EV,this.startFn,DEVICE.eventParam1);
+		window.removeEventListener(DEVICE.MOVE_EV,this.moveFn ,DEVICE.eventParam1);
+		window.removeEventListener(DEVICE.END_EV,this.endFn ,DEVICE.eventParam1);
+		window.removeEventListener(DEVICE.CANCEL_EV,this.cancelFn,DEVICE.eventParam1);
 	}
 
 

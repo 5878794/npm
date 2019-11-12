@@ -85,7 +85,7 @@ var info={
 		$box.css(device.fixObjCss({
 //                height:"30pt",
 			width:"100%",
-			"z-index":"100000",
+			"z-index":"100010",
 			"position":"fixed",
 			left:"0",
 			top:"50%",

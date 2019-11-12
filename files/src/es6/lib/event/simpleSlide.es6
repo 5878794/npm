@@ -68,10 +68,10 @@ touch.prototype = {
 
 		obj.addEventListener(DEVICE.START_EV,this.touchStartFn = function(e){
 			_this.start(e);
-		},false);
+		},DEVICE.eventParam);
 		document.addEventListener(DEVICE.MOVE_EV,this.touchMoveFn = function(e){
 			_this.move(e);
-		},false);
+		},DEVICE.eventParam);
 		document.addEventListener(DEVICE.END_EV,this.touchEndFn = function(e){
 			_this.end(e)
 		},false);

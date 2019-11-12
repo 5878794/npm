@@ -19,6 +19,14 @@
 		isAPP : true,
 
 
+		//公共js库，单页面用
+		publishJS:[
+			'polyfill.js',
+			'jquery-3.1.1.min.js',
+			'setting.js',
+			'common.min.js',
+			'sign_page_init.min.js'
+		],
 
 		//-----------------------------------------------
 		//是否是调试
@@ -43,7 +51,7 @@
 		weChatCertificationApi:serverUrl+"healthweixin/wx/getJsapi.do",
 		//微信功能需要api列表,数组有值会自动加载js，和请求权限
 		weChatUseApiList:[
-			'closeWindow'
+			// 'closeWindow'
 			// 'onMenuShareTimeline',
 			// 'onMenuShareAppMessage',
 			// 'showAllNonBaseMenuItem'

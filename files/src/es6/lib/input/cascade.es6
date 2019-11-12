@@ -128,9 +128,10 @@ class cascade extends select{
 			height:this.listLineHeight+"px",
 			// background:"#eee",
 			"line-height":this.listLineHeight+"px",
-			'overflow':'hidden',
+			'overflow-y':'hidden',
+			'overflow-x':'scroll',
 			'border-bottom':'1px solid '+this.listBottomColor
-		});
+		}).addClass('box_hlc');
 
 		div.addClass("border_box");
 
@@ -147,7 +148,7 @@ class cascade extends select{
 			display:"block",
 			padding:'0 '+this.fontSize+"px",
 			height:this.listLineHeight-1+"px",
-			float:"left",
+			// float:"left",
 			'border-bottom':'1px solid transparent'
 		}).addClass("border_box");
 

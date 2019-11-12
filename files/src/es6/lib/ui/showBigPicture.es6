@@ -14,7 +14,8 @@
 require("./../jq/extend");
 require("./../jq/cssAnimate");
 let getImageFitSize = require("./../fn/getImageFitSize"),
-	$$$ = require("./../event/$$"),
+	scaleFn = require('../event/mulitTouch'),
+	// $$$ = require("./../event/$$"),
 	device = require("./../device");
 
 var showPicture = function(data){
@@ -33,6 +34,17 @@ var showPicture = function(data){
 	this.nowShowDom = null;
 	this.nowShowNumber = -1;
 	this.canClick = true;
+	this.scaleFn = null;
+
+	this.imgWidth = 0;
+	this.imgHeight = 0;
+	this.nowImgWidth = 0;
+	this.nowImgHeight = 0;
+	this.winWidth = 0;
+	this.winHeight = 0;
+	this.imgScale = 1;
+	this.imgTranslateX = 0;
+	this.imgTranslateY = 0;
 
 	this.init();
 };
@@ -44,11 +56,7 @@ showPicture.prototype = {
 		this.createLoading();
 		this.createImgDiv();
 
-		if(this.isPc){
-			this.eventBind();
-		}else{
-			this.eventBindPhone();
-		}
+		this.eventBind();
 
 
 
@@ -75,10 +83,10 @@ showPicture.prototype = {
 
 		rightBtn.css3({
 			position:"absolute",
-			right:"10px",
+			right:"0.1rem",
 			top:"50%",
-			"margin-top":"-16px",
-			width:"32px",height:"32px",
+			"margin-top":"-0.32rem",
+			width:"0.64rem",height:"0.64rem",
 			background:"url('"+this.arrowImg+"') no-repeat center center",
 			"background-size":"100% 100%",
 			cursor:"pointer",
@@ -86,14 +94,14 @@ showPicture.prototype = {
 			"z-index":10
 		});
 		leftBtn = rightBtn.clone().css3({
-			left:"10px",right:"",
+			left:"0.1rem",right:"unset",
 			transform:"rotate(180deg)"
 		});
 		closeBtn.css({
 			position:"absolute",
 			right:"10px",
 			top:"10px",
-			width:"32px",height:"32px",
+			width:"0.64rem",height:"0.64rem",
 			background:"url('"+this.closeImg+"') no-repeat center center",
 			"background-size":"100% 100%",
 			cursor:"pointer",
@@ -102,12 +110,12 @@ showPicture.prototype = {
 		});
 
 
-		if(this.isPc){
+		// if(this.isPc){
 			this.leftBtn = leftBtn;
 			this.rightBtn = rightBtn;
 			this.main.append(rightBtn);
 			this.main.append(leftBtn);
-		}
+		// }
 
 		this.closeBtn = closeBtn;
 		this.main.append(closeBtn);
@@ -150,7 +158,7 @@ showPicture.prototype = {
 				height:"100%",
 				position:"absolute",
 				left:0,top:0
-			});
+			}).addClass('scroll_xy');
 		}
 
 		div.append(this.loadDom);
@@ -231,6 +239,22 @@ showPicture.prototype = {
 			img_height = img.height,
 			new_size = getImageFitSize(img_width,img_height,win_width,win_height);
 
+		this.imgWidth = new_size.width;
+		this.imgHeight = new_size.height;
+		this.nowImgWidth = this.imgWidth;
+		this.nowImgHeight = this.imgHeight;
+		this.winWidth = parseInt(this.main.width());
+		this.winHeight = parseInt(this.main.height());
+		this.imgScale = 1;
+		this.imgTranslateX = 0;
+		this.imgTranslateY = 0;
+
+		//添加图片的缩放事件
+		if(this.scaleFn){
+			this.scaleFn.destroy();
+		}
+		this.addScaleFn();
+
 		$(img).css({
 			width:new_size.width+"px",
 			height:new_size.height+"px",
@@ -254,37 +278,117 @@ showPicture.prototype = {
 		this.closeBtn.click(function(){
 			_this.destroy();
 		});
+
+
+
+		//增加缩放的图片的移动功能
+		let points = [];
+		window.addEventListener(device.START_EV,this.temp_s_fn = function(e){
+			if(e.touches){
+				e = e.touches[0];
+			}
+			points = [e];
+		},false);
+		window.addEventListener(device.MOVE_EV,this.temp_m_fn = function(e){
+			if(e.touches){
+				if(e.touches.length > 1){
+					points = [];
+					return;
+				}
+				e = e.touches[0];
+			}
+			points.push(e);
+			_this.movePicture(points);
+		},false);
+
+
 	},
 	eventBindPhone:function(){
 		var _this = this;
-
-		$$$(this.main).myslideleft(function(e){
-			e.stopPop();
-			if(!_this.canClick){return;}
-			var n = _this.nowShowNumber + 1;
-			_this.showImg(n);
-		});
-		$$$(this.main).myslideright(function(e){
-			e.stopPop();
-			if(!_this.canClick){return;}
-			var n = _this.nowShowNumber - 1;
-			_this.showImg(n);
-
-		});
 
 		this.closeBtn.click(function(){
 			_this.destroy();
 		});
 	},
 	destroy:function(){
-		if(this.isPc){
-			this.leftBtn.unbind("click");
-			this.rightBtn.unbind("click");
-		}else{
-			$$$(this.main).unbind(true);
+		if(this.scaleFn){
+			this.scaleFn.destroy();
 		}
+		window.removeEventListener(device.START_EV,this.temp_s_fn,false);
+		window.removeEventListener(device.MOVE_EV,this.temp_m_fn,false);
+		this.leftBtn.unbind("click");
+		this.rightBtn.unbind("click");
 		this.closeBtn.unbind("click");
 		this.main.remove();
+	},
+
+	addScaleFn:function(){
+
+		let _this = this;
+		//该插件阻止咯 touchMove的默认事件
+		//双指缩放、旋转类
+		this.scaleFn = new scaleFn({
+			maxScale:4,
+			minScale:1,
+			changeFn:function(scale,deg){
+				_this.nowImgWidth = _this.imgWidth * scale;
+				_this.nowImgHeight = _this.imgHeight * scale;
+				_this.imgScale = scale;
+
+				_this.imgAutoParams();
+			},
+			touchEndFn:function(){
+				_this.imgAutoParams();
+
+			}
+		});
+	},
+
+
+	movePicture(points){
+		if(points.length < 2){return;}
+		let sP = points[points.length-2],
+			eP = points[points.length-1],
+			sPx = sP.screenX,
+			sPy = sP.screenY,
+			ePx = eP.screenX,
+			ePy = eP.screenY,
+			mX = (ePx - sPx)/this.imgScale,
+			mY = (ePy - sPy)/this.imgScale;
+
+		//移动
+		this.imgTranslateX += mX;
+		this.imgTranslateY += mY;
+
+		this.imgAutoParams();
+
+
+	},
+
+	//缩放后 img自动剧中
+	imgAutoParams(){
+		let mX_max = (this.nowImgWidth - this.winWidth)/2/this.imgScale,
+			mY_max = (this.nowImgHeight - this.winHeight)/2/this.imgScale,
+			mX_min = -mX_max,
+			mY_min = -mY_max;
+
+
+		if(mX_max<0){
+			this.imgTranslateX = 0;
+		}else{
+			this.imgTranslateX = (this.imgTranslateX > mX_max)? mX_max : this.imgTranslateX;
+			this.imgTranslateX = (this.imgTranslateX < mX_min)? mX_min : this.imgTranslateX;
+		}
+		if(mY_max<0){
+			this.imgTranslateY = 0;
+		}else{
+			this.imgTranslateY = (this.imgTranslateY > mY_max)? mY_max : this.imgTranslateY;
+			this.imgTranslateY = (this.imgTranslateY < mY_min)? mY_min : this.imgTranslateY;
+		}
+
+		this.nowShowDom.find('img').css({
+			transform:'scale('+this.imgScale+') translate('+this.imgTranslateX+'px, '+this.imgTranslateY+'px)'
+		});
 	}
 };
 

@@ -79,6 +79,9 @@ btnSendSmsInterval.prototype = {
 
 		//按钮事件绑定
 		this.dom.click(function(){
+			$('input').blur();
+			let top = $(document).scrollTop();
+			$(document).scrollTop(top);
 			_this.clearError();
 
 			//检查phoneNumber输入值

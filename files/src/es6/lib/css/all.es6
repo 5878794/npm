@@ -33,7 +33,7 @@ var css = {
 		color:'#ccc'
 	},
 	'body':{
-		'font-family': "微软雅黑", Arial, "宋体",
+		'font-family': '"微软雅黑", Arial, "宋体"',
 		'min-width': '320px'
 	},
 	'a:link,a:visited':{

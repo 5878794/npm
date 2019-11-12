@@ -1,4 +1,5 @@
-
+//不支持ie 和 edge
+//要支持用老版本的
 
 let TAS = require("./touchAndSlide"),
 	eventFnCatch = new Map(),
@@ -20,17 +21,26 @@ class $${
 		this.addDefaultEvent();
 	}
 
-	static run(e,type){
-		let that=e.myTarget,
-			needPop = true;
+	static run(event,type){
+		event = window.event || event;
+		let path = event.path || (event.composedPath && event.composedPath()),
+			needPop = true,
+			that = '';
 
-		e.stopPop = function(){
+		if(path.length == 0){
+			return;
+		}
+
+		event.stopPop = function(){
 			needPop = false;
 		};
 
-		let gonext = function(obj){
-			var p_obj = obj.parentNode;
-			handlerthis(p_obj);
+		let gonext = function(){
+			if(path.length != 0){
+				that = path.shift();
+				handlerthis(that);
+			}
+
 		};
 
 		let handlerthis = function(obj){
@@ -51,7 +61,7 @@ class $${
 
 				let objMapFn = objMap.get(type);
 				if(objMapFn){
-					objMapFn.call(obj,e);
+					objMapFn.call(obj,event);
 				}
 			}
 
@@ -63,7 +73,7 @@ class $${
 
 		};
 
-		handlerthis(that);
+		gonext();
 	}
 	static runMove(x,y,type){
 		nowClickObj.map(obj=>{

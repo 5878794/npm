@@ -1,5 +1,8 @@
 
 //loading动画   具体参数见函数
+//可以多次实例化，可以多次调用show后在hide，show和hide次数要相同
+
+
 //var a = new DEVICE.loading();
 //a.show("loading");
 //a.hide();
@@ -86,9 +89,15 @@ __loading.prototype = {
 	}
 };
 
+var tempLoadObj = null;
 
+var a = function(obj){
+	if(tempLoadObj){
+		return tempLoadObj;
+	}else{
+		tempLoadObj = this;
+	}
 
-var a = function(obj,scale){
 	obj = obj || $("body");
 	this.win = $.getDom(obj);
 
@@ -103,7 +112,9 @@ var a = function(obj,scale){
 	this.downfn = null;     //阻止事件冒泡和默认事件
 	this.movefn = null;
 	this.endfn = null;
-	this.scale = scale*3 || 1;
+	// this.scale = window.devicePixelRatio || 1;
+	this.scale = 1;
+	this.runNumber = 0;
 
 	this._init();
 };
@@ -122,7 +133,7 @@ a.prototype = {
 
 		$(win).css(device.fixObjCss({
 			position:"fixed",
-			"z-index":"99999",
+			"z-index":"199999",
 			left:0,
 			top:0,
 			width:"100%",
@@ -171,12 +182,15 @@ a.prototype = {
 	_addEven:function(){
 		var _box = this.div,
 			_this = this;
-		_box.addEventListener(device.START_EV,_this.downfn = function(e){e.stopPropagation();e.preventDefault();},false);
-		_box.addEventListener(device.MOVE_EV,_this.movefn = function(e){e.stopPropagation();e.preventDefault();},false);
-		_box.addEventListener(device.END_EV,_this.endfn = function(e){e.stopPropagation();e.preventDefault();},false);
+		_box.addEventListener(device.START_EV,_this.downfn = function(e){e.stopPropagation();e.preventDefault();},device.eventParam);
+		_box.addEventListener(device.MOVE_EV,_this.movefn = function(e){e.stopPropagation();e.preventDefault();},device.eventParam);
+		_box.addEventListener(device.END_EV,_this.endfn = function(e){e.stopPropagation();e.preventDefault();},device.eventParam);
 	},
 	//显示
 	show:function(text){
+		this.runNumber++;
+		if(this.runNumber != 1){return;}
+
 		$(this.text).text(text);
 		$(this.div).css(device.fixObjCss({
 			display:"box"
@@ -188,6 +202,9 @@ a.prototype = {
 	},
 	//隐藏
 	hide:function(){
+		this.runNumber--;
+		if(this.runNumber != 0){return;}
+
 		this.div.style.display = "none";
 		this.canvas.stop();
 	},
@@ -196,9 +213,9 @@ a.prototype = {
 		this.canvas.destroy();
 		this.canvas = null;
 		var _this = this;
-		this.div.removeEventListener(device.START_EV,_this.downfn,false);
-		this.div.removeEventListener(device.MOVE_EV,_this.movefn,false);
-		this.div.removeEventListener(device.END_EV,_this.endfn,false);
+		this.div.removeEventListener(device.START_EV,_this.downfn,device.eventParam);
+		this.div.removeEventListener(device.MOVE_EV,_this.movefn,device.eventParam);
+		this.div.removeEventListener(device.END_EV,_this.endfn,device.eventParam);
 		$(this.div).remove();
 	}
 };

@@ -107,7 +107,7 @@ class pullRefresh{
 		});
 		this.refreshDom.append(wxZZ);
 
-		body.append(this.refreshDom);
+
 	}
 
 	//创建刷新的dom
@@ -123,6 +123,7 @@ class pullRefresh{
 			"line-height":height+"px"
 		});
 
+		body.append(dom);
 		return dom;
 	}
 

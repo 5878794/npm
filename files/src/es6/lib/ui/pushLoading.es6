@@ -43,7 +43,8 @@ let app = require("../device"),
 	iosHandlerScroll = Symbol("iosHandlerScroll"),
 	bodyPaddingBottom = Symbol("bodyPaddingBottom"),
 	isLoading = Symbol("isLoading"),
-	iosScroll = Symbol("iosScroll");
+	iosScroll = Symbol("iosScroll"),
+	iosScrollFn = Symbol('iosScrollFn');
 
 var viewport,body;
 
@@ -61,7 +62,7 @@ class pushLoading{
 		let bottomFixedDivHeight = opt.bottomFixedDivHeight || 0;
 		this.bottomFixedDivHeight = app.rem2Px(viewport,bottomFixedDivHeight);
 
-
+		this.canRun = true;
 
 
 		//下拉滚动条到0的时候的偏移量
@@ -97,6 +98,7 @@ class pushLoading{
 			"line-height":height+"px"
 		});
 
+		body.append(this.loadingDom);
 		return dom;
 	}
 
@@ -127,7 +129,7 @@ class pushLoading{
 		body.css({
 			"padding-bottom":this[bodyPaddingBottom]+"px"
 		});
-		body.append(this.loadingDom);
+		// body.append(this.loadingDom);
 	}
 
 	//设置参数
@@ -143,23 +145,28 @@ class pushLoading{
 	//添加事件
 	[addEvent](){
 		let _this = this;
-		if(!app.isAndroid){
-			window.addEventListener("scroll",function(){
+		if(!app.isAndroid && navigator.userAgent.indexOf('tfsmy') == -1){
+			window.addEventListener("scroll",this[iosScrollFn] = function(){
+				if(!_this.canRun){return;}
 				_this[iosScroll]();
 			},false);
 			document.addEventListener(app.END_EV,this[touchEndFn] = function(e){
+				if(!_this.canRun){return;}
 				_this[iosHandlerScroll]();
 			},false);
 		}else{
 			document.addEventListener(app.START_EV,this[touchStartFn] = function(e){
+				if(!_this.canRun){return;}
 				_this[androidTouchStart](e);
 
 			},false);
 			document.addEventListener(app.MOVE_EV,this[touchMoveFn] = function(e){
+				if(!_this.canRun){return;}
 				_this[androidTouchMove](e);
 
 			},false);
 			document.addEventListener(app.END_EV,this[touchEndFn] = function(e){
+				if(!_this.canRun){return;}
 				_this[androidTouchEnd]();
 			},false);
 		}
@@ -170,7 +177,7 @@ class pushLoading{
 	[iosHandlerScroll](){
 		if(this[isLoading]){return;}
 
-		let scrollTop = document.body.scrollTop,
+		let scrollTop = $(document).scrollTop(),
 			y = scrollTop - this[maxScrollHeight];
 
 		if(y>this.loadingDomHeight){
@@ -188,7 +195,7 @@ class pushLoading{
 	[iosScroll](){
 		if(this[isLoading]){return;}
 
-		let scrollTop = document.body.scrollTop,
+		let scrollTop = $(document).scrollTop(),
 			y = scrollTop - this[maxScrollHeight];
 
 		if(y>=this.loadingDomHeight){
@@ -206,7 +213,7 @@ class pushLoading{
 			this[animateFn].stop();
 		}
 
-		if(document.body.scrollTop >= this[maxScrollHeight].toFixed(0)){
+		if($(document).scrollTop() >= this[maxScrollHeight].toFixed(0)){
 			this[y] = 0;
 			this[hasTouched] = true;
 		}
@@ -337,6 +344,38 @@ class pushLoading{
 		this[refreshParam]();
 	}
 
+
+	//注销
+	destroy(){
+		this.loadingDom.remove();
+
+
+		if(!app.isAndroid){
+			window.removeEventListener("scroll",this[iosScrollFn],false);
+			document.removeEventListener(app.END_EV,this[touchEndFn],false);
+		}else{
+			document.removeEventListener(app.START_EV,this[touchStartFn],false);
+			document.removeEventListener(app.MOVE_EV,this[touchMoveFn],false);
+			document.removeEventListener(app.END_EV,this[touchEndFn],false);
+		}
+	}
+
+	//列表第一次加载（搜索条件变更等因素）
+	firstLoad(){
+		this[isLoading] = true;
+		this.loadingFn.call(this.loadingDom);
+	}
+
+	//暂停
+	pause(){
+		this.canRun = false;
+	}
+
+
+	restore(){
+		this.canRun = true;
+		this[refreshParam]();
+	}
 }
 
 

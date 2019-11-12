@@ -123,12 +123,12 @@ class bodyStyle{
 			position:"absolute",
 			left:0,bottom:0,
 			background:this.bg,
-			display:"box",
-			"box-orient":"vertical",
+			// display:"box",
+			// "box-orient":"vertical",
 			color:this.fontColor,
 			"font-size":this.fontSize+"px",
 			'z-index':1001
-		});
+		}).addClass('box_slt');
 
 		this.domMain = div;
 	}
@@ -191,7 +191,7 @@ class bodyStyle{
 	//创建主窗口
 	[createBody](){
 		var div = $("<div></div>");
-		div.addClass("boxflex1");
+		div.addClass("boxflex1").css({width:'100%'});
 
 		this.domBody = div;
 	}
@@ -244,7 +244,7 @@ class bodyStyle{
 		this.domZZ.get(0).addEventListener(app.START_EV,startFn = function(e){
 			points = [];
 			savePoint(e);
-		},false);
+		},app.eventParam);
 
 
 		this.domZZ.get(0).addEventListener(app.MOVE_EV,moveFn = function(e){
@@ -259,7 +259,7 @@ class bodyStyle{
 			if(_this.domBody.scrollTop()==maxScrollTop && e_p<s_p){
 				e.preventDefault();
 			}
-		},false);
+		},app.eventParam);
 	}
 
 	//取消阻止div顶部时下啦触发下啦刷新

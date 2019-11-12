@@ -2,10 +2,14 @@
 let getParamFromUrl = function(){
 	var data = {};
 
-	var search = window.location.search;
-	search = search.substr(1);
-	var searchs = search.split("&");
+	// var search = window.location.search;
+	// search = search.substr(1);
 
+	var search = window.location.href.split('?')[1];
+
+	if(!search){return {};}
+
+	var searchs = search.split("&");
 	for( var i= 0,l=searchs.length;i<l;i++){
 		var this_val =  searchs[i],
 			this_keys = this_val.split("="),

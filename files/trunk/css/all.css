@@ -14,12 +14,11 @@ div, p, span, a, ul, li,img{
     -ms-user-select:none;
     -moz-user-select:none;
     -webkit-text-size-adjust: none;
+    font-size: 0.24rem;
 }
 
 
 div, p, span, a, ul, li, input, textarea{
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -74,17 +73,11 @@ a:active{
 
 .border_box{
     box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 
 .radius{
     border-radius: 5rem;
-    -webkit-border-radius: 5rem;
-    -moz-border-radius: 5rem;
-    -o-border-radius:5rem;
-    -ms-border-radius:5rem;
 }
 
 
@@ -140,12 +133,12 @@ a:active{
     flex-basis:auto
 */
 .boxflex1{
-    -webkit-flex:1 1 0% !important;
-    flex:1 1 0% !important;
+    -webkit-flex:1 1 0 !important;
+    flex:1 1 0 !important;
 }
 .boxflex2{
-    -webkit-flex:2 1 0% !important;
-    flex:2 1 0% !important;
+    -webkit-flex:2 1 0 !important;
+    flex:2 1 0 !important;
 }
 
 
@@ -153,6 +146,8 @@ a:active{
 
 /*纵向排列 左上*/
 .box_slt{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-start;
@@ -165,6 +160,8 @@ a:active{
 }
 /*纵向排列 左中*/
 .box_slc{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-start;
@@ -177,6 +174,8 @@ a:active{
 }
 /*纵向排列 左下*/
 .box_slb{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-start;
@@ -189,6 +188,8 @@ a:active{
 }
 /*纵向排列 中上*/
 .box_sct{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:center;
@@ -201,6 +202,8 @@ a:active{
 }
 /*纵向排列 中中*/
 .box_scc{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:center;
@@ -213,6 +216,8 @@ a:active{
 }
 /*纵向排列 中下*/
 .box_scb{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:center;
@@ -225,6 +230,8 @@ a:active{
 }
 /*纵向排列 右上*/
 .box_srt{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-end;
@@ -237,6 +244,8 @@ a:active{
 }
 /*纵向排列 右中*/
 .box_src{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-end;
@@ -249,6 +258,8 @@ a:active{
 }
 /*纵向排列 右下*/
 .box_srb{
+    width:100%;
+
     display: -webkit-flex;
     -webkit-flex-direction:column;
     -webkit-align-items:flex-end;

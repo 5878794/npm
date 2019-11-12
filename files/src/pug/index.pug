@@ -5,9 +5,10 @@ html
         include ./../pug_include/head
 
         link(rel="stylesheet" type="text/css" href="css/index.css")
-        script.
-            var text = "<script src='js/dist/index.min.js?_=" + new Date().getTime() + "'><\/script>";
-            document.write(text);
+        script(data-src='js/dist/index.min.js?t='+tt)
+        //script.
+        //    var text = "<script src='js/dist/index.min.js?_=" + new Date().getTime() + "'><\/script>";
+        //    document.write(text);
 
 
     body

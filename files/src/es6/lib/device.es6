@@ -536,7 +536,8 @@ var DEVICE = {};
 		return val;
 	};
 
-	DEVICE.eventParam = (passiveSupported)? {passive:false} : false;
+	DEVICE.eventParam = (passiveSupported)? {passive:false,capture:false} : false;
+	DEVICE.eventParam1 = (passiveSupported)? {passive:false,capture:true} : true;
 
 })();
 
@@ -572,7 +573,10 @@ DEVICE.inputBlur = function(){
 	$('input').blur();
 	//解决ios页面顶上去后不能恢复的问题，导致页面焦点错位
 	let top = $(document).scrollTop();
-	$(document).scrollTop(top);
+	$(document).scrollTop(top+1);
+	setTimeout(function(){
+		$(document).scrollTop(top);
+	},10);
 };
 
 
