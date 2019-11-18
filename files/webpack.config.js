@@ -69,6 +69,9 @@ var getEs6List1 = function(){
 		map[key] = entryFiles[i];
 	}
 
+	//单独输出单页面使用的入口文件
+	map['js/dist/sign_page_init'] = glob.sync(es6Src+"lib/signPage/__sign_page_init.es6")[0];
+
 	return map;
 };
 
