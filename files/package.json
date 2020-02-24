@@ -1,11 +1,15 @@
 {
   "name": "rabbit",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "index.js",
   "scripts": {
-    "js min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.",
-    "js dev": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.",
-    "jade": "pug -o ./trunk/  -P -w ./src/pug/.",
+    "all min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_zip.es6",
+    "all": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_compile.es6",
+    "es6 min":"webpack --display-error-details;tt=$(date +%s)",
+    "es6":"webpack --display-error-details -d; tt=$(date +%s)",
+    "pug min":"pug -o ./trunk/  -P -w ./src/pug/.",
+    "pug": "pug  ./trunk/  -P -w ./src/pug/.",
+    "less min":"node ./cmd/less_zip.es6",
     "less":"node ./cmd/less_compile.es6",
     "jadeTemplate": "pug -c -D --name-after-file -o ./trunk/template  ./src/pug_template",
     "browser-sync": "browser-sync start --server --files 'css/*.css,*.html'"
