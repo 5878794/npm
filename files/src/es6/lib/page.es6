@@ -88,7 +88,6 @@ let page = {
             this[run](obj);
         });
 
-
         return true;
     },
     //页面准备ok

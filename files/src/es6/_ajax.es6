@@ -14,7 +14,7 @@ let ajax = {
 
 
 		$.ajax({
-			type: "post",
+			type: "get",
 			cache: false,
 			url: url,
 			data: data,
@@ -30,7 +30,7 @@ let ajax = {
 
 			},
 			error: function(e) {
-				if(e.status == 0){
+				if(e.status == 0 && e.statusText != 'error'){
 					return;
 				}
 				error("网络错误,无法连接服务器。");
@@ -58,14 +58,11 @@ let ajax = {
 let api = {
 	//场馆列表
 	// data={
-	//      name:"",        str  名称模糊查询
-	//      index:"",       int  分页页数
-	//      size:""         int  每页数量
+	//      date  :"",        yy-mm-dd
 	// }
-	// "getVenuesList":"appVenue/getAppVenueByPage.do",
-	"getVenuesList":function(data={}){
+	"getList":function(data={}){
 		return new Promise((success,error)=>{
-			ajax.run("api/appVenue/getAppVenueByPage.do",data,success,error);
+			ajax.run("api/getTableInfo",data,success,error);
 		})
 	}
 };

@@ -9,14 +9,15 @@
 	// var serverUrl = "//phr.care4u.cn/";
 	//测试
 	// var serverUrl = "//118.123.173.101:7001/";
-	var serverUrl = "//172.16.1.35:8090/";
+	var serverUrl = "//tcm.care4u.cn:8080/ess/";
+	var psd_width = 750;
 
 	window.SETTING = {
 		serverUrl:serverUrl,
 
 		//-----------------------------------------------
 		//是否是app
-		isAPP : true,
+		isAPP : false,
 
 
 		//公共js库，单页面用
@@ -86,5 +87,56 @@
 
 
 
+	};
+
+	var win_width = window.innerWidth || window.outerWidth,
+		viewport = document.querySelector('meta[name="viewport"]'),
+		dpr = window.devicePixelRatio || 1,
+		scale = 1 / dpr,
+		rem;
+
+// 设置meta
+// 由于cordova app内嵌初始屏幕宽度获取有问题,只能设置width=device-width 不能设置实际的像素宽度在缩放
+// 需要自行切换注释
+	if(viewport){
+		// viewport.setAttribute('content', 'width= '+win_width*dpr+',initial-scale='+scale+',maximum-scale='+scale+', minimum-scale='+scale+',user-scalable=no');
+		viewport.setAttribute('content', 'width= device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no');
+	}else{
+		// $("head").append('<meta name="viewport" content="width='+win_width*dpr+', initial-scale='+scale+', user-scalable=no, minimum-scale='+scale+', maximum-scale='+scale+'">');
+		$("head").append('<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1, maximum-scale=1">');/**/
+	}
+
+
+//设置页面字体,可使用rem
+	var style = document.createElement('style');
+	win_width = window.innerWidth;
+	rem = win_width/psd_width*100;
+
+	style.innerHTML = "html{font-size:"+rem+"px!important;}";
+	document.querySelector("head").appendChild(style);
+
+//有些浏览器viewport宽度获取不准确
+//因此初始不停刷新页面字体
+	var temp_interval = setInterval(function () {
+
+		win_width = window.innerWidth;
+		var _rem = win_width/psd_width*100;
+		console.log(win_width,psd_width,rem,1)
+		if(rem != _rem){
+			rem = _rem;
+			style.innerHTML = "html{font-size:"+rem+"px!important;}";
+		}
+	},500);
+//10秒后取消自动刷新
+	setTimeout(function(){
+		clearInterval(temp_interval);
+	},10000);
+
+
+//页面大小变化刷新
+	window.onresize = function(){
+		win_width = window.innerWidth;
+		rem = win_width/psd_width*100;
+		style.innerHTML = "html{font-size:"+rem+"px!important;}";
 	};
 })();

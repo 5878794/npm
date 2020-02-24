@@ -63,6 +63,7 @@ let setFn = function(psdWidth){
 		rem = win_width/psd_width*100;
 		style.innerHTML = "html{font-size:"+rem+"px!important;}";
 	});
+
 };
 
 
