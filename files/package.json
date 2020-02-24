@@ -6,6 +6,7 @@
     "js min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.",
     "js dev": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.",
     "jade": "pug -o ./trunk/  -P -w ./src/pug/.",
+    "less":"node ./cmd/less_compile.es6",
     "jadeTemplate": "pug -c -D --name-after-file -o ./trunk/template  ./src/pug_template",
     "browser-sync": "browser-sync start --server --files 'css/*.css,*.html'"
   },
@@ -22,10 +23,14 @@
     "babel-preset-env": "",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-stage-3": "^6.22.0",
+    "less": "^3.11.1",
     "pug": "^2.0.3",
     "pug-cli": "1.0.0-alpha6",
     "webpack": "^2.2.1",
     "xlsx": "^0.15.5"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "clean-css": "^4.2.3"
+  }
 }
