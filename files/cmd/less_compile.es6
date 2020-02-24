@@ -43,7 +43,7 @@ let renderFn = function(){
 			//压缩css
 			// cmdText = 'lessc -x '+filePath+' ' +outPath;
 			//不压缩
-			cmdText = 'lessc  '+filePath+' ' +outPath;
+			cmdText = ' watcher-lessc -i '+filePath+' -o ' +outPath;
 
 		await runExec(cmdText);
 
