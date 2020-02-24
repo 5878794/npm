@@ -1,14 +1,14 @@
 {
   "name": "rabbit",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "all min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_zip.es6",
     "all": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_compile.es6",
     "es6 min":"webpack --display-error-details;tt=$(date +%s)",
     "es6":"webpack --display-error-details -d; tt=$(date +%s)",
-    "pug min":"pug -o ./trunk/  -P -w ./src/pug/.",
-    "pug": "pug  ./trunk/  -P -w ./src/pug/.",
+    "pug min":"pug -w ./src/pug/. -o ./trunk/",
+    "pug": "pug -w -P ./src/pug/. -o ./trunk/",
     "less min":"node ./cmd/less_zip.es6",
     "less":"node ./cmd/less_compile.es6",
     "jadeTemplate": "pug -c -D --name-after-file -o ./trunk/template  ./src/pug_template",
