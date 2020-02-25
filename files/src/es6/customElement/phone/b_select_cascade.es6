@@ -44,8 +44,8 @@ require('@webcomponents/shadydom');
 
 
 
-let $$ = require('../lib/event/$$'),
-	cascadeFn = require('../lib/input/cascade');
+let $$ = require('../../lib/event/$$'),
+	cascadeFn = require('../../lib/input/cascade');
 
 
 let showVal = Symbol('showVal'),
@@ -58,7 +58,7 @@ let showVal = Symbol('showVal'),
 	showSelect = Symbol('showSelect');
 
 
-
+let tempText = '';
 
 
 class bSelectCascade extends HTMLElement{
@@ -217,6 +217,7 @@ class bSelectCascade extends HTMLElement{
 		});
 
 		text = text.join('、');
+		tempText = text.split('、').join(',');
 
 		$(this.shadow).find('.val').text(text);
 		$(this.shadow).find('.placeholder').text('');
@@ -229,6 +230,10 @@ class bSelectCascade extends HTMLElement{
 	set data(val){
 		this[bindData] = val;
 		this[showVal]();
+	}
+
+	get textVal(){
+		return tempText;
 	}
 
 	get val(){

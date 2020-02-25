@@ -30,8 +30,8 @@ require('@webcomponents/custom-elements');
 require('@webcomponents/shadydom');
 
 
-let $$ = require('../lib/event/$$'),
-	selectFn = require('../lib/input/date'),
+let $$ = require('../../lib/event/$$'),
+	selectFn = require('../../lib/input/date'),
 	bodyDom = Symbol('body'),
 	init = Symbol('init'),
 	createBody = Symbol('createBody'),
