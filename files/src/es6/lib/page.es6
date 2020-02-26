@@ -974,17 +974,23 @@ let page = {
         }
     },
     mdfSoftKeyBoardBug(){
+        let has = false;
         $('input').each(function(){
             this.addEventListener('touchstart',function(e){
+                has = true;
                 e.stopPropagation();
             },device.eventParam)
         });
         document.body.addEventListener('touchstart',function(){
-            $('input').blur();
-            setTimeout(function(){
-                let top = $("body").scrollTop();
-                $("html,body").animate({scrollTop:top+'px'},0);
-            },100)
+            if(has){
+                has = false;
+                $('input').blur();
+                setTimeout(function(){
+                    let top = $("body").scrollTop();
+                    $("html,body").animate({scrollTop:top+'px'},0);
+                },100)
+            }
+
         },device.eventParam)
     },
 
