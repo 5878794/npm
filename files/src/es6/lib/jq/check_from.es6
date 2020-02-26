@@ -169,9 +169,11 @@
 
 		checkInput.each(function(){
 			let that_rule = $(this).data("rule"),
-				this_val = $.trim($(this).val()),
+				this_val = $.trim($(this).val()) || this.val,
 				this_id = $(this).attr("id"),
 				this_dom = $(this);
+
+
 
 			that_rule = that_rule.split(",");
 			data[this_id] = this_val;
