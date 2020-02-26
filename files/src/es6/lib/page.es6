@@ -977,11 +977,15 @@ let page = {
         $('input').each(function(){
             this.addEventListener('touchstart',function(e){
                 e.stopPropagation();
-            },false)
+            },device.eventParam)
         });
         document.body.addEventListener('touchstart',function(){
             $('input').blur();
-        },false)
+            setTimeout(function(){
+                let top = $("body").scrollTop();
+                $("html,body").animate({scrollTop:top+'px'},0);
+            },100)
+        },device.eventParam)
     },
 
 
@@ -1033,7 +1037,7 @@ page[init](function(){
 
     //自动缓存参数，非app用
     page[autoSaveUrlParam]();
-    // page.mdfSoftKeyBoardBug();
+    page.mdfSoftKeyBoardBug();
 
 }).then(()=>{
     if(page[isDebug]){
