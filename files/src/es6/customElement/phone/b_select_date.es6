@@ -133,9 +133,17 @@ class bSelectDate extends HTMLElement{
 			minDate = dom.attr('minDate') || '1950-1-1',
 			maxDate = dom.attr('maxDate') || '2050-12-12',
 			isShowDay = !($(this).attr('isShowDay')==='false'),
+			minDateId = dom.attr('minDateId') || '',
+			maxDateId = dom.attr('maxDateId') || '',
 			viewPort = dom.attr('viewport') || 750;
 		viewPort = parseInt(viewPort);
 
+		if(minDateId){
+			minDate = document.getElementById(minDateId).val;
+		}
+		if(maxDateId){
+			maxDate = document.getElementById(maxDateId).val;
+		}
 
 		new selectFn({
 			titleText:title,       //@param:str             标题  默认：请选择
@@ -225,6 +233,14 @@ class bSelectDate extends HTMLElement{
 	}
 	set title(text){
 		$(this).attr({title:text});
+	}
+
+	set minDateId(id){
+		$(this).attr({minDateId:id});
+	}
+
+	set maxDateId(id){
+		$(this).attr({maxDateId:id});
 	}
 
 	get minDate(){

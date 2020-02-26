@@ -58,7 +58,7 @@ let showVal = Symbol('showVal'),
 	showSelect = Symbol('showSelect');
 
 
-let tempText = '';
+
 
 
 class bSelectCascade extends HTMLElement{
@@ -217,7 +217,8 @@ class bSelectCascade extends HTMLElement{
 		});
 
 		text = text.join('、');
-		tempText = text.split('、').join(',');
+		let tempText = text.split('、').join(',');
+		$(this).attr({textVal:tempText});
 
 		$(this.shadow).find('.val').text(text);
 		$(this.shadow).find('.placeholder').text('');
@@ -233,7 +234,7 @@ class bSelectCascade extends HTMLElement{
 	}
 
 	get textVal(){
-		return tempText;
+		return $(this).attr('textVal') || '';
 	}
 
 	get val(){

@@ -161,7 +161,7 @@
 
 
 
-	$.fn.checkFrom = function(callback){
+	$.fn.checkFrom = function(){
 		let dom = $(this),
 			checkInput = dom.find("[data-rule]"),
 			errorDom = [],
@@ -172,7 +172,7 @@
 				this_val = $.trim($(this).val()) || this.val,
 				this_id = $(this).attr("id"),
 				this_dom = $(this);
-
+			this_val = this_val || '';
 
 
 			that_rule = that_rule.split(",");
@@ -224,7 +224,9 @@
 		});
 
 
-		callback(errorDom,data);
+		// callback(errorDom,data);
+
+		return {errorDom,data}
 	};
 })();
 
