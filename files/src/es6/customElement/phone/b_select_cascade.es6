@@ -175,7 +175,6 @@ class bSelectCascade extends HTMLElement{
 			success:function(rs){
 				//返回选择的对象
 				//json数组，  传入的格式
-
 				let keys = [];
 				rs.map(r=>{
 					keys.push(r.key)
@@ -206,14 +205,14 @@ class bSelectCascade extends HTMLElement{
 			return;
 		}
 
-		val = ','+val+',';
+		let newData = {};
 		data.map(rs=>{
 			let thisKey = rs.key;
-			thisKey = ','+thisKey+',';
+			newData[thisKey] = rs;
+		});
 
-			if(val.indexOf(thisKey)>-1){
-				text.push(rs.val);
-			}
+		val.split(',').map(rs=>{
+			text.push(newData[rs].val);
 		});
 
 		text = text.join('、');
