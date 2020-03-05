@@ -92,7 +92,7 @@ module.exports = function(isAlert,msg,titleMsg='系统提示',iconSrc,width=0,he
 
 
 			if(!iconSrc){
-				icon.css({display:'none'});
+				icon.css({display:'none',background:'none'});
 			}
 			if(isAlert){
 				cancel.css({display:'none'});
