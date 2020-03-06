@@ -30,6 +30,10 @@ let ajax = {
 
 			},
 			error: function(e) {
+				if(e.status == 0 && e.statusText == "timeout"){
+					error('请求超时');
+					return;
+				}
 				if(e.status == 0 && e.statusText != 'error'){
 					return;
 				}
