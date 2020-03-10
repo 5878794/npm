@@ -561,7 +561,7 @@ DEVICE.delHtmlTag = function(str){
 	return str.replace(/<[^>]+>/g,"");    //去掉所有的html标记
 };
 
-
+//全角空格转半角
 DEVICE.replaceSpaceFullAngleToHalfAngle = function(str){
 	var tmp = "";
 	for(var i=0;i<str.length;i++){
@@ -573,6 +573,8 @@ DEVICE.replaceSpaceFullAngleToHalfAngle = function(str){
 	}
 	return tmp;
 };
+
+//全角转半角
 DEVICE.replaceFullAngleToHalfAngle = function(str){
 	//句号 引号等未转换
 	var tmp = "";
