@@ -114,7 +114,7 @@ class bSelect extends HTMLElement{
 			// color:'#333'
 		});
 		span1.css({
-			// color:'#ccc'
+			color:'#ccc'
 		});
 
 		div.append(span).append(span1);
@@ -125,7 +125,12 @@ class bSelect extends HTMLElement{
 		let _this = this;
 
 		$$(this[bodyDom]).myclickok(function(){
-			_this[showSelect]();
+			$('input').blur();
+			setTimeout(function(){
+				let top = $("body").scrollTop();
+				$("html,body").animate({scrollTop:top+'px'},0);
+				_this[showSelect]();
+			},100)
 		});
 	}
 
