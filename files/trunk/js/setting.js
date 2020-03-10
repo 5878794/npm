@@ -185,9 +185,9 @@
 
 
 	//页面大小变化刷新
-	$(window).resize(function(){
+	window.onresize = function(){
 		win_width = getWinWidth();
 		rem = win_width/psd_width*100;
 		style.innerHTML = "html{font-size:"+rem+"px!important;}";
-	});
+	};
 })();
