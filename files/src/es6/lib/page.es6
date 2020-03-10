@@ -1029,7 +1029,34 @@ let page = {
                 }
             });
         });
+    },
+
+
+    //history 处理类
+    history:{
+        addEvent(fn){
+            fn = fn || function(){};
+            window.addEventListener("popstate", function() {
+                //获取之前的页面id
+                let currentState = history.state || {};
+                fn(currentState);
+                // console.log(currentState)
+            });
+        },
+        //当前页面增加缓存数据
+        //传入 json对象
+        save(data,url){
+            url = url || window.location.href;
+            window.history.replaceState(data,'',url);
+        },
+        //增加历史记录,并新开页面
+        add(data,url){
+            url = url || window.location.href;
+            window.history.pushState(data,'',url);
+        }
+
     }
+
 
 };
 
