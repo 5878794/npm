@@ -544,8 +544,14 @@ var DEVICE = {};
 
 //rem转px
 DEVICE.rem2Px = function(psdWidth,val){
-	let winWidth = window.innerWidth,
-		rem = winWidth/psdWidth*100;
+	let winWidth,rem;
+	if(DEVICE.isPc){
+		winWidth = window.innerWidth;
+		winWidth = (winWidth>600)? 600 : winWidth;
+	}else{
+		winWidth = window.innerWidth;
+	}
+	rem = winWidth/psdWidth*100;
 
 	return rem*val;
 };
