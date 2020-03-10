@@ -8,8 +8,24 @@
 	//正式
 	// var serverUrl = "//phr.care4u.cn/";
 	//测试
-	// var serverUrl = "//118.123.173.101:7001/";
-	var serverUrl = "//tcm.care4u.cn:8080/ess/";
+
+	// https://tcm.care4u.cn:8443/ess/static/wechat/index.html?urlCode=3105075e2803
+
+	var serverUrl = '/bens/';
+	// var serverUrl = "https://jy.care4u.cn/ess/";
+	// var serverUrl = "http://110.185.187.117/ess/";
+	//正式
+	// var serverUrl = "https://tcm.care4u.cn:8443/ess/";
+
+
+	// var serverUrl = '//tcm.care4u.cn:8443/ess/';
+	// var serverUrl = 'https://10.254.72.7:8443/ess/';
+
+	//测试
+	// var serverUrl = 'https://jy.care4u.cn:8443/ess/';
+
+
+	// var serverUrl = "//tcm.care4u.cn:8080/ess/";
 	var psd_width = 750;
 
 	window.SETTING = {
@@ -18,6 +34,8 @@
 		//-----------------------------------------------
 		//是否是app
 		isAPP : false,
+
+		//
 
 
 		//公共js库，单页面用
@@ -83,7 +101,7 @@
 
 		//-----------------------------------------------
 		//版本说明
-		ver:"test1"
+		ver:"1.0"
 
 
 
