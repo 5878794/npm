@@ -5,27 +5,24 @@
 
 (function(){
 	//服务器地址
-	//正式
-	// var serverUrl = "//phr.care4u.cn/";
-	//测试
+	//开发
+	// var serverUrl = '/bens/';
 
-	// https://tcm.care4u.cn:8443/ess/static/wechat/index.html?urlCode=3105075e2803
 
-	var serverUrl = '/bens/';
-	// var serverUrl = "https://jy.care4u.cn/ess/";
-	// var serverUrl = "http://110.185.187.117/ess/";
 	//正式
 	// var serverUrl = "https://tcm.care4u.cn:8443/ess/";
 
 
-	// var serverUrl = '//tcm.care4u.cn:8443/ess/';
-	// var serverUrl = 'https://10.254.72.7:8443/ess/';
+
+	//内测
+	// var serverUrl = 'https://testedu.care4u.cn:8443/ess/';
+
+
 
 	//测试
-	// var serverUrl = 'https://jy.care4u.cn:8443/ess/';
+	var serverUrl = 'https://jy.care4u.cn:8499/ess/';
 
 
-	// var serverUrl = "//tcm.care4u.cn:8080/ess/";
 	var psd_width = 750;
 
 	window.SETTING = {
@@ -100,10 +97,11 @@
 
 
 		//-----------------------------------------------
-		//版本说明
-		ver:"1.0"
+		//接口版本
+		apiVer:"1.0",
 
-
+		//是否检查版本强制刷新
+		isCheckVer:true
 
 	};
 

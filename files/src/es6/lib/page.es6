@@ -7,6 +7,8 @@ let device = require("./device"),
     alertFn = require('./ui/alert'),
     confirmFn = require('./ui/confirm'),
     isDebug = Symbol("isDebug"),
+    checkPageVer = Symbol('checkPageVer'),
+    getServerVer = Symbol('getServerVer'),
     isApp = Symbol("isApp"),
     hasAllReady = Symbol("hasAllReady"),
     readyFns = Symbol("readyFns"),
@@ -44,6 +46,43 @@ let page = {
 
     //缓存的readyFn的调用
     [readyFns]:[],
+
+    async [checkPageVer](){
+        let localVer = window.__ver__ || '',
+            serverVer = await this[getServerVer]();
+
+        if(!localVer){
+            console.log('未发现本地版本号');
+            return;
+        }
+
+        console.log('localVer:'+localVer+'   serverVer:'+serverVer);
+        if(localVer < serverVer ){
+            let url = '';
+            if(window.location.search){
+                url = window.location.href+'&t='+new Date().getTime();
+            }else{
+                url = window.location.href+'?t='+new Date().getTime();
+            }
+
+            console.log('refresh url:'+url);
+            window.location.href = url;
+        }
+
+    },
+    [getServerVer](){
+        return new Promise((success,error)=>{
+            $.getScript('./js/ver.js?t='+new Date().getTime()).then(rs=>{
+                rs = rs.split('=')[1];
+                rs = parseInt(rs);
+                success(rs);
+            }).catch(e=>{
+                console.log(e);
+                error(e);
+            });
+        })
+    },
+
     //页面初始执行入口
     run(obj){
         if(!this[hasAllReady]){
@@ -76,6 +115,12 @@ let page = {
             this[weChatReady](),
             this[loadScripts](SETTING.needLoadOtherJsList)
         ]);
+
+        //判断是否检查页面文件是否最新
+        if(SETTING.isCheckVer){
+            await this[checkPageVer]();
+        }
+
 
         //设置全部已经ready状态
         this[hasAllReady] = true;

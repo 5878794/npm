@@ -11,7 +11,7 @@ let ajax = {
 		// data.token = this.token;
 		// data.userToken = this.userToken;
 		// data.sign = this.sign(data);
-		data.ver = SETTING.ver;
+		data.ver = SETTING.apiVer;
 
 		$.ajax({
 			type: "post",
