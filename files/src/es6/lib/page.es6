@@ -57,7 +57,7 @@ let page = {
         }
 
         console.log('localVer:'+localVer+'   serverVer:'+serverVer);
-        if(localVer < serverVer ){
+        if(localVer < serverVer && !window.sessionStorage.getItem('hasRefresh')){
             let url = '';
             if(window.location.search){
                 url = window.location.href+'&t='+new Date().getTime();
@@ -66,6 +66,7 @@ let page = {
             }
 
             console.log('refresh url:'+url);
+	        window.sessionStorage.setItem('hasRefresh','true');
             window.location.href = url;
         }
 
@@ -1115,7 +1116,9 @@ page[init](function(){
 
     //自动缓存参数，非app用
     page[autoSaveUrlParam]();
-    page.mdfSoftKeyBoardBug();
+    if(device.isPhone){
+        page.mdfSoftKeyBoardBug();
+    }
 
 }).then(()=>{
     if(page[isDebug]){
