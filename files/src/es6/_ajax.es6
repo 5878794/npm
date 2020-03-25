@@ -1,6 +1,7 @@
 // let md5 = require("./lib/fn/md5"),
 // 	app = require("./lib/JkAndWeChat");
 
+let errorHandler = require('./lib/fn/errorHandler');
 
 let ajax = {
 	//请求函数主体
@@ -13,8 +14,10 @@ let ajax = {
 		// data.sign = this.sign(data);
 		data.ver = SETTING.apiVer;
 
+		let type = 'post';
+
 		$.ajax({
-			type: "post",
+			type: type,
 			cache: false,
 			url: url,
 			data: data,
@@ -33,6 +36,8 @@ let ajax = {
 
 			},
 			error: function(e) {
+				errorHandler.ajaxError(type,url,data,e);
+
 				if(e.status == 0 && e.statusText == 'timeout'){
 					error('访问人数过多，请稍后访问');
 					return;
@@ -41,6 +46,7 @@ let ajax = {
 				if(e.status == 0 && e.statusText != 'error'){
 					return;
 				}
+
 				error("网络错误,无法连接服务器。");
 			}
 		});
