@@ -60,7 +60,15 @@ let signPage = {
 		$('script').each(function(){
 			var src = $(this).data('src');
 			if(src){
-				$.getScript(src);
+				// $.getScript(src);
+				$.ajax({
+					cache:true,
+					url: src,
+					dataType: "script",
+					success: function(){
+
+					}
+				});
 			}
 		});
 	}
