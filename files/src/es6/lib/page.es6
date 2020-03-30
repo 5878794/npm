@@ -74,7 +74,7 @@ let page = {
     },
     [getServerVer](){
         return new Promise((success,error)=>{
-            $.getScript('./js/ver.js?t='+new Date().getTime()).then(rs=>{
+            $.getScript('./js/ver.js').then(rs=>{
                 rs = rs.split('=')[1];
                 rs = parseInt(rs);
                 success(rs);
@@ -295,9 +295,17 @@ let page = {
     //加载js接口
     loadScript(src){
         return new Promise(success=>{
-            $.getScript(src,function(){
-                success();
-            })
+            // $.getScript(src,function(){
+            //     success();
+            // });
+            $.ajax({
+                cache:true,
+                url: src,
+                dataType: "script",
+                success: function(){
+                    success();
+                }
+            });
         })
     },
 
