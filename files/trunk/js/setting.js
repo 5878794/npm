@@ -6,7 +6,7 @@
 (function(){
 	//服务器地址
 	//开发
-	// var serverUrl = '/bens/';
+	var serverUrl = '/bens/';
 
 
 	//正式
@@ -16,17 +16,22 @@
 
 	//内测
 	// var serverUrl = 'https://testedu.care4u.cn:8443/ess/';
-
+	// var serverUrl = 'https://testedu1.care4u.cn:8443/ess/';
 
 
 	//测试
-	var serverUrl = 'https://jy.care4u.cn:8499/ess/';
+	// var serverUrl = 'https://jy.care4u.cn:8499/ess/';
 
 
 	var psd_width = 750;
 
+
+
 	window.SETTING = {
 		serverUrl:serverUrl,
+
+		//js报错提交地址
+		jsErrorReportUrl:'',
 
 		//-----------------------------------------------
 		//是否是app

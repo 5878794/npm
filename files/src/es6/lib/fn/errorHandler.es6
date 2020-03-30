@@ -4,8 +4,11 @@ require('../jq/extend');
 let md5 = require('./md5');
 
 
-var serverUrl = '/';
+var serverUrl = SETTING.jsErrorReportUrl;
 var send = function(msg){
+	if(!serverUrl){return;}
+
+
 	//判断是否已提交过该问题,信息通过md5后对比
 	let text = md5(msg),
 		localData = window.localStorage.getItem('localData') || '[]';
