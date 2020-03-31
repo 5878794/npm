@@ -76,6 +76,25 @@ var getEs6List1 = function(){
 };
 
 
+var getTime = function(b){
+	b = b || new Date().getTime();
+	var a = new Date(parseInt(b));
+	var year=a.getFullYear();
+	var month=parseInt(a.getMonth())+1;
+	month= (month<10)? "0"+month : month;
+	var date=a.getDate();
+	date= (date<10)? "0"+date : date;
+	var hours=a.getHours();
+	hours= (hours<10)? "0"+hours : hours;
+	var minutes=a.getMinutes();
+	minutes= (minutes<10)? "0"+minutes : minutes;
+	var seconds=a.getSeconds();
+	seconds= (seconds<10)? "0"+seconds : seconds;
+
+	return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+};
+
+
 module.exports = {
 
 	//页面入口文件配置
@@ -147,7 +166,7 @@ module.exports = {
 		//合并公共部分生成单独的文件,需要单独引用  pub.bundle.js
 		// new webpack.optimize.CommonsChunkPlugin('pub'),
 		//文件头部注释
-		new webpack.BannerPlugin("######5878794@qq.com######"),
+		new webpack.BannerPlugin("######5878794@qq.com   "+getTime()+"  ######"),
 
 		//提取公共代码放到指定位置
 		new webpack.optimize.CommonsChunkPlugin({
