@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "all min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_zip.es6;node ./cmd/ver.es6 $tt",
+    "all min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_zip.es6 $tt;node ./cmd/ver.es6 $tt",
     "all": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_compile.es6;node ./cmd/ver.es6 $tt",
     "es6 min": "webpack --display-error-details;tt=$(date +%s)",
     "es6": "webpack --display-error-details -d; tt=$(date +%s)",

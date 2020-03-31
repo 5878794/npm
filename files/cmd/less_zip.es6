@@ -29,7 +29,7 @@ let runExec = function(cmdText){
 };
 
 
-let renderFn = function(){
+let renderFn = function(tt){
 
 	console.log('编译 less');
 	console.log('------------------------------------------------------------------------');
@@ -43,7 +43,7 @@ let renderFn = function(){
 			//压缩css
 			// cmdText = 'lessc -x '+filePath+' ' +outPath;
 			//不压缩
-			cmdText = 'lessc -x  '+filePath+' ' +outPath;
+			cmdText = 'lessc -x  --global-var="tt='+tt+'" '+filePath+' ' +outPath;
 
 		await runExec(cmdText);
 
@@ -54,5 +54,9 @@ let renderFn = function(){
 };
 
 
-renderFn();
+
+//获取连接参数
+var arguments = process.argv.splice(2);
+arguments = arguments[0];
+renderFn(arguments);
 
