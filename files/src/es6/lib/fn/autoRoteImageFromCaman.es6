@@ -7,6 +7,9 @@
 //手机转一圈拍出来的是 1 6 3 8 四个值。
 
 
+//图片旋转信息,有专门的库
+//https://github.com/exif-js/exif-js
+
 
 //详见:  https://juejin.im/post/5bfbab9ee51d45491b015492
 
