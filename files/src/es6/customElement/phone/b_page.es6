@@ -31,8 +31,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 let mFetch = require('../../lib/resLoader/myFetch'),
 	tempKey = Symbol('b-page-to-window');
@@ -127,8 +127,9 @@ class bPage extends HTMLElement{
 }
 
 
-customElements.define('b-page', bPage );
-
+if(!customElements.get('b-page')){
+	customElements.define('b-page', bPage );
+}
 
 
 module.exports = tempKey;

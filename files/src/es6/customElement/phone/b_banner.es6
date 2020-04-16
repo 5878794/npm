@@ -34,8 +34,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let bannerFn = require('../lib/ui/bannerScroll'),
@@ -275,5 +275,6 @@ class bBanner extends HTMLElement{
 	}
 }
 
-
-customElements.define('b-banner', bBanner );
+if(!customElements.get('b-banner')){
+	customElements.define('b-banner', bBanner );
+}

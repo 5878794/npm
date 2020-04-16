@@ -26,8 +26,8 @@
 //  dom.placeholder = '请选择你的年龄';
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let $$ = require('../../lib/event/$$'),
@@ -272,5 +272,9 @@ class bSelectDate extends HTMLElement{
 }
 
 
-customElements.define('b-select-date', bSelectDate );
 
+
+
+if(!customElements.get('b-select-date')){
+	customElements.define('b-select-date', bSelectDate );
+}

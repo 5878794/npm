@@ -45,8 +45,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let pushLoadingFn = require('../lib/ui/pushLoading'),
@@ -253,5 +253,6 @@ class bPushLoad extends HTMLElement{
 }
 
 
-
-customElements.define('b-push-load', bPushLoad );
+if(!customElements.get('b-push-load')){
+	customElements.define('b-push-load', bPushLoad );
+}

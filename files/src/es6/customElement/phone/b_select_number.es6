@@ -24,8 +24,8 @@
 // select.placeholder = '请选择';
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let $$ = require('../../lib/event/$$'),
@@ -275,5 +275,8 @@ class bSelectNumber extends HTMLElement{
 }
 
 
-customElements.define('b-select-number', bSelectNumber );
 
+
+if(!customElements.get('b-select-number')){
+	customElements.define('b-select-number', bSelectNumber );
+}

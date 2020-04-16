@@ -45,8 +45,8 @@
 let addStyleFile = require('../fn/addStyleFile'),
 	$$ = require('../../lib/event/$$');
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let bindData = Symbol(),
@@ -153,5 +153,9 @@ class bBind extends HTMLElement{
 }
 
 
-customElements.define('b-bind', bBind );
+
+if(!customElements.get('b-bind')){
+	customElements.define('b-bind', bBind );
+}
+
 

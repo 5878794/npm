@@ -24,8 +24,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let pullRefreshFn = require('../lib/ui/pullRefresh');
@@ -131,4 +131,7 @@ class bPullRefresh extends HTMLElement{
 
 
 
-customElements.define('b-pull-refresh', bPullRefresh );
+
+if(!customElements.get('b-pull-refresh')){
+	customElements.define('b-pull-refresh', bPullRefresh );
+}

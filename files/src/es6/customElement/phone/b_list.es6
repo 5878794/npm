@@ -65,8 +65,8 @@
 let addStyleFile = require('../fn/addStyleFile'),
 	$$ = require('../../lib/event/$$');
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 let slotDom = Symbol(),
@@ -178,5 +178,7 @@ class bList extends HTMLElement{
 }
 
 
-customElements.define('b-list', bList );
 
+if(!customElements.get('b-list')){
+	customElements.define('b-list', bList );
+}

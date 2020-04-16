@@ -49,8 +49,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 
@@ -321,4 +321,7 @@ class bSmsBtn extends HTMLElement{
 }
 
 
-customElements.define('b-sms-btn', bSmsBtn );
+
+if(!customElements.get('b-sms-btn')){
+	customElements.define('b-sms-btn', bSmsBtn );
+}

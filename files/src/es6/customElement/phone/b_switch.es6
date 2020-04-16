@@ -44,8 +44,8 @@ let bodyDom = Symbol('bodyDom'),
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 class bSwitch extends HTMLElement{
@@ -321,5 +321,8 @@ class bSwitch extends HTMLElement{
 }
 
 
-customElements.define('b-switch', bSwitch );
 
+
+if(!customElements.get('b-switch')){
+	customElements.define('b-switch', bSwitch );
+}

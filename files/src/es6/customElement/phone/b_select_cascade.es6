@@ -39,8 +39,8 @@
 
 
 //polyfill 需要
-require('@webcomponents/custom-elements');
-require('@webcomponents/shadydom');
+// require('@webcomponents/custom-elements');
+// require('@webcomponents/shadydom');
 
 
 
@@ -279,5 +279,9 @@ class bSelectCascade extends HTMLElement{
 }
 
 
-customElements.define('b-select-cascade', bSelectCascade );
 
+
+
+if(!customElements.get('b-select-cascade')){
+	customElements.define('b-select-cascade', bSelectCascade );
+}
