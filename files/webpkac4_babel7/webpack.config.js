@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var glob = require("glob");
 
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 
 
@@ -97,7 +97,7 @@ var getTime = function(b){
 };
 
 
-new webpack.BannerPlugin('create by bens '+ getTime());
+// new webpack.BannerPlugin('create by bens '+ getTime());
 
 
 
@@ -108,7 +108,8 @@ module.exports = {
 	//入口文件输出配置
 	output: {
 		path: __dirname+"/trunk/",
-		filename: "[name].min.js"
+		filename: "[name].min.js",
+		publicPath:"/"
 	},
 	// watch:true,
 	module:{
@@ -172,7 +173,13 @@ module.exports = {
 			// new UglifyJsPlugin(),
 
 		// ]
+	},
+	devServer: {
+		contentBase: path.join(__dirname, './trunk'),
+		// compress: true,
+		port: 9000
 	}
 
 
 };
+
