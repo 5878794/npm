@@ -73,7 +73,7 @@ window.onerror = function (msg, url, row, col, error) {
 	},100);
 	// console.log(error.stack);
 	// console.log(typeof error.stack)
-	return true;
+	return false;
 };
 
 
