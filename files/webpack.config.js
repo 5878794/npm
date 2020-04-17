@@ -2,6 +2,8 @@ var webpack = require('webpack');
 var path = require('path');
 var glob = require("glob");
 
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 
 
 //生成要编译的文件列表
@@ -95,45 +97,57 @@ var getTime = function(b){
 };
 
 
-module.exports = {
+new webpack.BannerPlugin('create by bens '+ getTime());
 
+
+
+module.exports = {
 	//页面入口文件配置
 	entry:getEs6List1(),
-	// entry: {
-	// 	// "coachesAndVenues/js/index":"./src/es6/coachesAndVenues/index.es6",
-	// 	// "coachesAndVenues/js/coachList":"./src/es6/coachesAndVenues/coachList.es6",
-	// 	// "coachesAndVenues/js/venuesInfo":"./src/es6/coachesAndVenues/venuesInfo.es6",
-	// 	// "coachesAndVenues/js/coachInfo":"./src/es6/coachesAndVenues/coachInfo.es6",
-	// 	// "appType/js/index":"./src/es6/appType/index.es6",
-	// 	// "appType/js/more":"./src/es6/appType/more.es6",
-	// 	// "handlingGuideline/js/index":"./src/es6/handlingGuideline/index.es6",
-	// 	// "handlingGuideline/js/info":"./src/es6/handlingGuideline/info.es6",
-	// 	// "news/js/index":"./src/es6/news/index.es6",
-	// 	// "news/js/info":"./src/es6/news/info.es6",
-	// 	// "healthTest/js/index":"./src/es6/healthTest/index.es6"
-	// },
 	devtool:false,
 	//入口文件输出配置
 	output: {
 		path: __dirname+"/trunk/",
-		filename: "[name].min.js"
+		filename: "[name].min.js",
+		publicPath:"/"
 	},
 	// watch:true,
-	module: {
-		//加载器配置
-		loaders: [
+	module:{
+		rules: [
+			//加载器配置
 			{
 				test: /\.es6?$/,
-				loader: 'babel-loader',
-				exclude: /node_modules/,
-				query: {
-					presets: ['env','stage-3'],
-					plugins: [
-						"transform-custom-element-classes",
-						"transform-decorators-legacy"
-					]
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						// cacheDirectory: true,
+						presets: [
+							[
+								"@babel/env",
+								{
+									// "targets": {
+									// 	"edge": "17",
+									// 	"firefox": "60",
+									// 	"chrome": "67",
+									// 	"safari": "11.1"
+									// },
+
+									"useBuiltIns": "entry",  //entry   usage
+									corejs:3
+								}
+							]
+						],
+						plugins: [
+							//解决commonjs问题
+							'@babel/plugin-transform-modules-commonjs',
+							//引入polyfill
+							'@babel/plugin-transform-runtime'
+						]
+					}
 				}
 			}
+
 		]
 	},
 	//其它解决方案配置
@@ -142,37 +156,30 @@ module.exports = {
 		extensions: ['.es6','.js'],
 		//自己的库地址
 		modules: [
-			path.resolve(__dirname, "src/js/lib"),
+			path.resolve(__dirname, "src/es6"),
 			"node_modules"
 		]
-		//模块别名定义，方便后续直接引用别名，无须多写长长的地址
-		// alias: {
-		// 	//后续直接 require('mod1') 即可
-		// 	mod1 : __dirname+'/js/mod1.es6',
-		// 	mod2 : __dirname+'/js/mod2.js',
-		// 	mod3 : __dirname+'/js/mod3.es6'
-		// }
 	},
-	//插件
-	plugins:[
-		//去除注释 压缩代码
-		new webpack.optimize.UglifyJsPlugin({
-			compress: true,
-			output: {
-				comments: false
-			},
-			except: ['$super', '$', 'exports','require','super','window']    //排除关键字
-		}),
-		//合并公共部分生成单独的文件,需要单独引用  pub.bundle.js
-		// new webpack.optimize.CommonsChunkPlugin('pub'),
-		//文件头部注释
-		new webpack.BannerPlugin("######5878794@qq.com   "+getTime()+"  ######"),
+	optimization:{
+		//公共文件提取
+		splitChunks:{
+			name: 'common',  //这公共代码的chunk名为'commons'
+			chunks:'all',
+			minChunks:3,        // 设定要有4个chunk（即4个页面）加载的js模块才会被纳入公共代码
+			filename: 'js/[name].min.js'  //生成的文件名
+		}
+		// minimizer: [
+			// 代码压缩
+			// new UglifyJsPlugin(),
 
-		//提取公共代码放到指定位置
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'common', // 这公共代码的chunk名为'commons'
-			filename: 'js/[name].min.js', // 生成后的文件名，虽说用了[name]，但实际上就是'commons.bundle.js'了
-			minChunks: 3 // 设定要有4个chunk（即4个页面）加载的js模块才会被纳入公共代码。这数目自己考虑吧，我认为3-5比较合适。
-		})
-	]
+		// ]
+	},
+	devServer: {
+		contentBase: path.join(__dirname, './trunk'),
+		// compress: true,
+		port: 9000
+	}
+
+
 };
+
