@@ -1,0 +1,41 @@
+{
+  "name": "rabbit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "all min": "webpack --display-error-details;tt=$(date +%s);pug -o ./trunk/  -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_zip.es6 $tt;node ./cmd/ver.es6 $tt",
+    "all": "webpack --display-error-details -d; tt=$(date +%s);pug -o ./trunk/  -P -O {\"tt\":\"'$tt'\"} ./src/pug/.;node ./cmd/less_compile.es6;node ./cmd/ver.es6 $tt",
+    "es6 min": "webpack --display-error-details;tt=$(date +%s)",
+    "es6": "webpack --display-error-details -d; tt=$(date +%s)",
+    "pug min": "pug -w ./src/pug/. -o ./trunk/",
+    "pug": "pug -w -P ./src/pug/. -o ./trunk/",
+    "less min": "node ./cmd/less_zip.es6",
+    "less": "node ./cmd/less_compile.es6",
+    "jadeTemplate": "pug -c -D --name-after-file -o ./trunk/template  ./src/pug_template",
+    "browser-sync": "browser-sync start --server --files 'css/*.css,*.html'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.2.4",
+    "@webcomponents/shadydom": "^1.6.0",
+    "babel-cli": "^6.23.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-custom-element-classes": "^0.1.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "less": "^3.11.1",
+    "pug": "^2.0.3",
+    "pug-cli": "1.0.0-alpha6",
+    "watcher-lessc": "^0.2.0",
+    "webpack": "^2.2.1",
+    "xlsx": "^0.15.5"
+  },
+  "description": "",
+  "devDependencies": {
+    "clean-css": "^4.2.3"
+  }
+}
