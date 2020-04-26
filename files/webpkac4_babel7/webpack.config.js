@@ -126,11 +126,9 @@ module.exports = {
 							[
 								"@babel/env",
 								{
-									// "targets": {
-									// 	"edge": "17",
-									// 	"firefox": "60",
-									// 	"chrome": "67",
-									// 	"safari": "11.1"
+									// targets: {
+									// 	browsers: ['> 1%', 'last 2 versions'],
+									// 	// chrome: '52' // 一些新语法浏览器直接支持 不会被转换
 									// },
 
 									"useBuiltIns": "entry",  //entry   usage
@@ -142,7 +140,9 @@ module.exports = {
 							//解决commonjs问题
 							'@babel/plugin-transform-modules-commonjs',
 							//引入polyfill
-							'@babel/plugin-transform-runtime'
+							'@babel/plugin-transform-runtime',
+							//类的装饰器
+							["@babel/plugin-proposal-decorators", { "legacy": true }]
 						]
 					}
 				}
