@@ -145,12 +145,12 @@ module.exports = {
 
 							//类的装饰器  需要带参数 {legacy:true}
 							//使用咯带参数的配置  后面2个也要配置参数   {loose:true} 使用松散模式
-							// ["@babel/plugin-proposal-decorators"],
+							["@babel/plugin-proposal-decorators",{legacy:true}],
 
 
 							//类私有变量
-							["@babel/plugin-proposal-class-properties"],
-							['@babel/plugin-proposal-private-methods']
+							["@babel/plugin-proposal-class-properties",{loose:true}],
+							['@babel/plugin-proposal-private-methods',{loose:true}]
 
 						]
 					}
