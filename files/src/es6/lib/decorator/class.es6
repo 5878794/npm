@@ -8,6 +8,7 @@
 
 let decorator = {
 	//混合多个class成为一个新的class
+	//跳过constructor，属性值不行
 
 	// class A { say() { return 1 } }
 	// class B { hi() { return 2 } }
