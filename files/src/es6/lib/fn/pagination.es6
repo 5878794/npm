@@ -31,7 +31,13 @@ let pagination = {
 			backData;
 
 		if(totalPage<=7){
-			backData = [pre,1,2,3,4,5,6,7,next];
+			backData = [];
+			for(let i=1,l=totalPage;i<=l;i++){
+				backData.push(i);
+			}
+			backData.push(next);
+			backData.unshift(pre);
+			// backData = [pre,1,2,3,4,5,6,7,next];
 		}else{
 			backData = this[countPage](pre,next,nowPage,totalPage);
 		}
