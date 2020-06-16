@@ -48,7 +48,7 @@ require('../../lib/jq/check_from');
 let createDom = Symbol(),
 	paramCheck = Symbol(),
 	createInputCss = Symbol(),
-	createInput = Symbol();
+	createInput = Symbol.for('createInput');
 
 
 let createInputDom = {
@@ -350,5 +350,8 @@ class bInput extends HTMLElement{
 if(!customElements.get('b-input')){
 	customElements.define('b-input', bInput );
 }
+
+
+module.exports = bInput;
 
 
