@@ -16,7 +16,10 @@ require("./../jq/cssAnimate");
 let getImageFitSize = require("./../fn/getImageFitSize"),
 	scaleFn = require('../event/mulitTouch'),
 	// $$$ = require("./../event/$$"),
-	device = require("./../device");
+	device = require("./../device"),
+	rem2px = function(val){
+		return device.rem2Px(750,val)/2+'px';
+	};
 
 var showPicture = function(data){
 	this.imgs = data.imgs || [];
@@ -83,10 +86,11 @@ showPicture.prototype = {
 
 		rightBtn.css3({
 			position:"absolute",
-			right:"0.1rem",
+			right:rem2px(0.1),
 			top:"50%",
-			"margin-top":"-0.32rem",
-			width:"0.64rem",height:"0.64rem",
+			"margin-top":rem2px(-0.32),
+			width:rem2px(0.64),
+			height:rem2px(0.64),
 			background:"url('"+this.arrowImg+"') no-repeat center center",
 			"background-size":"100% 100%",
 			cursor:"pointer",
@@ -94,14 +98,16 @@ showPicture.prototype = {
 			"z-index":10
 		});
 		leftBtn = rightBtn.clone().css3({
-			left:"0.1rem",right:"unset",
+			left:rem2px(0.1),
+			right:"unset",
 			transform:"rotate(180deg)"
 		});
 		closeBtn.css({
 			position:"absolute",
 			right:"10px",
 			top:"10px",
-			width:"0.64rem",height:"0.64rem",
+			width:rem2px(0.64),
+			height:rem2px(0.64),
 			background:"url('"+this.closeImg+"') no-repeat center center",
 			"background-size":"100% 100%",
 			cursor:"pointer",
@@ -116,6 +122,11 @@ showPicture.prototype = {
 			this.main.append(rightBtn);
 			this.main.append(leftBtn);
 		// }
+
+		if(this.imgs.length == 1){
+			leftBtn.css({display:'none'});
+			rightBtn.css({display:'none'});
+		}
 
 		this.closeBtn = closeBtn;
 		this.main.append(closeBtn);
