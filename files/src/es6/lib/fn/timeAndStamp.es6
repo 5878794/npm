@@ -66,6 +66,16 @@ let getDate = function (b) {
 	date = (date < 10) ? "0" + date : date;
 	return year + "-" + month + "-" + date;
 };
+let getDate1 = function (b) {
+	b = b || new Date().getTime();
+	var a = new Date(b);
+	var year = a.getFullYear();
+	var month = parseInt(a.getMonth()) + 1;
+	month = (month < 10) ? "0" + month : month;
+	var date = a.getDate();
+	date = (date < 10) ? "0" + date : date;
+	return year + "-" + month + "-" + date;
+};
 
 
 //a :   2012-12-13   2012-12-12 12:12:33  自动补位
@@ -133,4 +143,4 @@ let getDataTime3 = function(stamp){
 };
 
 
-module.exports = {getDateTime,getDateTime1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3};
+module.exports = {getDateTime,getDateTime1,getDate1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3};
