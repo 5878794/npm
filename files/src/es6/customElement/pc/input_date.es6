@@ -36,6 +36,7 @@
 //  input.key;              //获取设置的key的值。
 //  input.min = '2020-11-11'    //获取设置最大、最小选择时间范围
 //  input.max = '20202-11-11'
+//  input.disabled = true;  //设置input是否可用 true/false
 
 
 

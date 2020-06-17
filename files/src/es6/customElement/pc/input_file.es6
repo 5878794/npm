@@ -33,6 +33,7 @@
 //  input.checkPass();      //input检查 返回 true/false 。 错误时会显示errDom提示
 //  input.value;            //获取上传的文件对象,返回数组   get
 //  input.key;              //获取设置的key的值。
+//  input.disabled = true;  //设置input是否可用 true/false
 
 
 
@@ -254,7 +255,7 @@ class bInputFile extends bInput{
 	//创建添加的容器
 	[createShowDiv](input,divWidth,divHeight){
 		let div = $('<div class="__input_file__ box_scc"></div>'),
-			del = $('<div class="box_scc hover">删除</div>');
+			del = $('<div class="box_scc hover __input_del_btn__">删除</div>');
 
 
 		div.css({
@@ -313,6 +314,16 @@ class bInputFile extends bInput{
 		});
 
 		return files;
+	}
+
+	set disabled(state){
+		if(state){
+			this.fileBtn.addClass('hidden');
+			this.inputBodyDom.find('.__input_file__').find('.__input_del_btn__').addClass('hidden');
+		}else{
+			this.fileBtn.removeClass('hidden');
+			this.inputBodyDom.find('.__input_file__').find('.__input_del_btn__').removeClass('hidden');
+		}
 	}
 
 }

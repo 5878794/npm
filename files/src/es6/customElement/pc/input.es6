@@ -37,6 +37,7 @@
 	//  input.selectData = [];  //type=select时，设置下拉菜单选项
 	//  input.value = '';       //获取或设置对象的值   get、set
 	//  input.key;              //获取设置的key的值。
+	//  input.disabled = true;  //设置input是否可用 true/false
 
 
 
@@ -341,6 +342,17 @@ class bInput extends HTMLElement{
 
 	get key(){
 		return this.serverKey;
+	}
+
+	set disabled(state){
+		if(state){
+			this.body.find('.__input__').attr({
+				disabled:'disabled'
+			});
+		}else{
+			this.body.find('.__input__').removeAttr('disabled');
+		}
+
 	}
 
 }
