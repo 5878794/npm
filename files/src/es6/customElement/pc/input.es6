@@ -61,6 +61,12 @@ let createInputDom = {
 		if(placeholder){
 			selectInput.append('<option value="">'+placeholder+'</option>');
 		}
+
+		selectInput.css({
+			width:'100%',
+			'-webkit-appearance': 'none'
+		})
+
 		return selectInput;
 	},
 	textarea(placeholder,rule){
@@ -146,7 +152,7 @@ class bInput extends HTMLElement{
 		let dom = $('<div class="box_slt"></div>'),
 			inputBody = $('<div class="box_hlt"></div>'),
 			name = $('<div>'+this.name+'</div>'),
-			error = $('<div>'+this.err+'</div>'),
+			error = $('<div class="__input_error__">'+this.err+'</div>'),
 			inputDom = $('<div class="boxflex1 box_hlc"></div>');
 
 		dom.append(inputBody).append(error);
@@ -237,6 +243,25 @@ class bInput extends HTMLElement{
 				//修正select本身文字有4像素右偏
 				let select_padding_left = parseInt(this.inputBodyDom.css('paddingLeft'))-4;
 				this.inputBodyDom.css({paddingLeft:select_padding_left+'px'});
+
+				//由于样式已使用默认样式，去掉咯右边的箭头，需要自己添加
+				let div = $('<div></div>');
+				div.css({
+					width: 0,
+					height: 0,
+					'border-left':'4px solid transparent',
+					'border-right': '4px solid transparent',
+					'border-top': '6px solid #000',
+					position:'absolute',
+					right:'10px',
+					top:'50%',
+					'margin-top':'-3px'
+				});
+				this.inputBodyDom.css({
+					position:'relative',
+					'padding-right':'30px'
+				}).append(div);
+
 
 				this.inputBodyDom.append(selectInput);
 				break;
