@@ -17,7 +17,8 @@ module.exports = function(number,digits){
         //货币格式中使用的货币。
         currency: 'CNY',
         //小数位数
-        minimumFractionDigits:digits
+        minimumFractionDigits:digits,
+        maximumFractionDigits:digits
     };
 
     return new Intl.NumberFormat('zh',option).format(number);
