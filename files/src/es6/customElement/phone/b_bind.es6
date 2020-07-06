@@ -63,7 +63,7 @@ class bBind extends HTMLElement{
 	//元素加入页面回调
 	connectedCallback() {
 		//挂载css
-		let all = addStyleFile('../../css/all.css');
+		let all = addStyleFile('../res/css/all.css');
 		this.shadow.appendChild(all);
 
 		let cssFilePath = $(this).attr('css'),
