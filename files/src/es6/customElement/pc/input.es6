@@ -34,11 +34,14 @@
 
 	//  input.nameWidth = 100;  //获取或设置标题字段的宽度   get、set
 	//  input.rowHeight = 30;   //获取或设置行高  get、set
-	//  input.checkPass();      //input检查 返回 true/false 。 错误时会显示errDom提示
-	//  input.selectData = [];  //type=select时，设置下拉菜单选项
+	//  input.selectData = [{name:'',value:''}];  //type=select时，设置下拉菜单选项
 	//  input.value = '';       //获取或设置对象的值   get、set
 	//  input.key;              //获取设置的key的值。
 	//  input.disabled = true;  //设置input是否可用 true/false
+
+	//  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
+	//通过返回该控件的value
+	//失败返回  {msg:'err',dom:this}
 
 
 
@@ -364,14 +367,20 @@ class bInput extends HTMLElement{
 	}
 
 	checkPass(){
-		this.errDom.css({display:'none'});
+		return new Promise((success,error)=>{
+			this.errDom.css({display:'none'});
 
-		if(this.body.checkFrom().errorDom.length == 0){
-			return true;
-		}else{
-			this.errDom.css({display:'block'});
-			return false;
-		}
+			if(this.body.checkFrom().errorDom.length == 0){
+				success(this.value);
+			}else{
+				this.errDom.css({display:'block'});
+				error({
+					msg:$(this).attr('err'),
+					dom:this
+				});
+			}
+		})
+
 	}
 
 	//设置select的列表

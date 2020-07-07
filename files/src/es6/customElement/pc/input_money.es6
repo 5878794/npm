@@ -72,6 +72,7 @@ class BInputNumber extends BInput{
 		input.addEventListener('blur',function(e){
 			let val = this.value.replace(/\,/ig,'');
 			val = numberFormat(val,accuracy);
+			val = (val=='NaN')? '' : val;
 			this.value = val;
 			hidden.value = val.replace(/\,/ig,'');
 		},false)
@@ -79,7 +80,7 @@ class BInputNumber extends BInput{
 	}
 
 	get value(){
-		return this.body.find('.__hidden_input__').val()*1;
+		return this.body.find('.__hidden_input__').val();
 	}
 
 	set value(val){

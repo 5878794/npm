@@ -30,10 +30,14 @@
 
 //  input.nameWidth = 100;  //获取或设置标题字段的宽度   get、set
 //  input.rowHeight = 30;   //获取或设置行高  get、set
-//  input.checkPass();      //input检查 返回 true/false 。 错误时会显示errDom提示
 //  input.value;            //获取上传的文件对象,返回数组   get
 //  input.key;              //获取设置的key的值。
 //  input.disabled = true;  //设置input是否可用 true/false
+
+
+//  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
+							//通过返回该控件的value
+							//失败返回  {msg:'err',dom:this}
 
 
 
@@ -291,17 +295,22 @@ class bInputFile extends bInput{
 
 
 	checkPass(){
-		this.errDom.css({display:'none'});
-		if($(this).attr('rule') == 'must'){
-			if(this.value.length != 0){
-				return true;
+		return new Promise((success,error)=>{
+			this.errDom.css({display:'none'});
+			if($(this).attr('rule') == 'must'){
+				if(this.value.length != 0){
+					success(this.value);
+				}else{
+					this.errDom.css({display:'block'});
+					error({
+						msg:$(this).attr('err'),
+						dom:this
+					});
+				}
 			}else{
-				this.errDom.css({display:'block'});
-				return false;
+				return true;
 			}
-		}else{
-			return true;
-		}
+		})
 	}
 
 	set value(val){
