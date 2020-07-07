@@ -27,6 +27,7 @@
 	//
 	// 	rowHoverStyle:null,         //行hover附加样式    2个必须一起设置
 	// 	rowNotHoverStyle:null       //
+	//  noDataHtml:'<div>暂无数据</div>'        //无数据显示的东东    有默认值
 	// };
 
 
@@ -124,6 +125,7 @@ class bTableList extends HTMLElement{
 		this.titleRowHeight = 30;
 		this.titleRowStyle = null;      //{color:#ccc;}
 		this.titleCelStyle = null;
+		this.noDataHtml = '<div class="box_hcc" style="width:100%;height:100px;font-size:14px;color:#333;">暂无数据</div>';
 
 		this.rowHeight = 30;
 		this.rowStyle = null;
@@ -262,6 +264,11 @@ class bTableList extends HTMLElement{
 
 			this.body.append(row);
 		});
+
+		if(data.length == 0){
+			let div = $(this.noDataHtml);
+			this.body.append(div);
+		}
 	}
 
 
