@@ -15,7 +15,7 @@
 //获取元素对象
 	//  let table = $('b-table-list').get(0);
 
-//设置表单样式等
+//设置表单样式等整体设置
 	// table.setting = {
 	// 	titleRowHeight:30,       //标题行 高度    默认：30
 	// 	titleRowStyle:null,      //标题行附加样式   {background:red;}
@@ -35,20 +35,22 @@
 	// 	{
 	// 		name:'客户',          //must,标题行名称
 	// 		width:'25%',         //must,cel宽度
-	// 		color:'#ccc',        //must,字体颜色
-								// key 或 children字段必须出现一个
+	//      type:'text',          //数据插入方式 html\text  默认：text
+	// 		style:{color:'red'},        //字体颜色
+	//      key:'a1',              // key 或 children字段必须出现一个
 	// 		cursor:'pointer',      //是否显示可点击鼠标样式
 	// 		icon:'icon',            //该列是否有图标
+	//      iconStyle:{width:'',height:''},
 	// 		children:[
-	// 			{color:'red',key:'a1',cursor:'pointer'},//该列内显示的子数据，竖向排列
-	// 			{color: 'green', key: 'a2'},
-	// 			{color: 'yellow', key: 'a3'}
+	// 			{style:'red',key:'a1',cursor:'pointer',type:'html'},//该列内显示的子数据，竖向排列
+	// 			{style: 'green', key: 'a2'},
+	// 			{style: 'yellow', key: 'a3'}
 	// 		]
 	// 	},
 	// 	{
 	// 		name:'操作',
 	// 		width:'25%',
-	// 		color:'#ccc',
+	// 		style:{color:'#ccc'},
 	// 		key:'d',                //数据对应的key
 	// 		cursor:'pointer'
 	// 	}
@@ -72,6 +74,20 @@
 	// table.show(data);
 
 
+
+//事件处理
+//行点击事件
+	// table.body.find('.__row__').click(function(){
+	//      let data = $(this).data('data');
+	//      console.log(data);
+	// });
+
+//元素点击事件
+// table.body.find('.__key9__').click(function(e){
+// 	e.stopPropagation();        //阻止冒泡，避免点击到行
+// 	let data = $(this).parent().parent().data('data');
+// 	console.log(data);
+// });
 
 
 let addStyleFile = require('../fn/addStyleFile');
@@ -175,7 +191,7 @@ class bTableList extends HTMLElement{
 
 		data.map(rowData=>{
 			let row = $('<div class="box_hcc __row__"></div>');
-			row.css(rowCss);
+			row.css(rowCss).data({data:rowData});
 
 			this.tableData.map(rs=>{
 				//创建列
@@ -190,9 +206,15 @@ class bTableList extends HTMLElement{
 					let img = new Image();
 					img.src = rowData[rs.icon];
 					$(img).addClass('__'+rs.icon+'__');
+					if(rs.iconStyle){
+						$(img).css(rs.iconStyle);
+					}
 					cel.append(img);
-					celBody = $('<div class="boxflex1 diandian box_slc" style="text-align:left;padding-left:10px;"></div>');
-					cel.append(celBody);
+
+					if(rs.children && rs.children.length != 0){
+						celBody = $('<div class="boxflex1 diandian box_slc" style="text-align:left;padding-left:10px;"></div>');
+						cel.append(celBody);
+					}
 				}
 
 				//处理该列是否有子集
@@ -201,10 +223,17 @@ class bTableList extends HTMLElement{
 					//插入子元素
 					rs.children.map(children=>{
 						let childrenDom = $('<div class="diandian"></div>');
-						childrenDom.text(rowData[children.key]).css({
-							color:children.color,
+
+						let type = (children.type == 'html')? 'html' : 'text';
+
+						childrenDom[type](rowData[children.key]).css({
 							width:'100%'
 						}).addClass('__'+children.key+'__');
+
+						if(children.style){
+							childrenDom.css(children.style);
+						}
+
 						if(children.cursor){
 							childrenDom.addClass('hover');
 						}
@@ -213,9 +242,19 @@ class bTableList extends HTMLElement{
 					});
 				}else{
 					//无子元素
-					insertBody.append('<div class="diandian" style="width:100%;">'+rowData[rs.key]+'</div>').addClass('__'+rs.key+'__');
-					if(rs.cursor){
-						cel.addClass('hover');
+					if(rs.key){
+						let item = $('<div class="diandian" style="width:100%;"></div>');
+						let type = (rs.type == 'html')? 'html' : 'text';
+						item[type](rowData[rs.key]);
+
+						if(rs.style){
+							item.css(rs.style);
+						}
+
+						insertBody.append(item).addClass('__'+rs.key+'__');
+						if(rs.cursor){
+							cel.addClass('hover');
+						}
 					}
 				}
 				row.append(cel);

@@ -62,6 +62,9 @@ class BInputSearch extends BInput{
 
 		this.awaitTime = 100;  //ms
 		this.awaitFn = null;
+		this.userSearchFn = function(){};
+		this.userInputFn = function(){};
+
 		this[addEvent]();
 	}
 
