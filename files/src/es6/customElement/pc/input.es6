@@ -230,6 +230,7 @@ class bInput extends HTMLElement{
 	[createInputCss](){
 		this.inputCss = {
 			display:'block',
+			width:'100%',
 			height:this.userStyle.rowHeight+'px',
 			lineHeight:this.userStyle.rowHeight+'px',
 			background:'none',

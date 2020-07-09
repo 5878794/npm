@@ -78,6 +78,7 @@ class BInputDate extends BInput{
 		}
 
 		this.inputBodyDom.append(textInput);
+
 	}
 
 
@@ -113,6 +114,13 @@ class BInputDate extends BInput{
 	set changeFn(fn){
 		fn = fn || function(){};
 		this.userChangeFn = fn;
+	}
+
+	set value(val){
+		val = val || '';
+		if(!val){return;}
+		val = t2s.getDate1(val);
+		this.body.find('.__input__').val(val);
 	}
 
 }
