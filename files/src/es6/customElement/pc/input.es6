@@ -21,6 +21,7 @@
 		// iconWidth=20
 		// iconHeight=20
 		// autoHeight=true          //textarea独有，是否自动增高输入框高度
+		// disabled=disabled          //是否可编辑
 	// )
 
 
@@ -159,6 +160,10 @@ class bInput extends HTMLElement{
 		this[createInput](this.type);
 		this.shadow.appendChild(this.body.get(0));
 
+
+		if($(this).attr('disabled') == 'disabled'){
+			this.disabled = true;
+		}
 
 	}
 
