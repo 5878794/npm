@@ -14,7 +14,7 @@ div, p, span, a, ul, li,img{
     -ms-user-select:none;
     -moz-user-select:none;
     -webkit-text-size-adjust: none;
-    font-size: 0.24rem;
+    /*font-size: 0.24rem;*/
 }
 
 
@@ -32,6 +32,15 @@ input,button,select,textarea{
     outline:none; border: none;
 }
 
+
+.input_disabled{
+    background: #F5F5F5 !important;
+    border-color: #F5F5F5 !important;
+}
+
+/*input:disabled{*/
+/*    background: #F5F5F5 !important;*/
+/*}*/
 
 /*placeholder颜色设置*/
 input::-webkit-input-placeholder {
@@ -461,6 +470,17 @@ a:active{
     display: none;
 }
 
+.hover{
+    cursor: pointer;
+    /*-webkit-transition: all 0.4s ease-out;*/
+    /*-moz-transition: all 0.4s ease-out;*/
+    /*-ms-transition: all 0.4s ease-out;*/
+    /*-o-transition: all 0.4s ease-out;*/
+    /*transition: all 0.4s ease-out;*/
+}
+.hover:hover{
+    opacity: 0.4;
+}
 
 
 

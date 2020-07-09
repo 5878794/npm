@@ -414,8 +414,10 @@ class bInput extends HTMLElement{
 			this.body.find('.__input__').attr({
 				disabled:'disabled'
 			});
+			this.inputBodyDom.addClass('input_disabled');
 		}else{
 			this.body.find('.__input__').removeAttr('disabled');
+			this.inputBodyDom.removeClass('input_disabled');
 		}
 
 	}
