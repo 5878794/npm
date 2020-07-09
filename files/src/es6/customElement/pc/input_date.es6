@@ -38,6 +38,8 @@
 //  input.max = '20202-11-11'
 //  input.disabled = true;  //设置input是否可用 true/false
 
+//  input.changeFn = function(){};
+
 
 
 
@@ -46,13 +48,17 @@
 let BInput = require('./input'),
 	t2s = require('../../lib/fn/timeAndStamp');
 
-let createInput = Symbol.for('createInput');
+let createInput = Symbol.for('createInput'),
+	bindChangFn = Symbol();
 
 
 class BInputDate extends BInput{
 	constructor(props) {
 		super(props);
 
+		this.userChangeFn = function(){};
+
+		this[bindChangFn]();
 	}
 
 	[createInput](type){
@@ -75,6 +81,15 @@ class BInputDate extends BInput{
 	}
 
 
+	[bindChangFn](){
+		let input = this.body.find('.__input__').get(0),
+			_this = this;
+		input.addEventListener('change',function(){
+			_this.userChangeFn(_this.value);
+		},false)
+	}
+
+
 	get min(){
 		return this.inputBodyDom.find('input').attr('min') || '';
 	}
@@ -93,6 +108,11 @@ class BInputDate extends BInput{
 		this.inputBodyDom.find('input').attr({
 			max:val
 		});
+	}
+
+	set changeFn(fn){
+		fn = fn || function(){};
+		this.userChangeFn = fn;
 	}
 
 }
