@@ -6,7 +6,7 @@
 //==========================================================
 
 // html
-// b-input(name='名字:'           //输入框前面的标题。 如空不显示标题。
+// b-input-date(name='名字:'           //输入框前面的标题。 如空不显示标题。
 // key='aa'                  //服务器对应的key
 // placeholder='测试。。。'    //提示文字
 // rule='must'                //只支持must
@@ -121,6 +121,10 @@ class BInputDate extends BInput{
 		if(!val){return;}
 		val = t2s.getDate1(val);
 		this.body.find('.__input__').val(val);
+	}
+
+	get value(){
+		return this.body.find('.__input__').val();
 	}
 
 }

@@ -7,7 +7,7 @@
 //==========================================================
 
 // html
-// b-input(name='名字:'          //输入框前面的标题。 如空不显示标题。
+// b-input-file(name='名字:'          //输入框前面的标题。 如空不显示标题。
 // key='aa'                     //服务器对应的key
 // type=file                    //输入框类型
 // rule='must'                  //只支持must
@@ -71,6 +71,7 @@ class bInputFile extends bInput{
 		this[mdfStyle]();
 
 		this[addFileBtnFn]();
+
 	}
 
 	//样式修正
@@ -120,6 +121,10 @@ class bInputFile extends bInput{
 		let div = this.btn.clone(),
 			input = this.input.clone();
 		div.append(input);
+
+		if(this.unit){
+			div.append(this.unit);
+		}
 
 		this.fileBtn = div;
 

@@ -18,6 +18,7 @@
 		// type='text'               //输入框类型
 		// err='错。。。'              //验证错误显示提示信息
 		// icon='./image/aa.jpg'      //输入框前面图标地址，及大小  如空不显示icon
+		// unit='m'					// 输入框后面显示单位
 		// iconWidth=20
 		// iconHeight=20
 		// autoHeight=true          //textarea独有，是否自动增高输入框高度
@@ -32,6 +33,7 @@
 	// 	input.inputBodyStyle = {color:'red'};
 	// 	input.rowStyle = {color:'red'};
 	// 	input.errStyle ={color:'red'};
+	//	input.unitStyle={color:'red'};
 
 	//  input.nameWidth = 100;  //获取或设置标题字段的宽度   get、set
 	//  input.rowHeight = 30;   //获取或设置行高  get、set
@@ -132,7 +134,8 @@ class bInput extends HTMLElement{
 		this.inputIconHeight = parseInt($(this).attr('iconHeight')) || 20;
 		//textarea 是否自动增加高度
 		this.autoHeight = ($(this).attr('autoHeight') == 'true');
-
+		//输入框单位显示
+		this.unit = $(this).attr('unit') || '';
 
 		//生成的input的样式缓存
 		this.inputCss = {};
@@ -158,6 +161,7 @@ class bInput extends HTMLElement{
 		this[createInputCss]();
 		this[paramCheck]();
 		this[createInput](this.type);
+		this.inputBodyDom.append(this.unit);
 		this.shadow.appendChild(this.body.get(0));
 
 
@@ -175,11 +179,13 @@ class bInput extends HTMLElement{
 		let dom = $('<div class="box_slt"></div>'),
 			inputBody = $('<div class="box_hlt"></div>'),
 			name = $('<div>'+this.name+'</div>'),
+			unit = $('<div>'+this.unit+'</div>'),
 			error = $('<div class="__input_error__">'+this.err+'</div>'),
 			inputDom = $('<div class="boxflex1 box_hlc"></div>');
 
 		dom.append(inputBody).append(error);
 		inputBody.append(name).append(inputDom);
+
 
 		name.css({
 			width:this.userStyle.nameWidth+'px',
@@ -187,6 +193,12 @@ class bInput extends HTMLElement{
 			lineHeight:this.userStyle.rowHeight+'px',
 			paddingRight:'10px'
 		});
+		if(this.name.indexOf('<br')>-1){
+			name.css({
+				lineHeight: this.userStyle.rowHeight / 2 + 'px'
+			})
+		}
+
 		inputBody.css({
 			width:'100%'
 		});
@@ -199,8 +211,12 @@ class bInput extends HTMLElement{
 		inputDom.css({
 			border:'1px solid #ccc',
 			padding:'0 10px'
-		})
+		});
+		unit.css({
+			paddingLeft:'5px'
+		});
 
+		this.unit = unit;
 		this.body = dom;
 		this.rowDom = inputBody;
 		this.nameDom = name;
@@ -331,6 +347,9 @@ class bInput extends HTMLElement{
 	set nameStyle(style){
 		this.nameDom.css(style);
 	}
+	set unitStyle(style){
+		this.unit.css(style);
+	}
 	set inputBodyStyle(style){
 		this.inputBodyDom.css(style);
 	}
@@ -364,8 +383,16 @@ class bInput extends HTMLElement{
 		});
 		this.body.find('.__textarea__').css({
 			height:height*3+'px',
+			minHeight:height*3+'px',
 			lineHeight:'120%'
 		});
+
+		if(this.name.indexOf('<br')>-1){
+			this.nameDom.css({
+				lineHeight: height / 2 + 'px'
+			})
+		}
+
 	}
 	//外层dom有border 因此整体高度要比获取多值多2像素
 	get rowHeight(){

@@ -120,6 +120,7 @@ class bTableList extends HTMLElement{
 
 		//表格数据
 		this.tableData = [];
+		this.minWidth = parseInt($(this).attr('min-width'));
 
 		//配置参数
 		this.titleRowHeight = 30;
@@ -167,6 +168,12 @@ class bTableList extends HTMLElement{
 		}
 
 		this.body.css({display:'block'});
+		if(this.minWidth){
+			this.body.css({
+				'min-width':this.minWidth+'px',
+				overflow:'auto'
+			}).addClass('scroll_style1');
+		}
 
 	}
 

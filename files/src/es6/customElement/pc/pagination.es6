@@ -69,7 +69,7 @@ class bPagination extends HTMLElement{
 	[addCss](){
 		let text = '\n' +
 			'.pagination_main{\n' +
-			'  height: 35px;\n' +
+			'  height: 35px;color:#666;\n' +
 			'}\n' +
 			'.pagination_main a,\n' +
 			'.pagination_main div{\n' +
@@ -89,7 +89,7 @@ class bPagination extends HTMLElement{
 			'.pagination_pre:visited,\n' +
 			'.pagination_page:visited,\n' +
 			'.pagination_next:visited{\n' +
-			'  color:#000;\n' +
+			'  color:#666;\n' +
 			'}\n' +
 			'\n' +
 			'\n' +
