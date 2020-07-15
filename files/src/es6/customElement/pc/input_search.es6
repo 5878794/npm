@@ -6,7 +6,7 @@
 //==========================================================
 
 // html
-// b-input(name='名字:'           //输入框前面的标题。 如空不显示标题。
+// b-input-search(name='名字:'           //输入框前面的标题。 如空不显示标题。
 // key='aa'                  //服务器对应的key
 // placeholder='测试。。。'    //提示文字
 // rule='must'                //只支持must
@@ -31,8 +31,6 @@
 //  input.selectData = [];  //type=select时，设置下拉菜单选项
 //  input.value = '';       //获取或设置对象的值   get、set
 //  input.key;              //获取设置的key的值。
-//  input.min = '2020-11-11'    //获取设置最大、最小选择时间范围
-//  input.max = '20202-11-11'
 //  input.disabled = true;  //设置input是否可用 true/false
 //  input.searchFn = function   //search函数返回，显示提示列表
 								//异步函数/promise对象
@@ -78,16 +76,23 @@ class BInputSearch extends BInput{
 			top:this.rowHeight+'px',
 			left:0,
 			width:'100%',
-			borderTop:'1px solid rgb(80, 111, 226)'
+			zIndex:100,
+			// padding:'0 10px',
+			// boxSizing:'border-box',
+			borderRadius:'5px',
+			// borderTop:'1px solid rgb(80, 111, 226)',
+			boxShadow:'0 0 3px 3px #ccc',
+			background:'#fff'
 		});
 		let searchListDom = $('<div class="box_hlc diandian"></div>');
 		searchListDom.css({
 			width:'100%',
-			height:'30px',
-			padding:'0 10px',
+			height:'45px',
+			lineHeight:'45px',
 			borderBottom:'1px solid #ccc',
+			textIndent:'1em',
 			cursor: 'pointer',
-			background:'#eee'
+			background:'#fff'
 		});
 
 		this.inputBodyDom.css({
@@ -158,10 +163,9 @@ class BInputSearch extends BInput{
 			_this[itemClick]($(this));
 		});
 		body.find('div').hover(function(){
-			$(this).css({background:'#fff'});
-			$(this).css({background:'#fff'});
+			$(this).css({background:'#fbd6d8'});
 		},function(){
-			$(this).css({background:'#eee'});
+			$(this).css({background:'#fff'});
 		})
 	}
 

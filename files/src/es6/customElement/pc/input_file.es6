@@ -17,6 +17,7 @@
 // icon='./image/aa.jpg'        //输入框前面图标地址，及大小  如空不显示icon
 // iconWidth=20
 // iconHeight=20
+//  disabled='disabled'     //注：不能直接设置，需要在js中设置
 // )
 
 
@@ -38,6 +39,10 @@
 //  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
 							//通过返回该控件的value
 							//失败返回  {msg:'err',dom:this}
+
+
+//                      disabled=true时，设置要显示的资源
+//  input.showFiles = [''http://www.baidu.com/aa.pdf','http://www.baidu.com/aa.png'];
 
 
 
@@ -63,6 +68,7 @@ let allowFileType = {
 
 
 class bInputFile extends bInput{
+
 	constructor() {
 		super();
 
@@ -319,7 +325,8 @@ class bInputFile extends bInput{
 	}
 
 	set value(val){
-		console.log('%c 不能设置value,只能获取','color:red;');
+		console.log('%c 不能设置value,只能获取,要显示图片调用showFiles','color:red;');
+
 	}
 	get value(){
 		let files = [];
@@ -332,6 +339,9 @@ class bInputFile extends bInput{
 
 	set disabled(state){
 		if(state){
+			if(!this.fileBtn){
+				return;
+			}
 			this.fileBtn.addClass('hidden');
 			this.inputBodyDom.find('.__input_file__').find('.__input_del_btn__').addClass('hidden');
 		}else{
@@ -340,6 +350,86 @@ class bInputFile extends bInput{
 		}
 	}
 
+
+	set showFiles(data){
+		data = data || [];
+
+		let divWidth = 80,
+			divHeight = 80;
+		data.map(rs=>{
+			let fileType = rs.substr(rs.lastIndexOf('.')+1);
+			let div = $('<div class="__input_file__ box_scc"></div>');
+			div.css({
+				width:divWidth+'px',
+				height:divHeight+'px',
+				border:'1px solid #aaa',
+				margin:'0 10px 10px 0',
+				position:'relative'
+			});
+
+
+
+			if(allowFileType.image.indexOf(fileType) > -1){
+				//是图片
+				let img = $(`<img class="hover" src="${rs}">`);
+				img.css({
+					cursor:'pointer'
+				});
+				img.get(0).onload = function(){
+					let imgW = this.width,
+						imgH = this.height,
+						size = getImageFitSize(imgW,imgH,divWidth,divHeight);
+
+					img.css({
+						width:size.width+'px',
+						height:size.height+'px'
+					})
+				};
+				img.click(function(){
+					let src = $(this).attr('src');
+					let a = new showBigImage({
+						imgs:[src]
+					})
+					a.showImg(0);
+				});
+
+				div.append(img);
+				this.inputBodyDom.append(div);
+			}else{
+				//是文件
+				let typeDom = $('<div class="diandian"></div>'),
+					nameDom = $('<div class="diandian"></div>'),
+					fileUrl = rs,
+					fileName = rs.substr(rs.lastIndexOf('/')+1);
+				div.removeClass('box_scc').addClass('box_slt');
+				nameDom.addClass('hover');
+
+				typeDom.css({
+					padding:'0 5px',
+					width:'100%',
+					height:'30px',
+					fontSize:'16px',
+					color:'blue'
+				}).text(fileType);
+				nameDom.css({
+					padding:'0 10px',
+					width:'100%',
+					height:'30px',
+					color:'#333',
+					fontSize:'12px'
+				}).text(fileName);
+
+				div.append(typeDom).append(nameDom);
+
+				nameDom.click(function(){
+					window.open(fileUrl);
+				});
+
+
+				this.inputBodyDom.append(div);
+			}
+		})
+	}
 }
 
 
