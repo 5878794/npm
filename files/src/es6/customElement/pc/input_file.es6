@@ -319,7 +319,7 @@ class bInputFile extends bInput{
 					});
 				}
 			}else{
-				return true;
+				success(this.value);
 			}
 		})
 	}

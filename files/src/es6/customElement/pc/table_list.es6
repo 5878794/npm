@@ -96,7 +96,9 @@ let addStyleFile = require('../fn/addStyleFile');
 let createTitleRow = Symbol(),
 	getTitleRowStyle = Symbol(),
 	createRowList = Symbol(),
-	getRowListStyle = Symbol();
+	getRowListStyle = Symbol(),
+	setLevel2Body = Symbol(),
+	addEvent = Symbol();
 
 
 class bTableList extends HTMLElement{
@@ -115,12 +117,20 @@ class bTableList extends HTMLElement{
 		this.shadow = this.attachShadow({mode: 'open'});
 
 		this.body = $('<div></div>');
-		this.shadow.appendChild(this.body.get(0));
+		this.titleBody = $('<div></div>');
+		this.listBody = $('<div></div>');
+		this.body.append(this.titleBody).append(this.listBody);
 
+
+		this.minWidth = parseInt($(this).attr('minWidth'));
+		this.addEventRun = false;
+		if(this.minWidth){
+			this[addEvent]();
+		}
 
 		//表格数据
 		this.tableData = [];
-		this.minWidth = parseInt($(this).attr('min-width'));
+
 
 		//配置参数
 		this.titleRowHeight = 30;
@@ -134,6 +144,10 @@ class bTableList extends HTMLElement{
 
 		this.rowHoverStyle = null;
 		this.rowNotHoverStyle = null;
+
+
+		this[setLevel2Body]();
+		this.shadow.appendChild(this.body.get(0));
 
 	}
 
@@ -152,7 +166,8 @@ class bTableList extends HTMLElement{
 		if(this.rowHoverStyle && this.rowNotHoverStyle){
 			this.body.find('.__row__').unbind('hover');
 		}
-		this.body.html('');
+		this.titleBody.html('');
+		this.listBody.html('');
 
 		this.body.css({display:'none'});
 
@@ -167,13 +182,11 @@ class bTableList extends HTMLElement{
 			});
 		}
 
-		this.body.css({display:'block'});
+
 		if(this.minWidth){
-			this.body.css({
-				'min-width':this.minWidth+'px',
-				overflow:'auto'
-			}).addClass('scroll_style1');
+			this[setLevel2Body](this.minWidth);
 		}
+		this.body.css({display:'flex'}).addClass('box_slt');
 
 	}
 
@@ -181,7 +194,7 @@ class bTableList extends HTMLElement{
 	[createTitleRow](){
 		let {rowCss,celCss} = this[getTitleRowStyle]();
 
-		let row = $('<div class="box_hcc"></div>');
+		let row = $('<div class="box_hcc __table_row__"></div>');
 		row.css(rowCss);
 
 		this.tableData.map(rs=>{
@@ -192,14 +205,14 @@ class bTableList extends HTMLElement{
 			row.append(cel);
 		});
 
-		this.body.append(row);
+		this.titleBody.append(row);
 	}
 	//创建列表
 	[createRowList](data){
 		let {rowCss,celCss} = this[getRowListStyle]();
 
 		data.map(rowData=>{
-			let row = $('<div class="box_hcc __row__"></div>');
+			let row = $('<div class="box_hcc __row__ __table_row__"></div>');
 			row.css(rowCss).data({data:rowData});
 
 			this.tableData.map(rs=>{
@@ -269,7 +282,7 @@ class bTableList extends HTMLElement{
 				row.append(cel);
 			});
 
-			this.body.append(row);
+			this.listBody.append(row);
 		});
 
 		if(data.length == 0){
@@ -342,9 +355,69 @@ class bTableList extends HTMLElement{
 		return {rowCss:row,celCss:cel};
 	}
 
+	//设置标题容器和列表容器样式
+	[setLevel2Body](width){
+		if(width){
+			//设置table滚动
+			this.body.css({
+				width:'100%'
+			});
+			this.titleBody.css({
+				width:'100%',
+				overflowX:'hidden',
+				overflowY:'scroll'
+			});
+			this.listBody.css({
+				width:'100%',
+				overflowX:'auto',
+				overflowY:'scroll'
+			}).addClass('scroll_style1');
+			this.body.find('.__table_row__').css({
+				minWidth:width+'px'
+			});
+		}else{
+			this.titleBody.css({
+				width:'100%'
+			});
+			this.listBody.css({
+				width:'100%',
+				overflow:'auto'
+			}).addClass('scroll_style1');
+		}
+	}
 
+	//2个滚动条的联动滚动
+	[addEvent](){
+		if(this.addEventRun){return;}
+		this.addEventRun = true;
+		let _this = this;
+		this.listBody.get(0).addEventListener('scroll',function(e){
+			let left = $(this).scrollLeft();
+			_this.titleBody.scrollLeft(left);
+		},false)
+	}
 
+	set rowWidth(width){
+		width = parseInt(width);
+		this.minWidth = width;
+		this[setLevel2Body](this.minWidth);
+		this[addEvent]();
+	}
+	set tableHeight(height){
+		let titleHeight = parseInt(this.titleBody.height()),
+			listHeight = height - titleHeight;
+		this.listBody.css({
+			maxHeight:listHeight+'px'
+		})
+	}
 
+	autoHeight(){
+		this.body.css({
+			width:'100%',
+			height:'100%'
+		}).addClass('box_slt');
+		this.listBody.addClass('boxflex1')
+	}
 
 }
 

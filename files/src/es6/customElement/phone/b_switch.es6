@@ -22,11 +22,15 @@
 // 	let dom = $('b-switch').get(0);
 // 	dom.val = true;
 // 	dom.checkBgColor = 'red';
+//  dom.changeFn = function(val){
+//                          //this 指向该元素对象
+//                          //返回当前选择状态  true/false
+//  }
 
 
 
 
-let $$ = require('../lib/event/$$');
+let $$ = require('../../lib/event/$$');
 
 let bodyDom = Symbol('bodyDom'),
 	init = Symbol('init'),
@@ -98,6 +102,8 @@ class bSwitch extends HTMLElement{
 		this[moveLength] = 0;
 		this.height = 0;
 		this.width = 0;
+
+		this.userChangeFn = function(){};
 
 		//在 setParam 中设置的
 		this.param = {
@@ -204,6 +210,7 @@ class bSwitch extends HTMLElement{
 
 		$$(this[bodyDom]).myclickok(function(){
 			_this[changeDom]();
+			_this.userChangeFn.call(_this,_this.val);
 		});
 	}
 
@@ -317,6 +324,11 @@ class bSwitch extends HTMLElement{
 	set offText(text){
 		this.param.offText = text;
 		$(this).attr({offText:text});
+	}
+
+	set changeFn(fn){
+		fn = fn || function(){};
+		this.userChangeFn = fn;
 	}
 }
 

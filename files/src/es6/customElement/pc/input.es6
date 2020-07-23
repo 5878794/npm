@@ -392,7 +392,6 @@ class bInput extends HTMLElement{
 				lineHeight: height / 2 + 'px'
 			})
 		}
-
 	}
 	//外层dom有border 因此整体高度要比获取多值多2像素
 	get rowHeight(){
