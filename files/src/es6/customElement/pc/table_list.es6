@@ -377,11 +377,14 @@ class bTableList extends HTMLElement{
 			});
 		}else{
 			this.titleBody.css({
-				width:'100%'
+				width:'100%',
+				overflowX:'hidden',
+				overflowY:'scroll'
 			});
 			this.listBody.css({
 				width:'100%',
-				overflow:'auto'
+				overflowX:'auto',
+				overflowY:'scroll'
 			}).addClass('scroll_style1');
 		}
 	}
