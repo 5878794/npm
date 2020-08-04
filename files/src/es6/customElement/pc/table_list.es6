@@ -287,7 +287,7 @@ class bTableList extends HTMLElement{
 
 		if(data.length == 0){
 			let div = $(this.noDataHtml);
-			this.body.append(div);
+			this.listBody.append(div);
 		}
 	}
 

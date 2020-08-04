@@ -72,7 +72,7 @@ let createInputDom = {
 		selectInput.css({
 			width:'100%',
 			'-webkit-appearance': 'none'
-		})
+		});
 
 		return selectInput;
 	},
@@ -161,7 +161,7 @@ class bInput extends HTMLElement{
 		this[createInputCss]();
 		this[paramCheck]();
 		this[createInput](this.type);
-		this.inputBodyDom.append(this.unit);
+		this.inputBodyDom.append(this.unitDom);
 		this.shadow.appendChild(this.body.get(0));
 
 
@@ -216,7 +216,7 @@ class bInput extends HTMLElement{
 			paddingLeft:'5px'
 		});
 
-		this.unit = unit;
+		this.unitDom = unit;
 		this.body = dom;
 		this.rowDom = inputBody;
 		this.nameDom = name;
@@ -348,7 +348,7 @@ class bInput extends HTMLElement{
 		this.nameDom.css(style);
 	}
 	set unitStyle(style){
-		this.unit.css(style);
+		this.unitDom.css(style);
 	}
 	set inputBodyStyle(style){
 		this.inputBodyDom.css(style);
@@ -446,6 +446,14 @@ class bInput extends HTMLElement{
 			this.inputBodyDom.removeClass('input_disabled');
 		}
 
+	}
+
+	set unitText(val){
+		this.unitDom.text(val);
+	}
+
+	set nameText(val){
+		this.nameDom.text(val);
 	}
 
 
