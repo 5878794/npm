@@ -9,7 +9,6 @@ let device = require("./device"),
     isDebug = Symbol("isDebug"),
     checkPageVer = Symbol('checkPageVer'),
     getServerVer = Symbol('getServerVer'),
-    isApp = Symbol("isApp"),
     hasAllReady = Symbol("hasAllReady"),
     readyFns = Symbol("readyFns"),
     init = Symbol("init"),
@@ -24,7 +23,6 @@ let device = require("./device"),
     autoSaveUrlParam = Symbol("autoSaveUrlParam"),
     base64Fn = require('./fn/base64'),
     myFetch = require('./resLoader/myFetch'),
-    appAutoGetUrl = Symbol("appAutoGetUrl"),
     signPage = require('../lib/signPage/b_page_rout'),
     errorHandler = require('../lib/fn/errorHandler');
 
@@ -39,9 +37,8 @@ let page = {
     //是否调试模式
     [isDebug]:SETTING.isDebug || false,
     //是否是健康成都app内的h5页面
-    [isApp]:SETTING.isAPP || false,
     //是否需要加载微信js
-    [needWeChatApi]:(!SETTING.isAPP && SETTING.weChatUseApiList && SETTING.weChatUseApiList.length!=0)? SETTING.weChatUseApiList : [],
+    [needWeChatApi]:(SETTING.weChatUseApiList && SETTING.weChatUseApiList.length!=0)? SETTING.weChatUseApiList : [],
     //页面是否已经ready
     [hasAllReady]:false,
 
@@ -113,7 +110,6 @@ let page = {
     async [init](callback){
         await Promise.all([
             this[pageReady](),
-            this[appReady](),
             this[weChatReady](),
             this[loadScripts](SETTING.needLoadOtherJsList)
         ]);
@@ -146,37 +142,10 @@ let page = {
             });
         })
     },
-    //app准备ok
-    [appReady](){
-        var _this = this;
-        return new Promise(success=>{
-            if(_this[isApp]){
-                document.addEventListener("deviceready", function() {
-
-                    //app自动设置服务器地址
-                    // _this[appAutoGetUrl](function(){
-                    //     success();
-                    // });
-                    console.log('app ok');
-                    success();
-
-                }, false);
-            }else{
-                console.log('is not app');
-                success();
-            }
-        })
-    },
     //微信ready
     [weChatReady](){
         let _this = this;
         return new Promise(async (success,error)=>{
-            if(_this[isApp]){
-                console.log('app not need wx js');
-                success();
-                return;
-            }
-
             if(this[needWeChatApi].length == 0){
                 console.log('not need wx api');
                 success();
@@ -273,25 +242,6 @@ let page = {
         });
     },
 
-    //自动配置服务器地址  app自动获取并覆盖setting.js中的服务器地址
-    [appAutoGetUrl](callback){
-        let _this = this;
-        if(this[isApp]){
-            YJH.H5ModuleManager.getValue(function(rs){
-                rs = rs.result;
-                rs = rs.substr(0,rs.length-1);
-                rs = rs.substr(0,rs.lastIndexOf("\/")+1);
-                SETTING.serverUrl = rs;
-                SETTING.serverImgUrl = SETTING.serverUrl+'HealthWeb/';
-                // SETTING.serverUrl = 'http://phr.care4u.cn/';
-                // SETTING.serverImgUrl = SETTING.serverUrl+'HealthWeb/';
-                callback();
-            },function(){
-                _this.error("无法获取服务器地址");
-            },"AppNetWorkBaseUrl");
-        }
-    },
-
     //加载js接口
     loadScript(src){
         return new Promise(success=>{
@@ -312,14 +262,10 @@ let page = {
     //alert        async
     alert(text,title,icon,iconWidth,iconHeight){
         return new Promise(async success=>{
-            if(this[isApp]){
-                YJH.H5Dialogs.alert(text.toString(), success, "提示");
-            }else{
-                // alert(text);
-                // callback();
-                await alertFn(true,text,title,icon,iconWidth,iconHeight);
-                success();
-            }
+            // alert(text);
+            // callback();
+            await alertFn(true,text,title,icon,iconWidth,iconHeight);
+            success();
         });
     },
 
@@ -327,30 +273,9 @@ let page = {
     confirm(msg,title,icon,iconWidth,iconHeight) {
         return new Promise(async success=>{
             msg = msg || "";
-            if(this[isApp]){
-                YJH.H5Dialogs.confirm(
-                    msg,
-                    function(aa) {
-                        aa = aa.buttonIndex;
-                        if(aa == 1) {
-                            error();
-                        } else {
-                            success();
-                        }
-                    },
-                    "提示",
-                    ["取消", "确定"]
-                )
-            }else{
-                // if(confirm(msg)){
-                //     success();
-                // }else{
-                //     error();
-                // }
 
-                let state = await alertFn(false,msg,title,icon,iconWidth,iconHeight);
-                success(state);
-            }
+            let state = await alertFn(false,msg,title,icon,iconWidth,iconHeight);
+            success(state);
         });
     },
     //相对地址转绝对地址
@@ -376,26 +301,16 @@ let page = {
 
     //打开新页面
     openUrl(url,type) {
-        if(this[isApp]){
-            if(type=="self"){
-                window.location.href=url;
-            }else{
-                let newUrl = this.getFullUrl(url);
-                YJH.H5ModuleManager.openWebInApp(newUrl);
-            }
+        if(window.location.href.indexOf('\/#\/') > -1){
+            //单页面的
+            let pageUrl = window.location.href;
+            signPage.openUrl(pageUrl,url);
         }else{
-
-            if(window.location.href.indexOf('\/#\/') > -1){
-                //单页面的
-                let pageUrl = window.location.href;
-                signPage.openUrl(pageUrl,url);
+            //非单页面
+            if(type == 'noCatch'){
+                window.location.replace(url);
             }else{
-                //非单页面
-                if(type == 'noCatch'){
-                    window.location.replace(url);
-                }else{
-                    window.location.href=url;
-                }
+                window.location.href=url;
             }
         }
     },
@@ -432,22 +347,14 @@ let page = {
 
     //关闭子应用回到主界面，微信需要注入接口
     closeApp(){
-        if(this[isApp]){
-            YJH.H5NativeAppInfo.goToRootPage();
-        }else{
-            if(window.wx && wx.closeWindow){
-                wx.closeWindow();
-            }
+        if(window.wx && wx.closeWindow){
+            wx.closeWindow();
         }
     },
 
     //主动退后
     goBack() {
-        if(this[isApp]){
-            YJH.H5ModuleManager.closeH5App({url:window.location.href})
-        }else{
-            window.history.go(-1);
-        }
+        window.history.go(-1);
     },
 
     //点击后退时关闭 app
@@ -465,48 +372,18 @@ let page = {
 
     //退回到当前页面时 执行传入到函数
     backRefresh:(function(){
-        var isHiddened = false,
-            fn = [];
+        let fn = [];
 
-        //app页面跳转是新开webView
-        //所有使用是否显示判断
-        if(SETTING.isAPP){
-            if(device.isAndroid){
-                //原生提供api
-                window.addEventListener('view_visibilitychange', function(e) {
-                    setTimeout(function(){
-                        for(var i= 0,l=fn.length;i<l;i++){
-                            fn[i]();
-                        }
-                    },100)
-                }, false);
-            }else{
-                document.addEventListener('visibilitychange', function(e) {
-                    if(document.hidden){
-                        isHiddened = true;
-                    }else{
-                        if(isHiddened){
-                            setTimeout(function(){
-                                for(var i= 0,l=fn.length;i<l;i++){
-                                    fn[i]();
-                                }
-                            },100);
-                        }
-                    }
-                }, false);
-            }
-        }else{
-            //浏览器是当前窗口地址跳转
-            window.addEventListener('pageshow',function(e){
-                //第一次加载时 persisted 为false
-                //从缓存读取时 persisted 为true
-                if(e.persisted){
-                    for(var i= 0,l=fn.length;i<l;i++){
-                        fn[i]();
-                    }
+        //浏览器是当前窗口地址跳转
+        window.addEventListener('pageshow',function(e){
+            //第一次加载时 persisted 为false
+            //从缓存读取时 persisted 为true
+            if(e.persisted){
+                for(var i= 0,l=fn.length;i<l;i++){
+                    fn[i]();
                 }
-            },false);
-        }
+            }
+        },false);
 
 
         return function(callback){
@@ -535,49 +412,30 @@ let page = {
     //同时saveUrlParamList数组中也需要添加该值
     getUserToken(){
         return new Promise((success,error)=>{
-            if(this[isApp]){
-                YJH.AppUserInfoManager.fetchUserInfo(
-                    function(rs){
-                        rs = rs.result || {};
-                        success(rs.token);
-                    }
-                )
-            }else{
-                let token = session.get(SETTING.tokenKeyFromUrl);
+            let token = session.get(SETTING.tokenKeyFromUrl);
 
-                if(token){
-                    success(token);
-                }else{
-                    error("还未登陆");
-                }
+            if(token){
+                success(token);
+            }else{
+                error("还未登陆");
             }
         });
     },
 
-    //关闭下拉刷新
-    closePullRefresh(){
-        if(this[isApp]){
-            YJH.H5NativeUIManager.closeDownLoad();
-        }
-    },
 
     //设置标题
     setTitle(text){
-        if(this[isApp]){
-            YJH.H5NativeAppInfo.setNavBarTitle(text);
-        }else{
-            document.title = text;
-            if (/ip(hone|od|ad)/i.test(navigator.userAgent)) {
-                var i = document.createElement('iframe');
-                i.src = '/favicon.ico';
-                i.style.display = 'none';
-                i.onload = function() {
-                    setTimeout(function(){
-                        i.remove();
-                    }, 9)
-                };
-                document.body.appendChild(i);
-            }
+        document.title = text;
+        if (/ip(hone|od|ad)/i.test(navigator.userAgent)) {
+            var i = document.createElement('iframe');
+            i.src = '/favicon.ico';
+            i.style.display = 'none';
+            i.onload = function() {
+                setTimeout(function(){
+                    i.remove();
+                }, 9)
+            };
+            document.body.appendChild(i);
         }
     },
 
@@ -661,72 +519,55 @@ let page = {
         })
     },
 
-    //照相或从相册获取图片base64
+    //微信 照相或从相册获取图片base64
     //微信权限
     //chooseImage
     //getLocalImgData
     //uploadImage
     getImageSrc(){
         return new Promise((success,error)=>{
-            if(this[isApp]){
-                YJH.Cameramethod.getThePicture(
-                    function(aa){
-                        let state = aa.status;
-                        if(state == 0){
-                            let base64 = aa.result.result;
-                            success({
-                                src:base64,
-                                id:base64
-                            })
-                        }else{
-                            error("获取失败");
-                        }
-                    }
-                )
-            }else{
-                if(!wx){
-                    error("不支持浏览器直接调用");
-                    return;
-                }
-                wx.chooseImage({
-                    count: 1, // 默认9
-                    sizeType: ['compressed'], // original原图   compressed压缩
-                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                    success: function (res) {
-                        let localIds = res.localIds,
-                            src= localIds[0];
-
-                        if(wx.getLocalImgData && (device.isIphone || device.isIpad)){
-                            wx.getLocalImgData({
-                                localId: src, // 图片的localID
-                                success: function (res) {
-                                    var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                                    success({
-                                        src:localData,
-                                        id:localData
-                                    })
-                                }
-                            });
-                        }else{
-                            wx.uploadImage({
-                                localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
-                                isShowProgressTips: 1, // 默认为1，显示进度提示
-                                success: function (res) {
-                                    let serverId = res.serverId; // 返回图片的服务器端ID
-                                    success({
-                                        src:src,
-                                        id:serverId
-                                    })
-                                }
-                            });
-                        }
-                    }
-                });
+            if(!wx){
+                error("不支持浏览器直接调用");
+                return;
             }
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['compressed'], // original原图   compressed压缩
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    let localIds = res.localIds,
+                        src= localIds[0];
+
+                    if(wx.getLocalImgData && (device.isIphone || device.isIpad)){
+                        wx.getLocalImgData({
+                            localId: src, // 图片的localID
+                            success: function (res) {
+                                var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                success({
+                                    src:localData,
+                                    id:localData
+                                })
+                            }
+                        });
+                    }else{
+                        wx.uploadImage({
+                            localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                let serverId = res.serverId; // 返回图片的服务器端ID
+                                success({
+                                    src:src,
+                                    id:serverId
+                                })
+                            }
+                        });
+                    }
+                }
+            });
         })
     },
 
-    //身份证照相及读取信息
+    //微信 身份证照相及读取信息
     //type=1 正面
     //type=2 反面
     //微信权限 微信不能识别，只能调用相机
@@ -735,62 +576,46 @@ let page = {
     //uploadImage
     getIdCardInfo(type){
         return new Promise((success,error)=>{
-            if(this[isApp]){
-                YJH.Cameramethod.idCardRecognition(
-                    type,
-                    function(rs){
-                        success({
-                            src:rs.idCardImage,
-                            id:rs.idCardImage,
-                            info:rs.idCardInfo
-                        });
-                    },
-                    function(){
-                        error("图片异常");
-                    }
-                );
-            }else{
-                if(!wx){
-                    error("不支持浏览器直接调用");
-                    return;
-                }
-                wx.chooseImage({
-                    count: 1, // 默认9
-                    sizeType: ['compressed'], // original原图   compressed压缩
-                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                    success: function (res) {
-                        let localIds = res.localIds,
-                            src= localIds[0];
-
-                        if(wx.getLocalImgData && (device.isIphone || device.isIpad)){
-                            wx.getLocalImgData({
-                                localId: src, // 图片的localID
-                                success: function (res) {
-                                    var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                                    success({
-                                        src:localData,
-                                        id:localData,
-                                        info:null
-                                    })
-                                }
-                            });
-                        }else{
-                            wx.uploadImage({
-                                localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
-                                isShowProgressTips: 1, // 默认为1，显示进度提示
-                                success: function (res) {
-                                    let serverId = res.serverId; // 返回图片的服务器端ID
-                                    success({
-                                        src:src,
-                                        id:serverId,
-                                        info:null
-                                    })
-                                }
-                            });
-                        }
-                    }
-                });
+            if(!wx){
+                error("不支持浏览器直接调用");
+                return;
             }
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['compressed'], // original原图   compressed压缩
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    let localIds = res.localIds,
+                        src= localIds[0];
+
+                    if(wx.getLocalImgData && (device.isIphone || device.isIpad)){
+                        wx.getLocalImgData({
+                            localId: src, // 图片的localID
+                            success: function (res) {
+                                var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                success({
+                                    src:localData,
+                                    id:localData,
+                                    info:null
+                                })
+                            }
+                        });
+                    }else{
+                        wx.uploadImage({
+                            localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                let serverId = res.serverId; // 返回图片的服务器端ID
+                                success({
+                                    src:src,
+                                    id:serverId,
+                                    info:null
+                                })
+                            }
+                        });
+                    }
+                }
+            });
         })
     },
 
@@ -812,85 +637,6 @@ let page = {
         }
     },
 
-    //生成条形码 app才能调用
-    createBarCode(code){
-        let _this = this;
-        return new Promise(function(success,error){
-            if(_this[isApp]){
-                YJH.H5QRCodeManager.generateQRCode(rs=>{
-                    success(rs)
-                },function(){
-                    error()
-                },{
-                    content:code,
-                    type:1
-                })
-            }else{
-                error();
-            }
-
-        })
-    },
-
-    //生成二维码 app才能调用
-    create2Code(code){
-        let _this = this;
-        return new Promise(function(success,error){
-            if(_this[isApp]){
-                YJH.H5QRCodeManager.generateQRCode(rs=>{
-                    success(rs)
-                },function(){
-                    error()
-                },{
-                    content:code,
-                    type:0
-                })
-            }else{
-                error();
-            }
-
-        })
-    },
-
-    //打开第三方应用  app才能调用
-    //不传id  是打开主应用的某个页面
-    //不传page  是打开index.html页面
-    //必传一个参数
-    openOtherApp(id,page){
-        page = page || "";
-        id = id || "";
-        if(this[isApp]){
-            if(id){
-                YJH.H5ModuleManager.openApp(
-                    rs=>console.log(rs),
-                    rs=>console.log(rs),
-                    {h5Id:id,page:page,notUseCfg:true}
-                )
-            }else{
-                YJH.H5ModuleManager.openApp(
-                    rs=>console.log(rs),
-                    rs=>console.log(rs),
-                    {page:page,notUseCfg:true}
-                )
-            }
-        }
-    },
-
-    //设置app 顶部右上角按钮 (只能是文字)    app才能调用
-    setRightBtn(opt){
-        if(!this[isApp]){return;}
-
-        let name = opt.name || "",
-            color = opt.color || "#000000",
-            callback = opt.callback || function(){};
-
-        YJH.H5NativeAppInfo.setNavBarRightBtn(callback,{
-            btnTitle:name,
-            btnTitleColor:color,
-            enable:true,
-            url:window.location.pathname
-        });
-    },
 
     //后退提示表单有变动
     //表单是否变化需要自己判断
@@ -919,60 +665,20 @@ let page = {
     pageCatch : {
         async get(key){
             return new Promise((success,error)=>{
-                if(SETTING.isAPP){
-                    YJH.H5ModuleManager.getValue(
-                        function(aa){
-                            aa = aa.result || "";
-                            //统一android和ios统一返回字符串
-                            if(typeof aa != "string"){
-                                aa = JSON.stringify(aa);
-                            }
-                            success(aa);
-                        },function(bb){
-                            success("");
-                        },
-                        key
-                    );
-                }else{
-                    let val = localStorage.getItem(key) || "";
-                    success(val);
-                }
+                let val = localStorage.getItem(key) || "";
+                success(val);
             })
         },
         async save(key,val){
             return new Promise((success,error)=>{
-                if(SETTING.isAPP){
-                    YJH.H5ModuleManager.setValueForKey(
-                        function(){
-                            success();
-                        },function(bb){
-                            error("app内部错误");
-                        },
-                        key,
-                        val
-                    )
-                }else{
-                    localStorage.setItem(key,val);
-                    success();
-                }
+                localStorage.setItem(key,val);
+                success();
             });
         },
         async del(key){
             return new Promise((success,error)=>{
-                if(SETTING.isAPP){
-                    YJH.H5ModuleManager.setValueForKey(
-                        function(){
-                            success();
-                        },function(bb){
-                            error("app内部错误");
-                        },
-                        key,
-                        ""
-                    )
-                }else{
-                    localStorage.removeItem(key);
-                    success();
-                }
+                localStorage.removeItem(key);
+                success();
             })
         }
     },
@@ -986,45 +692,15 @@ let page = {
     appLocalData:{
         get(key){
             return new Promise((success,error)=>{
-                if(page[isApp]){
-                    YJH.AppUserInfoManager.getSpecifiedUserInfo(function(rs){
-                        rs = rs.result || '{}';
-                        rs = JSON.parse(rs);
-                        success(rs[key]);
-                    },function(rs){
-                        rs = rs.des || '网络连接出现了一点问题，请重新尝试';
-                        error(rs)
-                    })
-                }else{
-                    let data = localData.getItem(key);
-                    success(data);
-                }
+                let data = localData.getItem(key);
+                success(data);
 
             })
         },
         set(key,val){
             return new Promise((success,error)=>{
-                if(page[isApp]){
-                    YJH.AppUserInfoManager.getSpecifiedUserInfo(function(rs){
-                        rs = rs.result || '{}';
-                        rs = JSON.parse(rs);
-                        rs[key] = val;
-                        rs = JSON.stringify(rs);
-                        YJH.AppUserInfoManager.setSpecifiedUserInfo(rs,function(){
-                            success();
-                        },function(rs){
-                            rs = rs.des || '网络连接出现了一点问题，请重新尝试';
-                            error(rs)
-                        })
-                    },function(rs){
-                        rs = rs.des || '网络连接出现了一点问题，请重新尝试';
-                        error(rs)
-                    })
-                }else{
-                    localData.setItem(key,val);
-                    success();
-                }
-
+                localData.setItem(key,val);
+                success();
             })
         }
     },
