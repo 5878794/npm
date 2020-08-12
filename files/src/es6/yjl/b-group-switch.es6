@@ -86,7 +86,7 @@ class bGroupSwitch extends HTMLElement{
 			'.main{width:100%; font-size:14px; color:#333;border:1px solid #ccc;}',
 			'.title{width:100%; height:40px; padding-left:20px;background:#eee;font-weight:bold}',
 			'.list{width:100%;}',
-			'.item{width:100%; border-top:1px solid #eee; padding:5px 30px;}',
+			'.item{width:100%; border-top:1px solid #eee; padding:5px 10px;}',
 			'.item b-switch{display:block; width:60px; height:24px; padding-left:20px;}',
 			'.btn{width:60%;height:34px; background:#5576f0;color:#fff;margin-top:20px;}',
 			'.gray{background:#eee;}'
@@ -97,7 +97,9 @@ class bGroupSwitch extends HTMLElement{
 
 	bindEvent(){
 		let _this = this;
+
 		this.btn.click(async function(){
+			let cacheDta = _this.cacheData || {};
 			if($(this).hasClass('gray')){return;}
 
 			let item = _this.listBody.find('.item'),
@@ -111,9 +113,16 @@ class bGroupSwitch extends HTMLElement{
 
 				let val = await _input.checkPass(),
 					checked = _switch.val;
-				data.value = val;
-				data.selected = checked;
-				backData.push(data);
+
+				//只返回修改过的值
+				let cacheThisData = cacheDta[data.id];
+				if(cacheThisData.value == val && cacheThisData.selected == checked){
+
+				}else{
+					data.value = val;
+					data.selected = checked;
+					backData.push(data);
+				}
 			}
 
 			_this.userClick(backData);
@@ -123,6 +132,14 @@ class bGroupSwitch extends HTMLElement{
 
 	set data(data){
 		data = data || [];
+
+		let cacheData = {};
+		data.map(rs=>{
+			rs.value = (!rs.value)? 0 : rs.value;
+			cacheData[rs.id] = rs;
+		});
+		this.cacheData = cacheData;
+
 		let body = this.listBody,
 			item = this.item,
 			_this = this;
@@ -132,7 +149,7 @@ class bGroupSwitch extends HTMLElement{
 		}
 		data.map(rs=>{
 			let _item = item.clone(),
-				_input = $(`<b-input-search rule="must,number" class="boxflex1" name="${rs.name}" key="${rs.key}" unit="天" err="天数必须为正整数"></b-input-search>`).get(0),
+				_input = $(`<b-input-search rule="must,number" class="boxflex1" name="${rs.name || ' '}" key="${rs.key}" unit="天" err="天数必须为正整数"></b-input-search>`).get(0),
 				_switch = $(`<b-switch></b-switch>`).get(0);
 
 			_input.inputBodyStyle = {width:'65px'};
@@ -152,7 +169,7 @@ class bGroupSwitch extends HTMLElement{
 			};
 			_switch.changeFn = function(val){
 				_this.btn.removeClass('gray').addClass('hover');
-			}
+			};
 
 			body.append(_item);
 		})

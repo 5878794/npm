@@ -128,6 +128,13 @@ class bRoleList extends HTMLElement{
         allItem.css({background:'#fff'});
         item.css({background:'#eee'})
     }
+    chooseRowNumber(rowNumber){
+        let allItem = this.body.find('.item');
+        let item = allItem.eq(rowNumber);
+
+        allItem.css({background:'#fff'});
+        item.css({background:'#eee'})
+    }
 
     add(data){
         let body = this.listBody,

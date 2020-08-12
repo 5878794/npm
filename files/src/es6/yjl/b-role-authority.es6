@@ -9,78 +9,7 @@
 
 //js:
 // 	let role = $('#role').get(0);
-// 	role.data = [
-// 		{
-// 			name:'aaa',
-// 			children:[
-// 				{
-// 					name:'aaa1',
-// 					children:[
-// 						{
-// 							name:'aaa11',
-// 							type:'公司权限',
-// 							checked:false
-// 						},
-// 						{
-// 							name:'aaa12',
-// 							type:'集团权限',
-// 							checked:true
-// 						}
-// 					]
-// 				},
-// 				{
-// 					name:'aaa2',
-// 					children:[
-// 						{
-// 							name:'aaa21',
-// 							type:'公司权限',
-// 							checked:false
-// 						},
-// 						{
-// 							name:'aaa22',
-// 							type:'集团权限',
-// 							checked:true
-// 						}
-// 					]
-// 				}
-// 			]
-// 		},
-// 		{
-// 			name:'bbb',
-// 			children:[
-// 				{
-// 					name:'bbb1',
-// 					children:[
-// 						{
-// 							name:'bbb11',
-// 							type:'公司权限',
-// 							checked:false
-// 						},
-// 						{
-// 							name:'bbb12',
-// 							type:'集团权限',
-// 							checked:true
-// 						}
-// 					]
-// 				},
-// 				{
-// 					name:'bbb2',
-// 					children:[
-// 						{
-// 							name:'bbb21',
-// 							type:'公司权限',
-// 							checked:false
-// 						},
-// 						{
-// 							name:'bbb22',
-// 							type:'集团权限',
-// 							checked:true
-// 						}
-// 					]
-// 				}
-// 			]
-// 		}
-// 	];
+// 	role.data = [];
 // 	role.submit = function(data){
 // 		console.log(data);          //返回传入的数组格式
 // 	};
@@ -199,18 +128,18 @@ class bRoleAuthority extends HTMLElement{
 		let backData = [];
 
 		data.map(lv1=>{
-			let lv1_name = lv1.name,
+			let lv1_name = lv1.categoryName,
 				lv2_data = lv1.children || [];
 			lv2_data.map(lv2=>{
-				let lv2_name = lv2.name,
-					lv3_data = lv2.children || [];
+				let lv2_name = lv2.categoryName,
+					lv3_data = lv2.privilegeList || [];
 				lv3_data.map(lv3=>{
-					if(lv3.checked){
+					// if(lv3.privilegeName == 1){
 						lv3.__level1__ = lv1_name;
 						lv3.__level2__ = lv2_name;
-						lv3.__level3__ = lv3.name;
+						lv3.__level3__ = lv3.privilegeName;
 						backData.push(lv3);
-					}
+					// }
 				});
 			})
 		});
@@ -226,10 +155,10 @@ class bRoleAuthority extends HTMLElement{
 		let body = this.listBody1,
 			item = this.item1,
 			_this = this;
-
+		body.html('');
 		data.map(rs=>{
 			let _item = item.clone().data({data:rs});
-			_item.text(rs.name);
+			_item.text(rs.categoryName);
 			body.append(_item);
 
 			_item.click(function(){
@@ -251,18 +180,19 @@ class bRoleAuthority extends HTMLElement{
 
 		body.html('');
 		data.map(rs=>{
-			let name = rs.name,
-				children = rs.children || [];
+			let name = rs.categoryName,
+				children = rs.privilegeList || [];
 			children.map((child,i)=>{
 				let _item = item.clone().data({level3:child,level2:rs,level1:level1});
 				if(i==0){
 					_item.find('.cel2_1').text(name);
 				}
-				_item.find('.cel2_2').text(child.name);
-				_item.find('.cel2_3').text(child.type);
+				_item.find('.cel2_2').text(child.privilegeName);
+				//TODO remark字段待定
+				_item.find('.cel2_3').text(child.remark);
 
 				let _switch = $(`<b-switch></b-switch>`).get(0);
-				_switch.val = (child.checked)? true : false;
+				_switch.val = (child.hasPrivilege == 1)? true : false;
 				_switch.checkBgColor = '#5576f0';
 				_item.find('.cel2_4').append(_switch);
 				body.append(_item);
@@ -276,15 +206,17 @@ class bRoleAuthority extends HTMLElement{
 					//选中
 					if(val){
 						//添加缓存
-						level3.checked = true;
+						level3.hasPrivilege = 1;
 						// level3.__level3__ = level3.name;
 						// level3.__level2__ = level2.name;
 						// level3.__level1__ = level1.name;
 					}else{
 						//移除缓存
-						level3.checked = false;
+						level3.hasPrivilege = 0;
 					}
-					_this.btn.removeClass('gray').addClass('hover');
+
+					_this.userClick(level3,this);
+					// _this.btn.removeClass('gray').addClass('hover');
 				};
 			})
 

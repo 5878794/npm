@@ -64,14 +64,14 @@ class bOrderInfo extends HTMLElement{
 			row1 = $('<div class="box_hlc hidden row1"></div>'),
 			row2 = $('<div class="box_hlt hidden row2"></div>'),
 			row3 = $('<div class="box_hlc hidden row3"></div>'),
-			row1Cel1 = $('<div class="row1_cel1">7,000,000</div>'),
-			row1Cel2 = $('<div class="box_slc row1_cel2"><p>房抵</p><span>f231231233123</span></div>'),
-			row1Cel3 = $('<div class="row1_cel3 boxflex1">来自中介</div>'),
+			row1Cel1 = $('<div class="row1_cel1"></div>'),
+			row1Cel2 = $('<div class="box_slc row1_cel2"><p></p><span></span></div>'),
+			row1Cel3 = $('<div class="row1_cel3 boxflex1"></div>'),
 			row2Cel1 = $('<div class="box_slt row2_cel1"></div>'),
-			row2Cel2 = $('<div class="row2_cel2"><p>中信银行-理财产品2</p><span>产品介绍产品介绍产品介绍产品介绍产品介绍产品介绍产品介绍产品介绍产品介绍产品介绍</span></div>'),
-			row2Cel1Row1 = $('<div class="box_hlc row2_cel1_row1 hidden"><span>姓名</span><div>12312312312</div><p class="boxflex1">510102322212322233</p></div>'),
-			row2Cel1Row2 = $('<div class="row2_cel1_row2 hidden">地址地址地址地址地址地址地址地址地址地址地址地址地址地址</div>'),
-			row3Cel1 = $('<div>待回款</div>'),
+			row2Cel2 = $('<div class="row2_cel2"><p></p><span></span></div>'),
+			row2Cel1Row1 = $('<div class="box_hlc row2_cel1_row1 hidden"><span></span><div></div><p class="boxflex1"></p></div>'),
+			row2Cel1Row2 = $('<div class="row2_cel1_row2 hidden"></div>'),
+			row3Cel1 = $('<div></div>'),
 			row3Cel2 = $('<p class="boxflex1 hover">查看订单详情 >></p>');
 
 		row3.append(row3Cel1).append(row3Cel2);

@@ -32,6 +32,7 @@ let navData = [
 		{name:'时间流程',url:'../setting/businessTime.html'},
 		{name:'开关设置',url:'../setting/urgent_task.html'},
 		{name:'客户来源',url:'../setting/client_source.html'},
+		{name:'档案室',url:'../setting/client_source.html?type=11'},
 		{name:'标准设定',url:'../setting/group_final_review.html'},
 		{name:'通道配置',url:'../setting/channel_config.html'},
 		{name:'公司部门',url:'../setting/company.html'},
@@ -186,10 +187,13 @@ class bWinLeft extends HTMLElement{
 			path = path+'index.html';
 		}
 
+		path = path + window.location.search;
+
 		let allItem = this.body.find('.__item__');
 		allItem.each(function(){
 			let thisSrc = $(this).attr('href');
-			if(thisSrc.indexOf(path)>-1){
+			thisSrc = thisSrc.substr(2);
+			if(thisSrc == path){
 				$(this).addClass('select');
 
 				//判断是否是子菜单

@@ -169,7 +169,7 @@ class bPagination extends HTMLElement{
 		this.body.html('');
 
 		if(listLength == 0){
-			this.dom.css({display:'none'});
+			this.body.css({display:'none'});
 			return;
 		}
 

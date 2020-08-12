@@ -129,7 +129,8 @@ class bInputFile extends bInput{
 		div.append(input);
 
 		if(this.unit){
-			div.append(this.unit);
+			this.unitDom.removeClass('hidden');
+			div.append(this.unitDom);
 		}
 
 		this.fileBtn = div;
@@ -261,7 +262,8 @@ class bInputFile extends bInput{
 		div.append(typeDom).append(nameDom);
 
 		nameDom.click(function(){
-			window.open(fileUrl);
+			//TODO 关闭下载
+			// window.open(fileUrl);
 		});
 
 
@@ -422,7 +424,8 @@ class bInputFile extends bInput{
 				div.append(typeDom).append(nameDom);
 
 				nameDom.click(function(){
-					window.open(fileUrl);
+					//TODO 关闭下载
+					// window.open(fileUrl);
 				});
 
 
