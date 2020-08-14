@@ -1,0 +1,38 @@
+{
+  "name": "rabbit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "all min": "webpack --mode production;tt=$(date +%s);node ./cmd/pug.es6 $tt;node ./cmd/less.es6 $tt;node ./cmd/ver.es6 $tt",
+    "es6-watch": "webpack-dev-server --http  --content-base trunk --inline --hot --devtool inline-source-map",
+    "pug-less-watch": "node ./cmd/less_pug_watch.es6"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "core-js": "^3.6.5",
+    "less": "^3.11.1",
+    "less-plugin-clean-css": "^1.5.1",
+    "md5": "^2.2.1",
+    "pug": "^2.0.3",
+    "pug-cli": "1.0.0-alpha6",
+    "webpack": "^4.42.1",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "description": "",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/plugin-proposal-private-methods": "^7.8.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@webcomponents/custom-elements": "^1.4.1",
+    "@webcomponents/shadydom": "^1.7.3",
+    "babel-loader": "^8.1.0",
+    "webpack-cli": "^3.3.12"
+  }
+}

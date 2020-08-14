@@ -1,0 +1,55 @@
+doctype html
+html
+    head
+        title 金盾时代-综合业务系统
+        include ./../../pug_include/head_pc
+
+        link(rel="stylesheet" type="text/css" href="index.css?t="+tt)
+        script(data-src='index.min.js?t='+tt)
+
+
+    body
+
+
+        div(class='left')
+            //- include ../../pug_include/left
+            b-win-left
+
+        div(class='right')
+            //- include ../../pug_include/top
+            //b-win-top
+
+            div(class='iframe scroll_style1' id='iframe_body')
+                div(class='page_body')
+                    //- 页面主体开始。。。。。。
+
+                    //- 通知部分
+                    b-index-notice(id='notice' class='notice')
+
+                    //- 搜索及排名部分
+                    div(class='search_main')
+                        div(class='search_total box_hlb')
+                            p(class='search_name') 您当前排名：
+                            span(class='search_main_number') 25
+                            div(class='boxflex1 box_hrc')
+                                div(class='show_ph box_hcc hover' id='show_ph')
+                                    img(src='./image/ph.png')
+                                    span 排行榜
+                                div(class='add_order box_hcc hover' id='add_order')
+                                    img(src='./image/add.png')
+                                    span 新订单
+
+                        div(class='search box_hlc')
+                            b-search(id='search1' class='b-search')
+                            //input(type='text' id='search' class='boxflex1' autocomplete='off' placeholder='请输入您要搜索的客户名、客户手机号、身份证号、订单号')
+                            //div(class='search_btn hover')
+
+
+                    //- 列表部分
+                    div(class='index_list')
+                        b-table-list(id='table_list')
+
+
+
+
+

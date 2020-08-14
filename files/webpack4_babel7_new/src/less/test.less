@@ -1,0 +1,20 @@
+
+
+//注意:注入咯全局变量 tt = 编译时的时间戳
+//background: url('../image/Group1x.png?t=@{tt}')
+
+@base: #f938ab;
+
+body{
+  color: @base;
+}
+
+
+
+.a{
+  width:@tt;
+}
+
+.top{
+  background: url('../image/Group1x.png?t=@{tt}') no-repeat center center;
+}
