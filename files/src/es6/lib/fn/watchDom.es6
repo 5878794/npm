@@ -24,6 +24,6 @@ let watcher = function(dom,callback){
 };
 
 
-export default watcher;
+module.exports = watcher;
 
 

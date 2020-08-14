@@ -137,6 +137,8 @@ class bInput extends HTMLElement{
 		this.autoHeight = ($(this).attr('autoHeight') == 'true');
 		//输入框单位显示
 		this.unit = $(this).attr('unit') || '';
+		//初始值
+		this.setValue = $(this).attr('value') || '';
 
 		//生成的input的样式缓存
 		this.inputCss = {};
@@ -176,6 +178,12 @@ class bInput extends HTMLElement{
 
 
 		this[addEvent]();
+
+
+		//赋值初始值
+		if(this.setValue){
+			this.value = this.setValue;
+		}
 	}
 
 

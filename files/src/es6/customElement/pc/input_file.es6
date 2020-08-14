@@ -214,8 +214,8 @@ class bInputFile extends bInput{
 				size = getImageFitSize(imgW,imgH,divWidth,divHeight);
 
 			img.css({
-				width:size.width+'px',
-				height:size.height+'px'
+				width:size.width-2+'px',
+				height:size.height-2+'px'
 			})
 		};
 		img.click(function(){
@@ -290,6 +290,7 @@ class bInputFile extends bInput{
 			fontSize:'12px',
 			position:'absolute',
 			left:0,bottom:0,
+			'z-index':10,
 			cursor:'pointer'
 		});
 		$(input).addClass('hidden');
@@ -311,7 +312,7 @@ class bInputFile extends bInput{
 		return new Promise((success,error)=>{
 			this.errDom.css({display:'none'});
 			if($(this).attr('rule') == 'must'){
-				if(this.value.length != 0){
+				if(this.value.length != 0 || this.getUploadedValue.length !=0){
 					success(this.value);
 				}else{
 					this.errDom.css({display:'block'});
@@ -336,7 +337,9 @@ class bInputFile extends bInput{
 			files.push(this.files[0])
 		});
 
-		return files;
+		let uploaded = this.getUploadedValue;
+
+		return files.concat(uploaded);
 	}
 
 	set disabled(state){
@@ -360,7 +363,8 @@ class bInputFile extends bInput{
 			divHeight = 80;
 		data.map(rs=>{
 			let fileType = rs.substr(rs.lastIndexOf('.')+1);
-			let div = $('<div class="__input_file__ box_scc"></div>');
+			let div = $('<div class="__input_file__ box_scc"></div>'),
+				del = $('<div class="box_scc hover __input_del_btn__">删除</div>');
 			div.css({
 				width:divWidth+'px',
 				height:divHeight+'px',
@@ -368,10 +372,22 @@ class bInputFile extends bInput{
 				margin:'0 10px 10px 0',
 				position:'relative'
 			});
+			del.css({
+				width:'100%',
+				height:'20px',
+				background:'rgba(0,0,0,0.5)',
+				color:'#fff',
+				fontSize:'12px',
+				position:'absolute',
+				left:0,bottom:0,
+				'z-index':10,
+				cursor:'pointer'
+			});
 
 
 
-			if(allowFileType.image.indexOf(fileType) > -1){
+			if(allowFileType.image.indexOf(fileType.toLocaleLowerCase()) > -1){
+
 				//是图片
 				let img = $(`<img class="hover" src="${rs}">`);
 				img.css({
@@ -383,8 +399,8 @@ class bInputFile extends bInput{
 						size = getImageFitSize(imgW,imgH,divWidth,divHeight);
 
 					img.css({
-						width:size.width+'px',
-						height:size.height+'px'
+						width:size.width-2+'px',
+						height:size.height-2+'px'
 					})
 				};
 				img.click(function(){
@@ -396,7 +412,7 @@ class bInputFile extends bInput{
 				});
 
 				div.append(img);
-				this.inputBodyDom.append(div);
+				this.inputBodyDom.prepend(div);
 			}else{
 				//是文件
 				let typeDom = $('<div class="diandian"></div>'),
@@ -429,9 +445,28 @@ class bInputFile extends bInput{
 				});
 
 
-				this.inputBodyDom.append(div);
+				this.inputBodyDom.prepend(div);
+			}
+
+			if(!this.disabled){
+				div.append(del);
+				del.click(function(){
+					del.unbind('click');
+					div.remove();
+				});
 			}
 		})
+	}
+
+	get getUploadedValue(){
+		let backData = [];
+		this.body.find('.__input_file__').find('img').each(function(){
+			let src = $(this).attr('src');
+			if(src.substr(0,4) == 'http'){
+				backData.push(src);
+			}
+		});
+		return backData;
 	}
 }
 
