@@ -67,7 +67,10 @@ let getDate = function (b) {
 	return year + "-" + month + "-" + date;
 };
 let getDate1 = function (b) {
-	b = b || new Date().getTime();
+	if(!b){
+		return '';
+	}
+	// b = b || new Date().getTime();
 	var a = new Date(b);
 	var year = a.getFullYear();
 	var month = parseInt(a.getMonth()) + 1;
@@ -143,4 +146,53 @@ let getDataTime3 = function(stamp){
 };
 
 
-module.exports = {getDateTime,getDateTime1,getDate1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3};
+let getMonthMaxDay = function(month){
+	//获取这个月的最大天数
+	let day = 0;
+	switch(month){
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			day = 31;
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			day = 30;
+			break;
+		case 2:
+			if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+				day = 29;
+			}else{
+				day = 28;
+			}
+			break;
+		default:
+			day = 31;
+	}
+
+	return day;
+}
+
+//获取当前月的起始日期
+let getNowMonthDay = function(){
+	let now = new Date(),
+		year = now.getFullYear(),
+		month = parseInt(now.getMonth()) + 1,
+		maxDay = getMonthMaxDay(month);
+	month = (month < 10) ? "0" + month : month;
+
+	let s_day = year+'-'+month+'-01',
+		e_day = year+'-'+month+'-'+maxDay;
+
+	return [s_day,e_day];
+
+}
+
+
+module.exports = {getDateTime,getDateTime1,getDate1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3,getNowMonthDay};
