@@ -116,6 +116,20 @@ var a = function(obj){
 	this.scale = 1;
 	this.runNumber = 0;
 
+	//是否已显示
+	this.isShow = false;
+	//延迟ms显示
+	this.delayTime = 1000;
+	//至少显示ms
+	this.showTime = 1000;
+	//setTimeOur fn
+	this.tempTimeOutFn = null;
+	//隐藏loading 时间不够时 延迟的timeout
+	this.hideTimeOutFn = null;
+	//开始显示loading的时间戳
+	this.isShowStamp = 0;
+
+
 	this._init();
 };
 a.prototype = {
@@ -191,11 +205,23 @@ a.prototype = {
 		this.runNumber++;
 		if(this.runNumber != 1){return;}
 
-		$(this.text).text(text);
-		$(this.div).css(device.fixObjCss({
-			display:"box"
-		}));
-		this.canvas.run();
+		//之前的延迟显示还没有完成
+		if(this.isShow && this.hideTimeOutFn){
+			clearTimeout(this.hideTimeOutFn);
+			this.hideTimeOutFn = null;
+			return;
+		}
+
+		let _this = this;
+		this.tempTimeOutFn = setTimeout(function(){
+			_this.isShow = true;
+			_this.isShowStamp = new Date().getTime();
+			$(_this.text).text(text);
+			$(_this.div).css(device.fixObjCss({
+				display:"box"
+			}));
+			_this.canvas.run();
+		},this.delayTime)
 	},
 	changeText:function(text){
 		$(this.text).text(text);
@@ -205,8 +231,30 @@ a.prototype = {
 		this.runNumber--;
 		if(this.runNumber != 0){return;}
 
-		this.div.style.display = "none";
-		this.canvas.stop();
+		if(!this.isShow){
+			if(this.tempTimeOutFn){
+				clearTimeout(this.tempTimeOutFn);
+				this.tempTimeOutFn = null;
+			}
+			return;
+		}
+
+		this.tempTimeOutFn = null;
+		let nowStamp = new Date().getTime(),
+			_this = this;
+		//显示时间大于最底需要显示的时间
+		if(nowStamp - this.isShowStamp >= this.showTime){
+			this.isShow = false;
+			this.div.style.display = "none";
+			this.canvas.stop();
+		}else{
+			let needShowTime = this.showTime - (nowStamp - this.isShowStamp);
+			this.hideTimeOutFn = setTimeout(function(){
+				_this.isShow = false;
+				_this.div.style.display = "none";
+				_this.canvas.stop();
+			},needShowTime)
+		}
 	},
 	//销毁
 	destroy:function(){
