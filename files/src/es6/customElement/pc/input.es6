@@ -8,6 +8,7 @@
 // b-input(type='yzm')
 // b-input(type='select')
 // b-input(type='textarea')
+// b-input(type='tel')
 //==========================================================
 
 // html
@@ -41,6 +42,8 @@
 	//  input.value = '';       //获取或设置对象的值   get、set
 	//  input.key;              //获取设置的key的值。
 	//  input.disabled = true;  //设置input是否可用 true/false
+	//  input.styleText = '.a{color:red;}';  //添加style文本进入内部
+
 
 	//  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
 	//通过返回该控件的value
@@ -285,6 +288,11 @@ class bInput extends HTMLElement{
 	//创建input
 	[createInput](type){
 		switch (type) {
+			case 'tel':
+				// let textInput = createInputDom.text(this.type,this.placeholder,this.rule);
+				// textInput.css(this.inputCss);
+				// this.inputBodyDom.append(textInput);
+				// break;
 			case 'text':
 				let textInput = createInputDom.text(this.type,this.placeholder,this.rule);
 				textInput.css(this.inputCss);
@@ -524,6 +532,14 @@ class bInput extends HTMLElement{
 	set change(fn){
 		fn = fn || function(){};
 		this.userSetChangeFn = fn;
+	}
+
+	set styleText(text){
+		let style = document.createElement('style');
+		style.rel = "stylesheet";
+		style.innerHTML = text;
+
+		this.shadow.appendChild(style);
 	}
 
 }
