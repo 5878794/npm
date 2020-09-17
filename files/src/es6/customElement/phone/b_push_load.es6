@@ -49,8 +49,8 @@
 // require('@webcomponents/shadydom');
 
 
-let pushLoadingFn = require('../lib/ui/pushLoading'),
-	$$ = require('../lib/event/$$');
+let pushLoadingFn = require('../../lib/ui/pushLoading'),
+	$$ = require('../../lib/event/$$');
 
 
 let createDom = Symbol(),

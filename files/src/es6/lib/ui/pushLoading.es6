@@ -342,12 +342,14 @@ class pushLoading{
 		this.loadingDom.css({"z-index":-1});
 		this[isLoading] = false;
 		this[refreshParam]();
+		this.notCanLoadingFn();
 	}
 
 
 	//注销
 	destroy(){
 		this.loadingDom.remove();
+		body.css({paddingBottom:0});
 
 
 		if(!app.isAndroid){
