@@ -1,5 +1,19 @@
 //手机不支持
 
+//文件转base64
+//input读取文件对象，然后创建 FileReader 对象。 再然后 readAsDataURL
+//var fileInput = document.querySelector('#fileInput');
+//         fileInput.onchange = function () {
+//             var file = this.files[0];
+//             var reader = new FileReader();
+//             reader.readAsDataURL(file);
+//             reader.onload = function () {
+//                 var data = reader.result;
+//                 console.log('data', data);
+//             };
+//         };
+
+
 //base64转blob对象
 let fromBase64 = function(base64){
 	var arr = base64.split(','),
