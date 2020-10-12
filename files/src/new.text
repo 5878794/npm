@@ -1,0 +1,22 @@
+元素未在显示区域时，忽略子元素的渲染
+目前仅chrome支持 2020-10-12
+容器本身没有设置高度可以用contain-intrinsic-size指定不显示时的高度
+---------------------------
+content-visibility: auto;
+contain-intrinsic-size: 1000px;
+---------------------------
+
+
+:line和:visited 的合集，简写
+2个写法等价
+---------------------------
+:link,
+:visited{}
+---------------------------
+:any-link{}
+---------------------------
+
+
+图片、iframe懒加载
+<img src='' loading='lazy'/>
+<iframe src='' loading='lazy'></iframe>
