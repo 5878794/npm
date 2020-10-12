@@ -1,6 +1,16 @@
 ﻿@charset "utf-8";
 /* CSS Document */
 
+
+/*元素未在显示区域时，忽略子元素的渲染*/
+/*目前仅chrome支持 2020-10-12*/
+/*容器本身没有设置高度可以用contain-intrinsic-size指定不显示时的高度*/
+/*---------------------------*/
+/*content-visibility: auto;*/
+/*contain-intrinsic-size: 1000px;*/
+/*---------------------------*/
+
+
 *{
     margin:0;
     padding:0;
