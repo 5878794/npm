@@ -34,7 +34,7 @@
 
 
 let addStyleFile = require('./fn/addStyleFile');
-
+require('../lib/jq/extend');
 
 class bBindObj extends HTMLElement{
 	//注册要监听的属性
@@ -47,7 +47,13 @@ class bBindObj extends HTMLElement{
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		//data-data属性不能传入对象  所以通过jq的data属性传值
-		this.data = $(this).data('data');
+		let data = $(this).data('data')??'';
+		if($.isObject(data)){
+			this.data = data;
+		}else{
+			this.clear();
+		}
+
 	}
 
 	constructor(){
@@ -60,10 +66,8 @@ class bBindObj extends HTMLElement{
 
 		this.createDom();
 
-		//分析dom中的变量
-		this.paramCatch = {};
-		this.checkTree();
 
+		this.init();
 
 		//css中设置咯初始visible:hidden 避免初始的时候页面闪烁
 		$(this).css({
@@ -75,14 +79,22 @@ class bBindObj extends HTMLElement{
 	createDom(){
 		let slot = $('<slot></slot>');
 		this.shadow.appendChild(slot.get(0));
+
+		this.body = $(this.shadow);
 	}
 
-	checkTree(){
+	init(){
+		//分析dom中的变量
+		this.paramCatch = {};
+
 		//slot中的子元素集合 数组
 		let cloneDom = this.shadow.querySelector('slot').assignedElements();
+		this.checkTree(cloneDom);
+	}
 
+	checkTree(cloneDom){
 		//获取html b-bind-array用
-		this.html = this.outerHTML;
+		// this.html = this.outerHTML;
 
 		cloneDom.map(rs=>{
 			this.checkDom(rs);
@@ -201,6 +213,15 @@ class bBindObj extends HTMLElement{
 	}
 
 
+	clear(){
+		for(let [key,val] of Object.entries(this.paramCatch)){
+			let obj = {};
+			obj[key] = '';
+			val.map(fn=>{
+				fn(obj);
+			})
+		}
+	}
 
 	set data(data){
 		let catchFn = this.paramCatch;
@@ -223,4 +244,4 @@ if(!customElements.get('b-bind-obj')){
 }
 
 
-
+module.exports = bBindObj;

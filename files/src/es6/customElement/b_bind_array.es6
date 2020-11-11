@@ -7,7 +7,6 @@
 //---------------------------------------------
 //---------------------------------------------
 
-// b-bind-array 下面第一层必须是  b-bind-obj
 
 //设置数据会清空原有数据
 // bBindArrayDom.data = [];
@@ -19,17 +18,17 @@
 // bBindArrayDom.list(n).remove();
 
 //修改数据
-// bBindArrayDom.list(n).data = {};
+// bBindArrayDom.list(n).data = {name:111};
 
 
 
-let addStyleFile = require('./fn/addStyleFile');
 
-require('./b_bind_obj');
+let bBindObj = require('./b_bind_obj');
+require('../lib/jq/extend');
 
 
 
-class bBIndArray extends HTMLElement{
+class bBIndArray extends bBindObj{
 	//注册要监听的属性
 	static get observedAttributes() {
 		//监听的属性需要全部小写
@@ -40,73 +39,88 @@ class bBIndArray extends HTMLElement{
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		//data-data属性不能传入对象  所以通过jq的data属性传值
-		this.data = $(this).data('data');
+		let data = $(this).data('data')??'';
+		if($.isArray(data)){
+			this.data = data;
+		}else if($.isString(data) && data !='') {
+
+		}else{
+			this.data = [];
+		}
 	}
 
 	constructor(){
 		super();
 
-		//创建shadow容器
-		this.body = this.attachShadow({mode: 'open'});
-		let all = addStyleFile('../res/css/all.css');
-		this.body.appendChild(all);
-
-		this.createDom();
-
-		//分析dom中的变量
-		this.html = null;
 		this.createdDoms = [];
-		this.checkTree();
-
-
-		//css中设置咯初始visible:hidden 避免初始的时候页面闪烁
-		$(this).css({
-			visibility:'visible'
-		});
-
-
 	}
 
-	createDom() {
+	init(){
+		//分析dom中的变量
+		this.paramCatchs = [];
+	}
+
+	createDom(){
 		let slot = $('<slot></slot>'),
 			template = $('<template></template>');
 		template.append(slot);
-		this.body.appendChild(template.get(0));
+		this.shadow.appendChild(template.get(0));
+
+		this.body = $(this.shadow);
 	}
 
-	checkTree(){
-		let cloneDom = this.body.querySelector('slot').assignedElements();
-		cloneDom = cloneDom[0];
+	getCloneDom(data){
+		let dom = this.shadow.querySelector('slot').assignedElements(),
+			fragment = document.createDocumentFragment();
+		dom.map(rs=>{
+			fragment.appendChild(rs.cloneNode(true));
+		});
 
-		this.html = cloneDom.html;
+		this.paramCatch = {};
+
+		let childDom = [];
+		for(let i=0,l=fragment.childNodes.length;i<l;i++){
+			childDom.push(fragment.childNodes[i])
+		}
+		this.checkTree(childDom);
+		super.data = data;
+
+		this.paramCatchs.push(this.paramCatch);
+
+		return {fragment,childDom};
 	}
 
 	set data(data){
 		data = data??[];
+		//清空列表
 		this.clearAll();
+
 		data.map(rs=>{
-			let dom = $(this.html).get(0);
-			this.body.appendChild(dom);
-			this.createdDoms.push(dom);
-			dom.data = rs;
+			//获取模版克隆
+			let {fragment,childDom} = this.getCloneDom(rs);
+			this.shadow.appendChild(fragment);
+			this.createdDoms.push(childDom);
 		});
 	}
 
 	clearAll(){
 		this.createdDoms.map(rs=>{
-			$(rs).remove();
+			rs.map(dom=>{
+				$(dom).remove();
+			})
 		})
 		this.createdDoms = [];
+		this.paramCatchs = [];
 	}
 
 	set add(data){
 		data = data??[];
 		data.map(rs=>{
-			let dom = $(this.html).get(0);
-			this.body.appendChild(dom);
-			this.createdDoms.push(dom);
-			dom.data = rs;
-		})
+			//获取模版克隆
+			let {fragment,childDom} = this.getCloneDom(rs);
+			this.shadow.appendChild(fragment);
+			this.createdDoms.push(childDom);
+		});
 	}
 
 	list(param){
@@ -117,15 +131,46 @@ class bBIndArray extends HTMLElement{
 		}else{
 			param = parseInt(param);
 			let dom = this.createdDoms[param]??{};
-			return {
-				remove(){
-					_this.createdDoms.splice(param,1);
-					$(dom).remove();
-				},
-				set data(data){
-					dom.data = data;
+
+			dom.remove = function(){
+				_this.createdDoms.splice(param,1);
+				_this.paramCatchs.splice(param,1);
+				if($.isArray(dom)){
+					dom.map(rs=>{
+						$(rs).remove();
+					})
 				}
 			}
+
+			Object.defineProperty(dom,"data",{
+				set : function (data) {
+					let catchFn = _this.paramCatchs[param]??{};
+
+					for(let [key,val] of Object.entries(data)){
+						if(catchFn[key]){
+							catchFn[key].map(fn=>{
+								fn(data);
+							})
+						}
+					}
+				},
+				configurable : true
+			});
+
+
+			// dom.data = function(data){
+			// 	let catchFn = _this.paramCatchs[param]??{};
+			//
+			// 	for(let [key,val] of Object.entries(data)){
+			// 		if(catchFn[key]){
+			// 			catchFn[key].map(fn=>{
+			// 				fn(data);
+			// 			})
+			// 		}
+			// 	}
+			// }
+
+			return dom;
 		}
 	}
 
