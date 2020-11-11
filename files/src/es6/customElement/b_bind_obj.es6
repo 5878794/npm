@@ -77,8 +77,10 @@ class bBindObj extends HTMLElement{
 	}
 
 	createDom(){
-		let slot = $('<slot></slot>');
-		this.shadow.appendChild(slot.get(0));
+		let slot = $('<slot></slot>'),
+			template = $('<template></template>');
+		template.append(slot);
+		this.shadow.appendChild(template.get(0));
 
 		this.body = $(this.shadow);
 	}
@@ -89,16 +91,33 @@ class bBindObj extends HTMLElement{
 
 		//slot中的子元素集合 数组
 		let cloneDom = this.shadow.querySelector('slot').assignedElements();
-		this.checkTree(cloneDom);
+
+		let fragment = document.createDocumentFragment();
+		cloneDom.map(rs=>{
+			fragment.appendChild(rs.cloneNode(true));
+		});
+
+		let childDom = [];
+		for(let i=0,l=fragment.childNodes.length;i<l;i++){
+			childDom.push(fragment.childNodes[i])
+			// console.log(fragment.childNodes[i].outerHTML)
+		}
+
+		this.body.append(fragment);
+
+		this.checkTree(childDom);
 	}
 
 	checkTree(cloneDom){
 		//获取html b-bind-array用
 		// this.html = this.outerHTML;
-
+		// console.log($(this).get(0).outerHTML);
+		// console.log('===========')
 		cloneDom.map(rs=>{
+			// console.log(rs.outerHTML)
 			this.checkDom(rs);
 		});
+		// console.log('----------------')
 	}
 
 	checkDom(rs){
@@ -224,6 +243,7 @@ class bBindObj extends HTMLElement{
 	}
 
 	set data(data){
+		// console.log('obj',data)
 		let catchFn = this.paramCatch;
 
 		for(let [key,val] of Object.entries(data)){

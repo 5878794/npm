@@ -53,6 +53,8 @@ class bBIndArray extends bBindObj{
 		super();
 
 		this.createdDoms = [];
+
+		// console.log(this.outerHTML)
 	}
 
 	init(){
@@ -60,14 +62,6 @@ class bBIndArray extends bBindObj{
 		this.paramCatchs = [];
 	}
 
-	createDom(){
-		let slot = $('<slot></slot>'),
-			template = $('<template></template>');
-		template.append(slot);
-		this.shadow.appendChild(template.get(0));
-
-		this.body = $(this.shadow);
-	}
 
 	getCloneDom(data){
 		let dom = this.shadow.querySelector('slot').assignedElements(),
@@ -81,16 +75,17 @@ class bBIndArray extends bBindObj{
 		let childDom = [];
 		for(let i=0,l=fragment.childNodes.length;i<l;i++){
 			childDom.push(fragment.childNodes[i])
+			// console.log(fragment.childNodes[i].outerHTML)
 		}
 		this.checkTree(childDom);
 		super.data = data;
 
 		this.paramCatchs.push(this.paramCatch);
-
 		return {fragment,childDom};
 	}
 
 	set data(data){
+		// console.log('array',data,this.outerHTML)
 		data = data??[];
 		//清空列表
 		this.clearAll();
@@ -156,19 +151,6 @@ class bBIndArray extends bBindObj{
 				},
 				configurable : true
 			});
-
-
-			// dom.data = function(data){
-			// 	let catchFn = _this.paramCatchs[param]??{};
-			//
-			// 	for(let [key,val] of Object.entries(data)){
-			// 		if(catchFn[key]){
-			// 			catchFn[key].map(fn=>{
-			// 				fn(data);
-			// 			})
-			// 		}
-			// 	}
-			// }
 
 			return dom;
 		}
