@@ -58,6 +58,8 @@ class bBindObj extends HTMLElement{
 
 	constructor(){
 		super();
+		console.log(this.tagName)
+		console.log(this.innerHTML)
 
 		//创建shadow容器
 		this.shadow = this.attachShadow({mode: 'open'});
@@ -65,6 +67,7 @@ class bBindObj extends HTMLElement{
 		this.shadow.appendChild(all);
 
 		this.createDom();
+		this.slotToTemplate();
 
 
 		this.init();
@@ -74,50 +77,54 @@ class bBindObj extends HTMLElement{
 			visibility:'visible'
 		});
 
+		// console.log(this.tagName)
+		// console.log(this.template.innerHTML)
+
 	}
 
 	createDom(){
-		let slot = $('<slot></slot>'),
-			template = $('<template></template>');
-		template.append(slot);
-		this.shadow.appendChild(template.get(0));
+		let slot = $('<slot></slot>');
+		this.shadow.appendChild(slot.get(0));
 
 		this.body = $(this.shadow);
+	}
+	slotToTemplate(){
+
+		let slotNode = this.shadow.querySelector('slot').assignedElements(),
+			html = [];
+
+		slotNode.map(rs=>{
+			html.push(rs.outerHTML);
+		});
+
+		slotNode.map(rs=>{
+			$(rs).remove();
+		});
+
+		html = html.join('');
+
+		let template = document.createElement('template');
+		template.innerHTML = html;
+		// console.log(html)
+
+		this.template = template;
+		this.body.append(template);
 	}
 
 	init(){
 		//分析dom中的变量
 		this.paramCatch = {};
 
-		//slot中的子元素集合 数组
-		let cloneDom = this.shadow.querySelector('slot').assignedElements();
-
-		let fragment = document.createDocumentFragment();
-		cloneDom.map(rs=>{
-			fragment.appendChild(rs.cloneNode(true));
-		});
-
-		let childDom = [];
-		for(let i=0,l=fragment.childNodes.length;i<l;i++){
-			childDom.push(fragment.childNodes[i])
-			// console.log(fragment.childNodes[i].outerHTML)
-		}
-
-		this.body.append(fragment);
-
-		this.checkTree(childDom);
+		let cloneDom = this.template.innerHTML;
+		cloneDom = $(cloneDom);
+		$(this).append(cloneDom);
+		this.checkTree(cloneDom);
 	}
 
 	checkTree(cloneDom){
-		//获取html b-bind-array用
-		// this.html = this.outerHTML;
-		// console.log($(this).get(0).outerHTML);
-		// console.log('===========')
-		cloneDom.map(rs=>{
-			// console.log(rs.outerHTML)
-			this.checkDom(rs);
-		});
-		// console.log('----------------')
+		for(let i=0,l=cloneDom.length;i<l;i++){
+			this.checkDom(cloneDom[i]);
+		}
 	}
 
 	checkDom(rs){

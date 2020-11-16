@@ -7,6 +7,10 @@
 //---------------------------------------------
 //---------------------------------------------
 
+//数组自带对象包裹  不能在包裹b-bind-obj
+
+//TODO bug
+//发现执行顺序问题，b-bind-obj始终优先b-bind-array解析。。。未找到原因
 
 //设置数据会清空原有数据
 // bBindArrayDom.data = [];
@@ -64,24 +68,18 @@ class bBIndArray extends bBindObj{
 
 
 	getCloneDom(data){
-		let dom = this.shadow.querySelector('slot').assignedElements(),
-			fragment = document.createDocumentFragment();
-		dom.map(rs=>{
-			fragment.appendChild(rs.cloneNode(true));
-		});
+		let cloneDom = this.template.innerHTML;
+		cloneDom = $(cloneDom);
 
+		//赋值
 		this.paramCatch = {};
-
-		let childDom = [];
-		for(let i=0,l=fragment.childNodes.length;i<l;i++){
-			childDom.push(fragment.childNodes[i])
-			// console.log(fragment.childNodes[i].outerHTML)
-		}
-		this.checkTree(childDom);
+		this.checkTree(cloneDom);
 		super.data = data;
 
+		//缓存
 		this.paramCatchs.push(this.paramCatch);
-		return {fragment,childDom};
+
+		return cloneDom;
 	}
 
 	set data(data){
@@ -92,17 +90,15 @@ class bBIndArray extends bBindObj{
 
 		data.map(rs=>{
 			//获取模版克隆
-			let {fragment,childDom} = this.getCloneDom(rs);
-			this.shadow.appendChild(fragment);
-			this.createdDoms.push(childDom);
+			let cloneDom = this.getCloneDom(rs);
+			$(this).append(cloneDom);
+			this.createdDoms.push(cloneDom);
 		});
 	}
 
 	clearAll(){
 		this.createdDoms.map(rs=>{
-			rs.map(dom=>{
-				$(dom).remove();
-			})
+			rs.remove();
 		})
 		this.createdDoms = [];
 		this.paramCatchs = [];
@@ -112,9 +108,9 @@ class bBIndArray extends bBindObj{
 		data = data??[];
 		data.map(rs=>{
 			//获取模版克隆
-			let {fragment,childDom} = this.getCloneDom(rs);
-			this.shadow.appendChild(fragment);
-			this.createdDoms.push(childDom);
+			let cloneDom = this.getCloneDom(rs);
+			$(this).append(cloneDom);
+			this.createdDoms.push(cloneDom);
 		});
 	}
 
@@ -130,10 +126,8 @@ class bBIndArray extends bBindObj{
 			dom.remove = function(){
 				_this.createdDoms.splice(param,1);
 				_this.paramCatchs.splice(param,1);
-				if($.isArray(dom)){
-					dom.map(rs=>{
-						$(rs).remove();
-					})
+				if(dom.remove){
+					dom.remove();
 				}
 			}
 
