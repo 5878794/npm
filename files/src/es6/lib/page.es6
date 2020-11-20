@@ -810,10 +810,11 @@ page[init](function(){
     errorHandler.error(e);
     if(page[isDebug]){
         console.log(e);
-        await page.alert("网络连接出现了一点问题，请重新尝试");
+        // await page.alert("网络连接出现了一点问题，请重新尝试");
     }else{
-        await page.alert("网络连接出现了一点问题，请重新尝试;");
-        page.goBack();
+        console.log(e);
+        // await page.alert("网络连接出现了一点问题，请重新尝试;");
+        // page.goBack();
     }
 });
 module.exports = page;
