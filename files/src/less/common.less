@@ -1,11 +1,28 @@
+@import url(./all_pc);
 
 //注意:注入咯全局变量 tt = 编译时的时间戳
 //background: url('../image/Group1x.png?t=@{tt}')
 
-.a{
-  width:@tt;
+
+//背景图片带参数防止缓存
+.bg(@a;@repeat:no-repeat;@left:center;@top:center){
+  @url:"@{a}?tt=@{tt}";
+  background: url(@url) @repeat @left @top;
+}
+.bgImage(@a;@repeat:no-repeat;@left:center;@top:center){
+  @url:"@{a}?tt=@{tt}";
+  background-image:url(@url);
+  background-repeat: @repeat;
+  background-position: @left @top;
 }
 
-.top{
-  background: url('../image/Group1x.png?t=@{tt}') no-repeat center center;
+
+
+
+
+
+.b{
+  .bg('../a.png');
+  .bgImage('../b.png');
 }
+
