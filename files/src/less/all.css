@@ -14,7 +14,7 @@ div, p, span, a, ul, li,img{
     -ms-user-select:none;
     -moz-user-select:none;
     -webkit-text-size-adjust: none;
-    //font-size: 12px;
+    /*font-size: 0.24rem;*/
 }
 
 
@@ -33,6 +33,15 @@ input,button,select,textarea{
 }
 
 
+.input_disabled{
+    background: rgb(230,231,232) !important;
+    border-color: rgb(214,213,207) !important;
+}
+
+/*input:disabled{*/
+/*    background: #F5F5F5 !important;*/
+/*}*/
+
 /*placeholder颜色设置*/
 input::-webkit-input-placeholder {
     color:    #ccc;
@@ -40,6 +49,9 @@ input::-webkit-input-placeholder {
 input:-moz-placeholder {
     color:    #ccc;
 }
+
+
+
 
 
 body{
@@ -77,7 +89,7 @@ a:active{
 
 
 .radius{
-    border-radius: 5px;
+    border-radius: 5rem;
 }
 
 
@@ -380,6 +392,8 @@ a:active{
     justify-content:flex-end;
 }
 
+
+
 /*横向排列 水平 物体之间和2测之间均分剩余空间  垂直：上*/
 .box_h_space_t{
     display: -webkit-flex;
@@ -453,7 +467,6 @@ a:active{
     justify-content:space-between;
 }
 
-
 /*多行*/
 .box_lines{
     -webkit-flex-wrap:wrap;
@@ -512,7 +525,7 @@ a:active{
 .scroll_x{
     overflow-y: hidden; overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
+    padding-bottom: 0.2rem;
 }
 .scroll_x::-webkit-scrollbar{
     display: none;
@@ -520,7 +533,7 @@ a:active{
 .scroll_y{
     overflow-x: hidden; overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-right: 20px;
+    padding-right: 0.2rem;
 }
 .scroll_y::-webkit-scrollbar{
     display: none;
@@ -528,50 +541,76 @@ a:active{
 .scroll_xy{
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
-    padding-right: 20px;
+    padding-bottom: 0.2rem;
+    padding-right: 0.2rem;
 }
 .scroll_xy::-webkit-scrollbar{
     display: none;
 }
 
+.hover{
+    cursor: pointer;
+    /*-webkit-transition: all 0.4s ease-out;*/
+    /*-moz-transition: all 0.4s ease-out;*/
+    /*-ms-transition: all 0.4s ease-out;*/
+    /*-o-transition: all 0.4s ease-out;*/
+    /*transition: all 0.4s ease-out;*/
+}
+.hover:hover{
+    opacity: 0.4;
+}
 
+
+/*.scroll_style1::-webkit-scrollbar {!*滚动条整体样式*!*/
+/*    width: 10px;     !*高宽分别对应横竖滚动条的尺寸*!*/
+/*    height: 10px;*/
+/*}*/
+/*.scroll_style1::-webkit-scrollbar-thumb {!*滚动条里面小方块*!*/
+/*    border-radius: 10px;*/
+/*    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+/*    background: #999;*/
+/*}*/
+/*.scroll_style1::-webkit-scrollbar-track {!*滚动条里面轨道*!*/
+/*    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+/*    border-radius: 10px;*/
+/*    background: #fff;*/
+/*}*/
 
 
 /*添加字体*/
 /*@font-face {*/
-/*font-family: "pertibd";*/
-/*src:url('./../font/PERTIBD.TTF?t=1526994860275') format('truetype'); !* chrome, firefox, opera, Safari, Android, iOS 4.2+*!*/
+    /*font-family: "pertibd";*/
+    /*src:url('./../font/PERTIBD.TTF?t=1526994860275') format('truetype'); !* chrome, firefox, opera, Safari, Android, iOS 4.2+*!*/
 /*}*/
 
 /*.pertibd {*/
-/*font-family:"pertibd" !important;*/
+    /*font-family:"pertibd" !important;*/
 /*}*/
 
 
 
 /*.test{*/
-/*animation:lineAnimate 1.5s infinite linear;*/
+    /*animation:lineAnimate 1.5s infinite linear;*/
 /*}*/
 
 
 /*@keyframes lineAnimate {*/
-/*0% {*/
-/*transform: translateY(0%) scaleY(0)*/
-/*}*/
-/*10% {*/
-/*transform: translateY(0%) scaleY(0.5)*/
-/*}*/
-/*30% {*/
-/*transform: translateY(50%) scaleY(1)*/
-/*}*/
-/*45% {*/
-/*transform: translateY(200%) scaleY(0.5)*/
-/*}*/
-/*55% {*/
-/*transform: translateY(200%) scaleY(0)*/
-/*}*/
-/*100% {*/
-/*transform: translateY(200%) scaleY(0)*/
-/*}*/
+    /*0% {*/
+        /*transform: translateY(0%) scaleY(0)*/
+    /*}*/
+    /*10% {*/
+        /*transform: translateY(0%) scaleY(0.5)*/
+    /*}*/
+    /*30% {*/
+        /*transform: translateY(50%) scaleY(1)*/
+    /*}*/
+    /*45% {*/
+        /*transform: translateY(200%) scaleY(0.5)*/
+    /*}*/
+    /*55% {*/
+        /*transform: translateY(200%) scaleY(0)*/
+    /*}*/
+    /*100% {*/
+        /*transform: translateY(200%) scaleY(0)*/
+    /*}*/
 /*}*/

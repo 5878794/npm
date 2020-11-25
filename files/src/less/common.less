@@ -1,28 +1,92 @@
 @import url(./all_pc);
-
-//注意:注入咯全局变量 tt = 编译时的时间戳
-//background: url('../image/Group1x.png?t=@{tt}')
+@import url(./fn);
 
 
-//背景图片带参数防止缓存
-.bg(@a;@repeat:no-repeat;@left:center;@top:center){
-  @url:"@{a}?tt=@{tt}";
-  background: url(@url) @repeat @left @top;
+
+
+.body{
+    width: 100%;
+    min-width:@minWidth;
 }
-.bgImage(@a;@repeat:no-repeat;@left:center;@top:center){
-  @url:"@{a}?tt=@{tt}";
-  background-image:url(@url);
-  background-repeat: @repeat;
-  background-position: @left @top;
+.content{
+    width: @minWidth;
+    margin: 0 auto;
 }
-
-
-
-
-
-
-.b{
-  .bg('../a.png');
-  .bgImage('../b.png');
+.red_btn{
+    width: 160px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background: #e02f2f;
+    font-size:14px;
+    .canHover();
 }
 
+
+
+header{
+    .html();
+    height: 60px;
+    font-size: 14px;
+    position: fixed;
+    left:0;
+    top:0;
+    z-index:1000;
+
+    .icon{
+        display: block;
+        width:36px;
+        height: 36px;
+        margin-left:20px;
+        margin-right:10px;
+
+    }
+    .title{
+        font-size:19px;
+        color: #fff;
+
+    }
+    .nav{
+        a{
+            padding:0 10px;
+            color: #fff;
+            font-size:14px;
+            .canHover();
+            &:link,
+            &:visited{
+                color:#fff;
+            }
+        }
+    }
+    .btns{
+        height: 100%;
+    }
+    .login{
+        .bgImage('../image/touxiang.png',no-repeat,left,center);
+        background-size:16px 16px;
+        padding-left: 24px;
+        margin:0 6px;
+        line-height: 40px;
+        color: #fff;
+        .canHover();
+    }
+    .logout{
+        margin:0 6px;
+        color: #fff;
+        line-height: 40px;
+        .canHover();
+    }
+    .line{
+        width:16px; height: 14px;
+        border-left:1px solid #fff;
+        margin-left: 6px;
+
+    }
+    .ma2{
+        width: 20px;
+        height: 20px;
+        margin-right: 20px;
+        .canHover();
+    }
+}
