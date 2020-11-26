@@ -47,16 +47,20 @@ class bBanner extends HTMLElement{
 
 		let jg = parseInt($(this).attr('jg')) || 5000,
 			animateTime = parseInt($(this).attr('animateTime')) || 1200,
-			imgWidthHeight = $(this).attr('imgWH');
+			imgWidthHeight = $(this).attr('imgWH'),
+			pointColor = $(this).attr('pointColor') || 'rgb(70,65,68):#fff';
+		pointColor = pointColor.split(':');
 
 
-		new bannerFn({
+		this.bannerObj = new bannerFn({
 			win: this.body,                      //@param:jqobj    外层窗口
 			body: this.main,        //@param:jqobj    滑动层
 			pointBody:$(this.shadow),
 			time: jg,                     //@param:number   滑动间隔时间
 			animateTime: animateTime,         //@param:number   滑动动画时间
-			showPoint:true                //@param:number   是否显示下面的小点
+			showPoint:true,                //@param:number   是否显示下面的小点
+			pointBg:pointColor[0],
+			pointSelectBg:pointColor[1]
 			// leftBtn:$("#story_right_btn"),  //@param:jqobj    左滑动按钮
 			// rightBtn:$("#story_left_btn"),  //@param:jqobj    右滑动按钮
 		 // changeStartFn:function(page){}, //@param:fn       滑动开始时执行函数，传递当前要滑动到的页面number
@@ -104,6 +108,10 @@ class bBanner extends HTMLElement{
 			fn();
 		});
 		fn();
+	}
+
+	go(n){
+		this.bannerObj.gotoPage = n;
 	}
 
 }

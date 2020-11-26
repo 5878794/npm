@@ -35,8 +35,8 @@ var scrollBanner = function (data) {
 	this.showPoint = $.isBoolean(data.showPoint)? data.showPoint : true;
 	this.leftBtn = data.rightBtn;
 	this.rightBtn = data.leftBtn;
-	this.pointBg = "rgb(70,65,68)";
-	this.pointSelectBg = "#fff";
+	this.pointBg = data.pointBg || "rgb(70,65,68)";
+	this.pointSelectBg = data.pointSelectBg || "#fff";
 	this.changeStartFn = data.changeStartFn || function(){};
 	this.changeEndFn = data.changeEndFn || function(){};
 	this.pointMarginBottom = data.pointMarginBottom || '40px';
@@ -387,6 +387,25 @@ scrollBanner.prototype = {
 
 
 		this.pointBody.remove();
+	},
+
+
+	set gotoPage(n){
+		var _this = this;
+
+		_this.body.stop(true);
+		clearInterval(_this.intervalFn);
+		_this.intervalFn = null;
+
+		n = (n>=this.maxPage)? this.maxPage : n;
+		this.page = n;
+		this.animate();
+
+		this.intervalFn = setInterval(function () {
+			_this.page++;
+			_this.animate();
+		}, _this.time);
+
 	}
 
 
