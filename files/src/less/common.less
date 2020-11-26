@@ -33,7 +33,23 @@ header{
     left:0;
     top:0;
     z-index:1000;
-
+    .animate();
+    .search{
+        position: relative;
+        top:2px;
+        width: 160px;
+        height: 30px;
+        border-radius: 30px;
+        padding-left:40px;
+        color: #999;
+        line-height: 30px;
+        font-size: 12px;
+        .bgImage('../image/search.png',no-repeat,10px,center);
+        background-size: 18px;
+        background-color: rgba(0,0,0,0.5);
+        margin-right: 10px;
+        cursor: text;
+    }
     .icon{
         display: block;
         width:36px;
@@ -89,4 +105,175 @@ header{
         margin-right: 20px;
         .canHover();
     }
+}
+
+
+footer{
+    color: #22222d;
+    min-height: 260px;
+    .bottom_left{
+        width: 400px; padding-top: 60px;
+        font-size: 16px;
+        img{
+            width: 30px; height: 30px;
+            margin-right: 10px;
+        }
+        .name{
+            padding-bottom: 40px;
+        }
+        .info{
+            font-size: 12px; font-weight:200;
+        }
+    }
+    .bottom_right{
+        padding-top:50px;
+        padding-bottom:20px;
+        .item{
+            width: auto;
+            font-size: 12px; color: #22222d;
+            padding:0 20px;
+            p{
+                padding-bottom: 10px;
+            }
+            a{
+                color: #666;
+                font-weight: lighter;
+                .canHover();
+                line-height: 20px;
+            }
+        }
+    }
+}
+
+
+.link{
+    background: #481011; height: 50px;
+    color: #b2b2b2; font-size: 12px;
+    line-height: 50px;
+    a{
+        color: #b2b2b2;
+        padding:0 10px;
+        border-right:1px solid #b2b2b2;
+        line-height: 10px;
+        .canHover();
+    }
+    a:last-child{
+        border:none;
+    }
+    .content{
+        height: 50px;
+
+    }
+}
+
+.copyright{
+    background: #000;
+    height: 50px;
+    color: #b2b2b2; font-size: 12px;
+    .content{
+        height: 50px;
+    }
+}
+
+
+
+
+.top_2ma{
+    display: none;
+    width: 207px; height: 207px;
+    padding:27px;
+    background: #1c1b1a;
+    position: absolute;
+    right:13px; top:80px;
+}
+.top_2ma img{
+    display: block;
+    width:153px; height: 153px;
+}
+.top_2ma:after{
+    content: '';
+    position: absolute;
+    left:82.5%;
+    top:-36px;
+    width: 0;
+    height: 0;
+    border: 18px solid;
+    border-color: transparent transparent #1c1b1a;
+}
+.top_goTop{
+    position: fixed; right:3%; bottom:10%;
+    z-index:100;
+}
+.top_goTop_btn1,
+.top_goTop_btn2,
+.top_goTop_btn3{
+    width: 54px; height: 54px;
+    margin-bottom:9px;
+    cursor: pointer;
+    position: relative;
+}
+.top_goTop_btn1 div,
+.top_goTop_btn2 div,
+.top_goTop_btn3 div{
+    width: 100%; height: 54px;
+    background-color: #e02f2f;
+    position: absolute;
+    left:0; top:0; z-index: 2;
+}
+.top_goTop_btn1 p,
+.top_goTop_btn2 p,
+.top_goTop_btn3 p{
+    width: 100%; height: 54px;
+    background-color: #e02f2f;
+    color: #fff; text-align: center;
+    padding:9px 0;
+    font-size: 14px; line-height: 18px;
+    display: none;
+    position: absolute;
+    left:0; top:0; z-index: 2;
+}
+.top_goTop_btn1 div{
+    background-image: url('../image/xuanfu (1).png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.top_goTop_btn2 div{
+    background-image: url('../image/xuanfu (2).png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.top_goTop_btn3 div{
+    background-image: url('../image/xuanfu (3).png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.top_goTop_btn2 span{
+    background: #e02f2f;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    display: block;
+    width: 100%;
+    height: 54px;
+    line-height: 54px;
+    position: absolute;
+    left:0; top:0;
+    z-index: 1;
+    overflow: hidden;
+    letter-spacing: 0.05em;
+}
+
+.top_goTop_btn1:hover div,
+.top_goTop_btn2:hover div,
+.top_goTop_btn3:hover div{
+    display: none;
+}
+.top_goTop_btn1:hover p,
+.top_goTop_btn2:hover p,
+.top_goTop_btn3:hover p{
+    display: block;
+}
+.top_goTop_btn2:hover span{
+    width:135px;
+    left:-135px;
 }
