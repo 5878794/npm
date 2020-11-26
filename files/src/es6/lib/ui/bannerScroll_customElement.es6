@@ -29,7 +29,7 @@ var scrollBanner = function (data) {
 	this.win = data.win;            //包裹层
 	this.body = data.body;          //移动层
 	this.customElementShadow = data.pointBody;
-	this.imgLength = this.win.find("a").length;
+	this.imgLength = this.win.children().length;
 	this.time = data.time || 5000;      //动画间隔时间
 	this.animateTime = data.animateTime || 1000;    //动画时间
 	this.showPoint = $.isBoolean(data.showPoint)? data.showPoint : true;
@@ -79,8 +79,8 @@ scrollBanner.prototype = {
 			top: 0
 		});
 
-		this.win.find("a").css({
-			display: "block",
+		this.win.children().css({
+			// display: "block",
 			width: this.winWidth + "px",
 			height: this.winHeight + "px",
 			border: "none",
@@ -88,9 +88,8 @@ scrollBanner.prototype = {
 			"position": "relative"
 		});
 
-		this.win.find("a").css({
+		this.win.children().css({
 			float: "left",
-			display: "block"
 		});
 	},
 	//添加指示的点点
@@ -149,7 +148,7 @@ scrollBanner.prototype = {
 			width: width + "px",
 			height: "100%"
 		});
-		this.win.find("a").css({
+		this.win.children().css({
 			width: this.winWidth + "px",
 			height: "100%"
 		})

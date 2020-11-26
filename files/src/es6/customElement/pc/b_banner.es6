@@ -48,7 +48,9 @@ class bBanner extends HTMLElement{
 		let jg = parseInt($(this).attr('jg')) || 5000,
 			animateTime = parseInt($(this).attr('animateTime')) || 1200,
 			imgWidthHeight = $(this).attr('imgWH'),
-			pointColor = $(this).attr('pointColor') || 'rgb(70,65,68):#fff';
+			pointColor = $(this).attr('pointColor') || 'rgb(70,65,68):#fff',
+			notShowPoint = $(this).attr('notShowPoint');
+		notShowPoint = (notShowPoint=='true')? false : true;
 		pointColor = pointColor.split(':');
 
 
@@ -58,7 +60,7 @@ class bBanner extends HTMLElement{
 			pointBody:$(this.shadow),
 			time: jg,                     //@param:number   滑动间隔时间
 			animateTime: animateTime,         //@param:number   滑动动画时间
-			showPoint:true,                //@param:number   是否显示下面的小点
+			showPoint:notShowPoint,                //@param:number   是否显示下面的小点
 			pointBg:pointColor[0],
 			pointSelectBg:pointColor[1]
 			// leftBtn:$("#story_right_btn"),  //@param:jqobj    左滑动按钮
