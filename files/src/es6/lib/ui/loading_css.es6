@@ -117,4 +117,4 @@ var loading = {
 
 
 
-export default loading;
+module.exports = loading;
