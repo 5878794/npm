@@ -58,8 +58,8 @@ class bBindObj extends HTMLElement{
 
 	constructor(){
 		super();
-		console.log(this.tagName)
-		console.log(this.innerHTML)
+		// console.log(this.tagName)
+		// console.log(this.innerHTML)
 
 		//创建shadow容器
 		this.shadow = this.attachShadow({mode: 'open'});
