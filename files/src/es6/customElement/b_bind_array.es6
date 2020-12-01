@@ -87,6 +87,7 @@ class bBIndArray extends bBindObj{
 		data = data??[];
 		//清空列表
 		this.clearAll();
+		$(this).find('.__no_data__').remove();
 
 		data.map(rs=>{
 			//获取模版克隆
@@ -94,6 +95,10 @@ class bBIndArray extends bBindObj{
 			$(this).append(cloneDom);
 			this.createdDoms.push(cloneDom);
 		});
+
+		if(data.length == 0){
+			$(this).append('<div class="box_hcc __no_data__" style="width:100%;height:200px;">暂无数据</div>');
+		}
 	}
 
 	clearAll(){
