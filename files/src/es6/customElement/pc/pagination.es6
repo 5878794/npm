@@ -22,7 +22,16 @@
 // 	a.clickFn = function(n){
 // 		console.log(n)          //点击事件，返回点击的页码
 // 	}
-//  a.selectBg = '#ccc';        //设置当前页码显示的背景色  默认：#cc9800
+//  //设置dom样式
+// a.css({
+// 	border:'none'
+// });
+//  //设置当前页的样式
+// a.selectCss({
+// 	color:'red',
+// 	background:'none',
+// 	borderBottom:'2px solid red'
+// });        //设置当前页
 
 
 
@@ -109,14 +118,14 @@ class bPagination extends HTMLElement{
 			'}\n' +
 			'\n' +
 			'.pagination_pre:after{\n' +
-			'  content: \'﹤\'; display: block;\n' +
+			'  content: \'上一页\'; display: block;\n' +
 			'  position: absolute;\n' +
 			'  left:0; top:0;\n' +
 			'  width:50px; height: 35px;\n' +
 			'  font-size: 16px;\n' +
 			'}\n' +
 			'.pagination_next:after{\n' +
-			'  content: \'﹥\'; display: block;\n' +
+			'  content: \'下一页\'; display: block;\n' +
 			'  position: absolute;\n' +
 			'  left:0; top:0;\n' +
 			'  width:50px; height: 35px;\n' +
@@ -315,6 +324,14 @@ class bPagination extends HTMLElement{
 		this.body.find('.select').css({
 			background:color
 		})
+	}
+
+	css(style){
+		this.body.find('div').css(style);
+	}
+
+	selectCss(style){
+		this.body.find('.select').css(style);
 	}
 
 }
