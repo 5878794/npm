@@ -261,12 +261,12 @@ let page = {
 
     //alert        async
     alert(text,title,icon,iconWidth,iconHeight){
-        return new Promise(async success=>{
-            // alert(text);
-            // callback();
-            await alertFn(true,text,title,icon,iconWidth,iconHeight);
-            success();
-        });
+	    alert(text);
+        // return new Promise(async success=>{
+
+            // await alertFn(true,text,title,icon,iconWidth,iconHeight);
+            // success();
+        // });
     },
 
     //confirm
