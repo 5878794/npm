@@ -58,6 +58,8 @@ class bBIndArray extends bBindObj{
 
 		this.createdDoms = [];
 
+		this.notShowNoDataDom = ($(this).attr('notShowNoData') == 'yes')? true : false;
+
 		// console.log(this.outerHTML)
 	}
 
@@ -96,7 +98,7 @@ class bBIndArray extends bBindObj{
 			this.createdDoms.push(cloneDom);
 		});
 
-		if(data.length == 0){
+		if(data.length == 0 && !this.notShowNoDataDom){
 			$(this).append('<div class="box_hcc __no_data__" style="width:100%;height:200px;">暂无数据</div>');
 		}
 	}
