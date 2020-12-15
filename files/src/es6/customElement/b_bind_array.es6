@@ -25,6 +25,9 @@
 // bBindArrayDom.list(n).data = {name:111};
 
 
+//参数
+// @attr:notShowNoDataDom='yes'  数据为空时不显示暂无数据
+// @attr:dataIsString    数组中为字符串时，  设置后自动添加属性  index,item
 
 
 let bBindObj = require('./b_bind_obj');
@@ -59,6 +62,7 @@ class bBIndArray extends bBindObj{
 		this.createdDoms = [];
 
 		this.notShowNoDataDom = ($(this).attr('notShowNoData') == 'yes')? true : false;
+		this.dataIsString = ($(this).attr('isString') == 'yes')? true : false;
 
 		// console.log(this.outerHTML)
 	}
@@ -113,6 +117,14 @@ class bBIndArray extends bBindObj{
 
 	set add(data){
 		data = data??[];
+
+		if(this.dataIsString){
+			data.map((rs,i)=>{
+				data.index = i;
+				data.item = rs;
+			})
+		}
+
 		data.map(rs=>{
 			//获取模版克隆
 			let cloneDom = this.getCloneDom(rs);
