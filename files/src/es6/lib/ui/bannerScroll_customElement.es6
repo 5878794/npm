@@ -408,7 +408,6 @@ scrollBanner.prototype = {
 	},
 
 	refresh(){
-		this.destroy();
 		this.imgLength = this.win.children().length;
 		this.page = 0;
 		this.maxPage = this.imgLength - 1;

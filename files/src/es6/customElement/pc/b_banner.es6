@@ -120,6 +120,10 @@ class bBanner extends HTMLElement{
 		this.bannerObj.refresh();
 	}
 
+	destroy(){
+		this.bannerObj.destroy();
+	}
+
 }
 
 
