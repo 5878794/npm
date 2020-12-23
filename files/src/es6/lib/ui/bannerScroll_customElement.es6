@@ -405,8 +405,23 @@ scrollBanner.prototype = {
 			_this.animate();
 		}, _this.time);
 
-	}
+	},
 
+	refresh(){
+		this.destroy();
+		this.imgLength = this.win.children().length;
+		this.page = 0;
+		this.maxPage = this.imgLength - 1;
+
+		this.intervalFn = null;
+		this.points = [];
+		this.pointBody = null;
+
+		this.touchStartTime = 0;
+		this.touchPoints = [];
+		this.leftPx = 0;
+		this.init();
+	}
 
 };
 

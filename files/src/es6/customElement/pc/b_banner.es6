@@ -116,6 +116,10 @@ class bBanner extends HTMLElement{
 		this.bannerObj.gotoPage = n;
 	}
 
+	refresh(){
+		this.bannerObj.refresh();
+	}
+
 }
 
 
