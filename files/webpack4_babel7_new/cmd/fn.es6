@@ -46,9 +46,15 @@ module.exports = {
 				} else {
 					let type = fullPath.split('.');
 					type = type[type.length-1];
-					if(type == fileType){
+
+					if(fileType){
+						if(type == fileType){
+							filesList.push(fullPath);
+						}
+					}else{
 						filesList.push(fullPath);
 					}
+
 				}
 			});
 		}
