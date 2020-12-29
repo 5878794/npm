@@ -2,8 +2,6 @@
 @import url(./fn);
 
 
-
-
 .body{
     width: 100%;
     min-width:@minWidth;
@@ -44,7 +42,7 @@ header{
     .search{
         position: relative;
         top:2px;
-        width: 160px;
+        width: 100px;
         height: 30px;
         border-radius: 30px;
         padding-left:40px;
@@ -59,9 +57,8 @@ header{
     }
     .icon{
         display: block;
-        width:36px;
-        height: 36px;
-        margin-left:20px;
+        width:160px;
+        margin-left:10px;
         margin-right:10px;
 
     }
@@ -74,12 +71,15 @@ header{
         a{
             padding:0 10px;
             color: #fff;
-            font-size:14px;
+            font-size:16px;
             .canHover();
             &:link,
             &:visited{
                 color:#fff;
             }
+        }
+        a.select{
+            color:red;
         }
     }
     .btns{
@@ -122,7 +122,7 @@ footer{
         width: 440px; padding-top: 60px;
         font-size: 18px;
         img{
-            width: 30px; height: 30px;
+            width: 142px; height: 30px;
             margin-right: 10px;
         }
         .name{
@@ -139,12 +139,13 @@ footer{
             width: auto;
             font-size: 14px; color: #22222d;
             padding:0 20px;
-            p{
+            .bottom_right_title{
                 padding-bottom: 10px;
+                color: #22222d !important;
             }
             a{
                 color: #666;
-                font-weight: lighter;
+                //font-weight: lighter;
                 .canHover();
                 line-height: 20px;
             }
@@ -158,7 +159,8 @@ footer{
     color:#fff;
     font-size: 32px;
     div{
-        height: 400px; font-weight: lighter;
+        height: 400px;
+        //font-weight: lighter;
     }
 }
 
@@ -182,7 +184,7 @@ footer{
     color: #e02f2f; font-size: 26px;
     div{
         font-size: 40px;
-        font-weight: lighter;
+        //font-weight: lighter;
     }
 }
 
@@ -318,6 +320,98 @@ footer{
     left:-135px;
 }
 
+
+.part4{
+    .bg('../image/beijing-chanpinyufuwu.jpg');
+    height: 680px;
+    background-size: 1920px 680px;
+    .title{
+        text-align: center;
+        font-size: 30px;
+        color: #22222d;
+        //font-weight: lighter;
+        padding:50px 0 30px 0;
+    }
+    .nav{
+        width: 100%;
+        border-bottom:1px solid #e02f2f;
+        height: 50px;
+        overflow: hidden;
+        p{
+            position: relative;
+            padding:0 15px;
+            height: 50px;
+            line-height: 50px;
+            .canHover();
+        }
+        .select:before{
+            content: '';
+            position: absolute; left:0; bottom:-2px;
+            width: 100%; height: 10px;
+            border-bottom:4px solid #e02f2f;
+        }
+        p.select{
+            color: #e22323;
+        }
+
+    }
+    .main_content{
+        margin:50px 0 0 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        b-banner{
+            width: 100%; height: 340px;
+        }
+        .item{
+            width:100%;
+            background: #fff;
+            padding:30px 50px 30px 30px;
+            .animate();
+            img{
+                width: 200px;
+                height: 200px;
+                margin-right: 20px;
+            }
+            .name{
+                font-size:24px;
+                color: #22222d;
+                font-weight: bold;
+                padding-top: 30px;
+                padding-bottom:20px;
+            }
+            .info{
+                font-size:16px; color: #22222d;
+                //font-weight: lighter;
+                line-height: 20px;
+                padding-bottom: 40px;
+            }
+            .btns{
+                padding-bottom: 30px;
+                width: 100%;
+                p{
+                    font-size: 16px;
+                    line-height: 16px;
+                    //font-weight: lighter;
+                    &:before{
+                        content: '○';
+                        display: inline-block;
+                        height: 20px;
+                        font-size:12px;
+                        //font-weight: lighter;
+                        line-height: 16px;
+                        padding-right: 5px;
+                        position: relative;
+                        top:-2px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
 .part8{
     background: #fff;
     .item{
@@ -346,4 +440,122 @@ footer{
             padding:1px 0 20px 0;
         }
     }
+}
+
+
+.government_top{
+    background: #fff;
+    padding:20px;
+    font-size:12px;
+    color: #22222d;
+    .government_top_left{
+        width: 180px;
+        margin-right: 60px;
+        .icon{
+            width: 180px; height: 180px;
+            background: #f6f9fa;
+            .img{
+                width: 100%;
+                height: 130px;
+            }
+            .dir{
+                .bg('../image/government/tb-mulu.png')
+            }
+            .file{
+                .bg('../image/government/tb-wenjian.png')
+            }
+            .api{
+                .bg('../image/government/tb-api.png')
+            }
+            .sql{
+                .bg('../image/government/tb-kubiao.png')
+            }
+            p{
+                width: 100%; line-height: 20px;
+                text-align: center;
+            }
+        }
+        .btn{
+            width:160px; height: 40px;
+            border-radius: 5px;
+            background: #cacacc; color:#fff;
+            text-align: center; line-height: 40px;
+            //.canHover();
+            margin-top:15px;
+        }
+
+    }
+    .government_top_right{
+        width: 160px;
+        margin-left:60px;
+        p{
+            font-size: 14px;
+            color: #e02f2f;
+            border:1px solid #e02f2f;
+            text-align: center;
+            width: 100%; height: 40px; line-height: 40px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            .canHover();
+        }
+        .favorites:before{
+            content: '★';
+            font-size:12px;
+            color:#e02f2f;
+            margin-right: 5px;
+            position: relative;
+            top:-1px;
+        }
+        p.notUse{
+            cursor: auto;
+            border: 1px solid #ccc;
+            color:#ccc;
+        }
+    }
+    .government_top_center{
+        .title{
+            font-size:22px;
+            color: #e02f2f;
+            line-height: 120%;
+            padding: 13px 0;
+        }
+        .msg{
+            color: #98999a;
+            width: 100%;
+            line-height: 120%;
+            padding:5px 0;
+        }
+        .time{
+            span{
+                color: #22222d;
+            }
+        }
+        .form{
+            span{
+                color: #4264f3;
+            }
+
+        }
+        .tag{
+            padding: 10px 0 25px 0;
+            p{
+                color:#e89d54;
+                border:1px solid #e89d54;
+                padding:3px 10px;
+                border-radius: 30px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+
+.__temp__a__{
+    color: #4264f3;
+    .canHover();
+}
+.__temp__a__:link,
+.__temp__a__:visited{
+    color: #4264f3;
 }

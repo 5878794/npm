@@ -1,8 +1,20 @@
 //注意:注入咯全局变量 tt = 编译时的时间戳
-//background: url('../image/Group1x.png?t=@{tt}')
 
 
-//背景图片带参数防止缓存
+@minWidth:1200px;
+@maxWidth:1920px;
+@useRem:true;
+
+
+
+.page(){
+    min-width:@minWidth;
+    max-width:@maxWidth;
+    width:100%;
+    margin: 0 auto;
+}
+
+//背景图片带参数防止缓存============================
 .bg(@a;@repeat:no-repeat;@left:center;@top:center){
     @url:"@{a}?tt=@{tt}";
     background: url(@url) @repeat @left @top;
@@ -13,20 +25,32 @@
     background-repeat: @repeat;
     background-position: @left @top;
 }
-.test(@name;@rest...){
-        @{name}:@rest;
+
+
+//px 转 rem ========================================= start
+.attr(@name,@px...){
+    @n:length(@px); //获取参数的个数
+    .attr1(@name,@px,@n);
 }
-
-@minWidth:1200px;
-@maxWidth:1920px;
-
-
-.html(){
-    min-width:@minWidth;
-    max-width:@maxWidth;
-    width:100%;
-    margin: 0 auto;
+.attr1(@name,@px,@n) when (@n>0){
+    .attr1(@name,@px,@n - 1);   //自身循环
+    @val:extract(@px,@n);       //获取参数中的第几个
+    .attr2(@name,@val);         //处理参数
 }
+.attr2(@name,@val) when(isNumber(@val)=false){
+    @{name}+_:@val;     //合并所以参数到 @name 中的写法
+}
+.attr2(@name,@val) when(isNumber(@val)=true) and (@useRem=true){
+    @{name}+_:unit(@val/100,rem);       //js中rem定义的要/100
+}
+.attr2(@name,@val) when(isNumber(@val)=true) and (@useRem=false){
+    @{name}+_:unit(@val,px);
+}
+//px 转 rem ========================================= end
+
+
+
+
 .canHover(){
     cursor: pointer;
     -webkit-transition: all 0.3s ease-in;
