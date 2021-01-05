@@ -13,6 +13,7 @@
 
 require("./../jq/extend");
 require("./../jq/cssAnimate");
+require('./../jq/mouseWheel');
 let getImageFitSize = require("./../fn/getImageFitSize"),
 	scaleFn = require('../event/mulitTouch'),
 	// $$$ = require("./../event/$$"),
@@ -108,7 +109,14 @@ showPicture.prototype = {
 			top:"10px",
 			width:rem2px(0.64),
 			height:rem2px(0.64),
-			background:"url('"+this.closeImg+"') no-repeat center center",
+			// background:"url('"+this.closeImg+"') no-repeat center center",
+
+			'background-image':"url('"+this.closeImg+"')",
+			'background-repeat':'no-repeat',
+			'background-position':'-1px center',
+			'background-color':'#333',
+			'border-radius':'5px',
+
 			"background-size":"100% 100%",
 			cursor:"pointer",
 			transition:"all 0.2s linear",
@@ -200,6 +208,10 @@ showPicture.prototype = {
 			div.find("div").remove();
 			//添加图片
 			div.append(this);
+
+			$(this).click(function(e){
+				e.stopPropagation();
+			})
 		};
 		img.src = src;
 
@@ -289,18 +301,27 @@ showPicture.prototype = {
 		this.closeBtn.click(function(){
 			_this.destroy();
 		});
+		this.main.click(function(){
+			_this.destroy();
+		});
+
+
+
 
 
 
 		//增加缩放的图片的移动功能
-		let points = [];
+		let points = [],
+			canMove = false;
 		window.addEventListener(device.START_EV,this.temp_s_fn = function(e){
+			canMove = true;
 			if(e.touches){
 				e = e.touches[0];
 			}
 			points = [e];
 		},false);
 		window.addEventListener(device.MOVE_EV,this.temp_m_fn = function(e){
+			if(!canMove){return;}
 			if(e.touches){
 				if(e.touches.length > 1){
 					points = [];
@@ -310,6 +331,9 @@ showPicture.prototype = {
 			}
 			points.push(e);
 			_this.movePicture(points);
+		},false);
+		window.addEventListener(device.END_EV,this.temp_e_fn = function(e){
+			canMove = false;
 		},false);
 
 
@@ -327,9 +351,11 @@ showPicture.prototype = {
 		}
 		window.removeEventListener(device.START_EV,this.temp_s_fn,false);
 		window.removeEventListener(device.MOVE_EV,this.temp_m_fn,false);
+		window.addEventListener(device.END_EV,this.temp_e_fn,false);
 		this.leftBtn.unbind("click");
 		this.rightBtn.unbind("click");
 		this.closeBtn.unbind("click");
+		this.main.unbind('click');
 		this.main.remove();
 	},
 
@@ -350,8 +376,24 @@ showPicture.prototype = {
 			},
 			touchEndFn:function(){
 				_this.imgAutoParams();
-
 			}
+		});
+
+
+		let scale = 1;
+		$(this.main).mousewheel(function(event, delta) {
+			var dir = delta > 0 ? 'Up' : 'Down';
+			if (dir == 'Up') {
+				scale = scale+0.1;
+			} else {
+				scale = scale-0.1;
+			}
+
+			_this.nowImgWidth = _this.imgWidth * scale;
+			_this.nowImgHeight = _this.imgHeight * scale;
+			_this.imgScale = scale;
+			_this.imgAutoParams();
+			return false;
 		});
 	},
 
