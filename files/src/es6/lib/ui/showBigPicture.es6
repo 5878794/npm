@@ -387,6 +387,7 @@ showPicture.prototype = {
 				scale = scale+0.1;
 			} else {
 				scale = scale-0.1;
+				scale = (scale<=0.1)? 0.1 : scale;
 			}
 
 			_this.nowImgWidth = _this.imgWidth * scale;
