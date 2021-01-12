@@ -18,6 +18,7 @@
 // @param:   imgWH banner的宽高比例
 // @param:   jg  动画停顿时间
 // @param:   animateTime  动画运动时的时间
+// @param:   animateDir  动画方向 默认：row横向  cel纵向
 
 
 
@@ -49,6 +50,7 @@ class bBanner extends HTMLElement{
 			animateTime = parseInt($(this).attr('animateTime')) || 1200,
 			imgWidthHeight = $(this).attr('imgWH'),
 			pointColor = $(this).attr('pointColor') || 'rgb(70,65,68):#fff',
+			animateDir = $(this).attr('animateDir') || 'row',
 			notShowPoint = $(this).attr('notShowPoint');
 		notShowPoint = (notShowPoint=='true')? false : true;
 		pointColor = pointColor.split(':');
@@ -59,6 +61,7 @@ class bBanner extends HTMLElement{
 			body: this.main,        //@param:jqobj    滑动层
 			pointBody:$(this.shadow),
 			time: jg,                     //@param:number   滑动间隔时间
+			dir:animateDir,
 			animateTime: animateTime,         //@param:number   滑动动画时间
 			showPoint:notShowPoint,                //@param:number   是否显示下面的小点
 			pointBg:pointColor[0],

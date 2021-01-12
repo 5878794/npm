@@ -40,6 +40,7 @@ var scrollBanner = function (data) {
 	this.changeStartFn = data.changeStartFn || function(){};
 	this.changeEndFn = data.changeEndFn || function(){};
 	this.pointMarginBottom = data.pointMarginBottom || '40px';
+	this.dir = data.dir || 'row';
 
 
 	this.winWidth = parseInt(this.win.width());
@@ -88,9 +89,12 @@ scrollBanner.prototype = {
 			"position": "relative"
 		});
 
-		this.win.children().css({
-			float: "left",
-		});
+		if(this.dir == 'row'){
+			this.win.children().css({
+				float: "left",
+			});
+		}
+
 	},
 	//添加指示的点点
 	addPoint: function () {
@@ -143,14 +147,25 @@ scrollBanner.prototype = {
 		this.winWidth = parseInt(this.win.width());
 		this.winHeight = parseInt(this.win.height());
 
-		let width = this.winWidth * this.imgLength;
+
+		let width,height;
+		if(this.dir == 'row'){
+			width = this.winWidth * this.imgLength;
+			width = width + 'px';
+			height = '100%';
+		}else{
+			width = '100%';
+			height = this.winHeight * this.imgLength;
+			height = height + 'px';
+		}
+
 		this.body.css({
-			width: width + "px",
-			height: "100%"
+			width: width,
+			height: height
 		});
 		this.win.children().css({
 			width: this.winWidth + "px",
-			height: "100%"
+			height: this.winHeight + 'px'
 		})
 
 
@@ -224,7 +239,12 @@ scrollBanner.prototype = {
 
 				if (Math.abs(pointsx) > Math.abs(pointsy)) {
 					e.preventDefault();
-					_this.moveEvent(e, pointsx);
+
+					if(this.dir == 'row'){
+						_this.moveEvent(e, pointsx);
+					}else{
+						_this.moveEvent(e, pointsy);
+					}
 				}
 
 			}, device.eventParam);
@@ -273,9 +293,16 @@ scrollBanner.prototype = {
 
 		this.changeStartFn(this.page);
 		var _this = this;
-		this.body.cssAnimate({
-			left: -this.page * this.winWidth + "px"
-		}, this.animateTime,function(){
+
+		let animateCss;
+		if(this.dir == 'row'){
+			animateCss = {left: -this.page * this.winWidth + "px"};
+		}else{
+			animateCss = {top: -this.page * this.winHeight + "px"};
+		}
+
+
+		this.body.cssAnimate(animateCss, this.animateTime,function(){
 			_this.changeEndFn(_this.page);
 		});
 
@@ -290,10 +317,17 @@ scrollBanner.prototype = {
 			return;
 		}
 
-		var t_left = this.leftPx + pointsx;
-		this.body.css({
-			left: t_left + "px"
-		});
+		if(this.dir == 'row'){
+			let t_left = this.leftPx + pointsx;
+			this.body.css({
+				left: t_left + "px"
+			});
+		}else{
+			let t_left = this.leftPx + pointsx;
+			this.body.css({
+				top: t_left + "px"
+			});
+		}
 	},
 	endEvent: function () {
 		if (this.touchStartTime == 0) {
@@ -322,7 +356,15 @@ scrollBanner.prototype = {
 
 		var pointsx = Math.abs(startpointx - lastpointx);
 		var pointsy = Math.abs(startpointy - lastpointy);
-		if (use_time < 500 && pointsx > 30 && pointsx > pointsy) {
+
+		let moveDir;
+		if(this.dir == 'row'){
+			moveDir = (pointsx > pointsy);
+		}else{
+			moveDir = (pointsy > pointsx);
+		}
+
+		if (use_time < 500 && pointsx > 30 && moveDir) {
 			if (startpointx > lastpointx) {
 				_this.page++;
 				_this.page = (_this.page > _this.maxPage) ? _this.maxPage : _this.page;
