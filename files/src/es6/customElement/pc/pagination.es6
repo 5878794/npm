@@ -178,8 +178,10 @@ class bPagination extends HTMLElement{
 		this.body.html('');
 
 		if(listLength == 0){
-			this.body.css({display:'none'});
+			this.body.addClass('hidden');
 			return;
+		}else{
+			this.body.removeClass('hidden');
 		}
 
 
