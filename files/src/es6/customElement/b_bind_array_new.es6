@@ -15,6 +15,8 @@
 //设置数据会清空原有数据
 // bBindArrayDom.data = [];
 
+//b-bind-array 子元素会自动绑定数据对象到  data-bindData=''上
+
 //添加数据 （滚动加载用）
 // bBindArrayDom.add = [];
 
@@ -84,6 +86,10 @@ class bBIndArray extends bBindObj{
 
 		//缓存
 		this.paramCatchs.push(this.paramCatch);
+
+		cloneDom.each(function(){
+			$(this).data({bindData:data});
+		});
 
 		return cloneDom;
 	}
