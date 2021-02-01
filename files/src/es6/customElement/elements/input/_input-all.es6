@@ -100,11 +100,6 @@ class inputAll extends HTMLElement{
 			height:this.userStyle.rowHeight+'px',
 			lineHeight:this.userStyle.rowHeight+'px'
 		});
-		if(this.name.indexOf('<br')>-1){
-			name.css({
-				lineHeight: this.userStyle.rowHeight / 2 + 'px'
-			})
-		}
 
 		inputBody.css({
 			width:'100%',
@@ -118,8 +113,7 @@ class inputAll extends HTMLElement{
 		});
 		inputDom.css({
 			border:'1px solid #ccc',
-			padding:'0 10px',
-			height:this.userStyle.rowHeight+'px'
+			padding:'0 10px'
 		});
 		unit.css({
 			padding:'0 0 0 10px',
@@ -229,6 +223,23 @@ class inputAll extends HTMLElement{
 		this.shadow.appendChild(style);
 	}
 
+	set rowHeight(height){
+		height = (height)? parseInt(height) : 0;
+		this.userStyle.rowHeight = height;
+		this.nameDom.css({
+			height:height+'px',
+			lineHeight:height+'px'
+		});
+		this.body.find('.__input__').css({
+			height:height+'px',
+			lineHeight:height+'px'
+		});
+		this.body.find('.__textarea__').css({
+			height:height*3+'px',
+			minHeight:height*3+'px',
+			lineHeight:'120%'
+		});
+	}
 
 	get key(){
 		return this.serverKey;

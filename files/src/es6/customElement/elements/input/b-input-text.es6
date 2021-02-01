@@ -35,6 +35,7 @@
 //  input.nameText = '';    //设置标题
 //  input.unitText = '';    //设置单位
 //  input.styleText = '.a{color:red;}';  //添加style文本进入内部
+//  input.rowHeight = 30;   //设置高度
 
 
 //  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
@@ -55,6 +56,8 @@ class bInputText extends publishInput{
 
 		this.createInput();
 		this.addEvent();
+
+		this.value = this.setValue;
 	}
 
 
@@ -107,3 +110,7 @@ class bInputText extends publishInput{
 if(!customElements.get('b-input-text')){
 	customElements.define('b-input-text', bInputText );
 }
+
+
+
+module.exports = bInputText;
