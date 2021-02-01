@@ -1,5 +1,7 @@
 
 
+
+
 let addStyleFile = require('../../fn/addStyleFile'),
 	addStyleStyle = require('../../fn/addStyleText');
 require('../../../lib/jq/check_from');
@@ -30,8 +32,11 @@ class inputAll extends HTMLElement{
 		//公共事件注册
 		this.setDefaultFunction();
 
-
 		this.shadow.appendChild(this.body.get(0));
+
+		if($(this).css('visibility') == 'hidden'){
+			$(this).css({visibility:'visible'})
+		}
 	}
 
 	getDefaultStyle(){
@@ -106,7 +111,7 @@ class inputAll extends HTMLElement{
 			padding:'0 10px'
 		});
 		error.css({
-			paddingLeft:this.userStyle.nameWidth+'px',
+			paddingLeft:this.userStyle.nameWidth+10+'px',
 			color:'red',
 			fontSize:'12px',
 			display:'none'
@@ -117,7 +122,8 @@ class inputAll extends HTMLElement{
 			height:this.userStyle.rowHeight+'px'
 		});
 		unit.css({
-			padding:'0 0 0 10px'
+			padding:'0 0 0 10px',
+			fontSize:'12px'
 		});
 
 		this.unitDom = unit;
@@ -152,6 +158,8 @@ class inputAll extends HTMLElement{
 	//需要实现的公共方法
 	setDefaultFunction(){
 		this.changeFunction = function(){};
+		this.focusFunction = function(){};
+		this.blurFunction = function(){};
 	}
 
 	//表单检查 返回promise对象
@@ -175,6 +183,14 @@ class inputAll extends HTMLElement{
 	set changeFn(fn){
 		fn = fn || function(){};
 		this.changeFunction = fn;
+	}
+	set focusFn(fn){
+		fn = fn || function(){};
+		this.focusFunction = fn;
+	}
+	set blurFn(fn){
+		fn = fn || function(){};
+		this.blurFunction = fn;
 	}
 
 	set disabled(state){
@@ -211,6 +227,11 @@ class inputAll extends HTMLElement{
 		style.innerHTML = text;
 
 		this.shadow.appendChild(style);
+	}
+
+
+	get key(){
+		return this.serverKey;
 	}
 
 }
