@@ -73,7 +73,8 @@ class bInputText extends publishInput{
 			lineHeight:this.userStyle.rowHeight+'px',
 			background:'none',
 			border:'none',
-			fontSize:'12px'
+			fontSize:'12px',
+			paddingLeft:'4px'
 		});
 
 		this.inputBodyDom.prepend(input);
@@ -92,7 +93,7 @@ class bInputText extends publishInput{
 		input.addEventListener('focus',function(){
 			_this.focusFunction.call(_this);
 		});
-		input.addEventListener('blue',function(){
+		input.addEventListener('blur',function(){
 			_this.blurFunction.call(_this);
 		});
 	}

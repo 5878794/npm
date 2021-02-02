@@ -22,7 +22,8 @@ class bInputPassword extends bInputText{
 			lineHeight:this.userStyle.rowHeight+'px',
 			background:'none',
 			border:'none',
-			fontSize:'12px'
+			fontSize:'12px',
+			paddingLeft:'4px'
 		});
 
 		this.inputBodyDom.prepend(input);

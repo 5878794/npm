@@ -40,7 +40,8 @@ class bInputTextarea extends bInputText{
 			lineHeight:'120%',
 			background:'none',
 			border:'none',
-			fontSize:'12px'
+			fontSize:'12px',
+			paddingLeft:'4px'
 		});
 
 		this.autoHeight = ($(this).attr('autoHeight') == 'true');
