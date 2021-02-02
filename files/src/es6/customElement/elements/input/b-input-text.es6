@@ -36,6 +36,7 @@
 //  input.unitText = '';    //设置单位
 //  input.styleText = '.a{color:red;}';  //添加style文本进入内部
 //  input.rowHeight = 30;   //设置高度
+//  input.placeholderColor = '#ccc';
 
 
 //  input.checkPass();      //input检查 返回 promise对象 。 错误时会显示errDom提示
@@ -100,6 +101,8 @@ class bInputText extends publishInput{
 
 	set value(val){
 		this.inputDom.val(val);
+
+		this.changeFunction.call(this,val);
 	}
 	get value(){
 		return this.inputDom.val();

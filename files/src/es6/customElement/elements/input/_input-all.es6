@@ -245,6 +245,19 @@ class inputAll extends HTMLElement{
 		return this.serverKey;
 	}
 
+
+	set placeholderColor(color){
+		let style = [
+			'::-webkit-input-placeholder { color:'+color+'; }',
+			':-moz-placeholder { color:'+color+'; }',
+			'input::-webkit-input-placeholder { color:'+color+'; }',
+			'input:-moz-placeholder { color:'+color+'; }',
+			'.add_placeholder{color:'+color+' !important;}'
+		];
+
+		this.styleText = style.join('');
+	}
+
 }
 module.exports = inputAll;
 

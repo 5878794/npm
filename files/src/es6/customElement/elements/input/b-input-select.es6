@@ -5,8 +5,19 @@
 //添加  set  select.list = [{id:'',val:''}];
 //     get  select.list;
 //     set  select.listFn = async function(){
-//              return [{id:'',val:''}]
+//              return await [{id:'',val:''}]
 //          }
+
+
+// 有初始值会触发 changFn   其他控件不会触发该事件
+
+//如果有级联菜单,可以单独写个字典文件（async function单独写个文件）
+//  自身通过    select.listFn = async function(){return await [];};   获取动态字典
+//  有子菜单的  select.changeFn = function(data){
+//          //this 指向该自定义元素
+//          let id = data.id;
+//          childSelect.listFn = async function(){return await [];};
+//  }
 
 
 
@@ -60,6 +71,15 @@ class bInputSelect extends publishInput{
 			let val = $(this).val(),
 				text = $(this).find('option:selected').text();
 			_this.changeFunction.call(_this, {id:val,val:text});
+
+			//模拟placeholder的颜色
+			if(val==''){
+				//没得值的是 placeholder
+				$(this).addClass('add_placeholder')
+			}else{
+				$(this).removeClass('add_placeholder');
+			}
+
 		},false)
 
 		input.addEventListener('focus',function(){
@@ -75,14 +95,14 @@ class bInputSelect extends publishInput{
 		let _this = this;
 
 		this.inputDom.css({display:'none'});
-		this.loadingDom.text('加载中，请稍后！').css({display:'block'});
+		this.loadingDom.text('加载中，请稍后！').css({display:'block'}).addClass('add_placeholder');
 
 		fn().then(rs=>{
 			this.inputDom.css({display:'block'});
 			this.loadingDom.css({display:'none'});
 			this.createList(rs);
 		}).catch(e=>{
-			this.loadingDom.text('获取数据失败，点击重试！');
+			this.loadingDom.text('获取数据失败，点击重试！').addClass('add_placeholder');
 			this.loadingDom.one('click',function(){
 				_this.listFn = fn;
 			});
@@ -113,6 +133,9 @@ class bInputSelect extends publishInput{
 	set value(val){
 		this.setValue = val;
 		this.inputDom.val(val);
+
+		let text = this.body.find('option:selected').text();
+		this.changeFunction.call(this, {id:val,val:text});
 	}
 	get value(){
 		return this.inputDom.val();
