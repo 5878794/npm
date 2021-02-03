@@ -34,6 +34,20 @@ let renderFn = function(tt){
     let lessCode = fn.readLessFileAndCompile(commonSrc,tt);
     fn.writeFile(commonNewSrc,lessCode);
 
+    //处理all.less
+	commonSrc = path.join(__dirname,'../src/less/');
+	let allNewSrc = path.join(__dirname,'../trunk/res/css/all.css');
+	commonSrc = path.join(commonSrc,'./all.less');
+	lessCode = fn.readLessFileAndCompile(commonSrc,tt);
+	fn.writeFile(allNewSrc,lessCode);
+
+	//处理all_pc.less
+	commonSrc = path.join(__dirname,'../src/less/');
+	let allPcNewSrc = path.join(__dirname,'../trunk/res/css/all_pc.css');
+	commonSrc = path.join(commonSrc,'./all_pc.less');
+	lessCode = fn.readLessFileAndCompile(commonSrc,tt);
+	fn.writeFile(allPcNewSrc,lessCode);
+
 };
 
 
