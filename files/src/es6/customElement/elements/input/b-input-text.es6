@@ -69,14 +69,11 @@ class bInputText extends publishInput{
 		let input =  $(`<input autocomplete="off" class="boxflex1 __input__" type="text" placeholder="${placeholder}" data-rule="${rule}"/>`);
 		input.css({
 			display:'block',
-			width:'100%',
 			height:this.userStyle.rowHeight+'px',
 			lineHeight:this.userStyle.rowHeight+'px',
-			background:'none',
-			border:'none',
-			fontSize:'12px',
 			paddingLeft:'4px'
 		});
+		input.css(this.setting.inputTextStyle);
 
 		this.inputBodyDom.prepend(input);
 		this.inputDom = input;

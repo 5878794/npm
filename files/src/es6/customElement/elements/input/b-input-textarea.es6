@@ -34,13 +34,8 @@ class bInputTextarea extends bInputText{
 
 		let input =  $(`<textarea autocomplete="off" class="boxflex1 __input__ __textarea__" type="password" placeholder="${placeholder}" data-rule="${rule}"></textarea>`);
 		input.css({
-			width:'100%',
 			display:'block',
 			height:this.userStyle.rowHeight*3+'px',
-			lineHeight:'120%',
-			background:'none',
-			border:'none',
-			fontSize:'12px',
 			paddingLeft:'4px'
 		});
 

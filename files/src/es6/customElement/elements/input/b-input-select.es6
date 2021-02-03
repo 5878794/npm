@@ -44,9 +44,9 @@ class bInputSelect extends publishInput{
 		}
 
 		input.css({
-			height:this.userStyle.rowHeight+'px',
-			fontSize:'12px'
+			height:this.userStyle.rowHeight+'px'
 		});
+		input.css(this.setting.inputSelectStyle);
 
 		let loading = $('<div class="boxflex1"></div>');
 		loading.css({

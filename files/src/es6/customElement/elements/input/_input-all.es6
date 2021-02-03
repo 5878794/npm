@@ -3,12 +3,17 @@
 
 
 let addStyleFile = require('../../fn/addStyleFile'),
-	addStyleStyle = require('../../fn/addStyleText');
+	addStyleStyle = require('../../fn/addStyleText'),
+	setting = require('./_input-setting');
+
 require('../../../lib/jq/check_from');
 
 class inputAll extends HTMLElement{
 	constructor() {
 		super();
+
+		this.setting = setting;
+
 		//创建shadow容器
 		this.shadow = this.attachShadow({mode: 'open'});
 
@@ -40,13 +45,7 @@ class inputAll extends HTMLElement{
 	}
 
 	getDefaultStyle(){
-		let style = [
-			'.input_disabled{\n' +
-			'    background-color: rgb(230,231,232) !important;\n' +
-			'    border-color: rgb(214,213,207) !important;\n' +
-			'}',
-			'.input_disabled div{color:#999 !important;}'
-		];
+		let style = setting.input_disabled_style;
 		style = style.join('');
 		return addStyleStyle(style);
 	}
@@ -75,8 +74,8 @@ class inputAll extends HTMLElement{
 
 		//input附加style
 		this.userStyle = {
-			nameWidth:100,      //标题字段宽度
-			rowHeight:30        //行高
+			nameWidth:setting.nameDomWidth,      //标题字段宽度
+			rowHeight:setting.rowHeight        //行高
 		};
 	}
 
@@ -100,25 +99,23 @@ class inputAll extends HTMLElement{
 			height:this.userStyle.rowHeight+'px',
 			lineHeight:this.userStyle.rowHeight+'px'
 		});
+		name.css(setting.nameDomStyle);
 
 		inputBody.css({
 			width:'100%',
 			padding:'0 10px'
 		});
+		inputBody.css(setting.rowDomStyle);
+
 		error.css({
 			paddingLeft:this.userStyle.nameWidth+10+'px',
-			color:'red',
-			fontSize:'12px',
 			display:'none'
 		});
-		inputDom.css({
-			border:'1px solid #ccc',
-			padding:'0 10px'
-		});
-		unit.css({
-			padding:'0 0 0 10px',
-			fontSize:'12px'
-		});
+		error.css(setting.errorDomStyle);
+
+		inputDom.css(setting.inputBodyDomStyle);
+
+		unit.css(setting.unitDomStyle);
 
 		this.unitDom = unit;
 		this.body = dom;
@@ -152,8 +149,8 @@ class inputAll extends HTMLElement{
 	//需要实现的公共方法
 	setDefaultFunction(){
 		this.changeFunction = function(){};
-		this.focusFunction = function(){};
-		this.blurFunction = function(){};
+		this.focusFunction = setting.focusFunction;
+		this.blurFunction = setting.blurFunction;
 	}
 
 	//表单检查 返回promise对象
