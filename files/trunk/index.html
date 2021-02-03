@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <meta http-equiv="x-xss-protection" content="1;mode=block">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <script src="res/js/jquery-3.5.0.min.js?t=1608776125"></script>
+
+    <style>
+        *{padding: 0;margin: 0; font-size:14px; color:#22222d;}
+        .main{
+            /*position: fixed; left:0; top:0;*/
+        }
+        .body{
+            width: 100%; padding-top: 100px;
+        }
+        .body img{
+            margin: 0 auto; display: block;
+        }
+        .body p{
+            font-size:25px; color:#dd9331;
+            padding:30px 0 50px 0;
+            width: 100%; text-align: center;
+        }
+        .body span{
+            font-size:30px; color: #22222d;
+            width: 100%; text-align: center;
+            display: block;
+            padding-bottom: 100px;
+        }
+
+        .use{
+            width: 90%; margin: 0 auto;
+            border-top:1px solid #ccc;
+            padding-bottom: 100px;
+        }
+        .use p{
+            display: block; width:240px;
+            background: #fff;
+            text-align: center;
+            line-height: 40px;
+            height: 40px;
+            font-size: 16px; color: #ccc;
+            position: relative; top:-20px;
+            margin: 0 auto;
+        }
+        .use div{
+            display: block; width:100%;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .use a{
+            width: 100px; height: 100px;
+            display: inline-block;
+            margin: 0 20px;
+            padding-top: 80px;
+            line-height: 20px; text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 0.4;
+        }
+        .use a:link,.use a:visited{
+            text-decoration: none;
+        }
+        .use a:hover{
+            opacity:1;
+        }
+        .bg1{
+            background: url('./res/image/home/chrome.jpg') no-repeat center top;
+        }
+        .bg2{
+            background: url('./res/image/home/edge.jpg') no-repeat center top;
+        }
+        .bg3{
+            background: url('./res/image/home/360.jpg') no-repeat center top;
+        }
+        .bg4{
+            background: url('./res/image/home/qq.jpg') no-repeat center top;
+        }
+    </style>
+    <script>
+        if(window.customElements){
+        	window.location.replace('./index/index.html');
+        }else{
+            $('.main').css({display:'block'});
+        }
+    </script>
+<body>
+
+<div class="main" style="display:block;">
+    <div class="body">
+        <img src="res/image/logo1.png"/>
+        <p>温馨提示</p>
+        <span>您的浏览器版本过低，为了保证更好的浏览体验，请升级您的浏览器</span>
+    </div>
+
+    <div class="use">
+        <p>常用浏览器下载或升级推荐</p>
+        <div>
+            <a href="https://www.google.cn/chrome/" target="_blank" class="bg1">谷歌浏览器</a>
+            <a href="https://www.microsoft.com/zh-cn/edge" class="bg2" target="_blank" >edge浏览器</a>
+            <a href="https://browser.360.cn/" class="bg3" target="_blank" >360浏览器</a>
+            <a href="https://browser.qq.com/" class="bg4" target="_blank" >QQ浏览器</a>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
