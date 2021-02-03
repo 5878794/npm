@@ -16,7 +16,9 @@ let src = path.join(__dirname,'../src/pages/'),
     allFiles = lessFiles.concat(pugFiles);
 
 let commonLessDir = path.join(__dirname,'../src/less/'),
-    outCommonLess = path.join(__dirname,'../trunk/res/css/common.css');
+    outCommonLess = path.join(__dirname,'../trunk/res/css/common.css'),
+	outAllLess = path.join(__dirname,'../trunk/res/css/all.css'),
+	outAllPcLess = path.join(__dirname,'../trunk/res/css/all_pc.css');
 
 
 let renderFn = function(){
@@ -73,22 +75,31 @@ let renderFn = function(){
 
     let commonMd5 = '';
     fs.watch(commonLessDir,async (event,filename)=>{
-        if(filename != 'common.less'){return;}
+        if(!(
+        	filename == 'common.less' ||
+	        filename == 'all.less' ||
+	        filename == 'all_pc.less'
+        )){return;}
 
-        let nowFile = path.join(commonLessDir,filename),
+        let nowFile = path.join(commonLessDir,'common.less'),
+	        nowFile1 = path.join(commonLessDir,'all.less'),
+	        nowFile2 = path.join(commonLessDir,'all_pc.less'),
             newFile = outCommonLess,
-            tt = new Date().getTime()
+	        newFile1 = outAllLess,
+	        newFile2 = outAllPcLess,
+            tt = new Date().getTime();
 
-        let currentMd5 = md5(fs.readFileSync(nowFile));
-        if(commonMd5 == currentMd5){
-            return;
-        }else{
-            commonMd5 = currentMd5;
-        }
+        let lessCode = fn.readLessFileAndCompile(nowFile,tt),
+	        lessCode1 = fn.readLessFileAndCompile(nowFile1,tt),
+	        lessCode2 = fn.readLessFileAndCompile(nowFile2,tt);
 
-        let lessCode = fn.readLessFileAndCompile(nowFile,tt);
         fn.writeFile(newFile,lessCode);
+	    fn.writeFile(newFile1,lessCode1);
+	    fn.writeFile(newFile2,lessCode2);
+
         console.log("\x1b[34m",newFile);
+	    console.log("\x1b[34m",newFile1);
+	    console.log("\x1b[34m",newFile2);
 
         //同时更新所有html
         let cmd = 'node ./cmd/pug.es6'
