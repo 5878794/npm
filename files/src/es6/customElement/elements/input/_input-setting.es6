@@ -39,7 +39,7 @@ module.exports = {
 	},
 	//输入框后单位显示样式
 	unitDomStyle:{
-		padding:'0 0 0 10px',
+		padding:'0 5px 0 10px',
 		fontSize:'12px'
 	},
 	//验证表单提示错误的dom的样式
@@ -69,7 +69,17 @@ module.exports = {
 		fontSize:'12px',
 	},
 	inputSelectStyle:{
-		fontSize:'12px'
+		fontSize:'12px',
+		appearance:'none',
+		'-moz-appearance':'none',
+		'-webkit-appearance':'none',
+		paddingLeft:'4px'
+	},
+	inputDateStyle:{
+		background:'none',
+		border:'none',
+		fontSize:'12px',
+		paddingLeft:'2px'
 	},
 
 

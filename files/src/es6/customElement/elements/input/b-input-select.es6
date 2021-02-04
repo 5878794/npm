@@ -55,9 +55,27 @@ class bInputSelect extends publishInput{
 			fontSize:'12px',
 			paddingLeft:'4px',
 			display:'none'
-		})
+		});
 
-		this.inputBodyDom.prepend(input).prepend(loading);
+		//下箭头
+		let div = $('<div></div>');
+		div.css({
+			width: 0,
+			height: 0,
+			'border-left':'4px solid transparent',
+			'border-right': '4px solid transparent',
+			'border-top': '6px solid #000',
+			position:'absolute',
+			right:'16px',
+			top:'50%',
+			'margin-top':'-3px'
+		});
+
+		this.inputBodyDom.css({
+			position:'relative'
+		});
+
+		this.inputBodyDom.prepend(input).prepend(loading).append(div);
 		this.inputDom = input;
 		this.loadingDom = loading;
 	}
