@@ -70,6 +70,9 @@ let getDate1 = function (b) {
 	if(!b){
 		return '';
 	}
+
+	b = (b.indexOf('-')>-1 || b.indexOf('\/')>-1)? b : parseInt(b);
+
 	// b = b || new Date().getTime();
 	var a = new Date(b);
 	var year = a.getFullYear();
