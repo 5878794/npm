@@ -24,6 +24,7 @@ let app = require("../device"),
 	addEvent = Symbol("addEvent");
 
 
+
 class bodyStyle{
 	constructor(opt={}){
 		//线条颜色
@@ -68,6 +69,18 @@ class bodyStyle{
 		//确认按钮
 		this.domYes = null;
 
+		//定位用的dom  pc用与定位时用，手机端不传
+		this.positionDom = opt.positionDom || $('body');
+		let offset = this.positionDom.offset(),
+			left = offset.left,
+			top = offset.top,
+			height = this.positionDom.height();
+		top += height;
+		this.positionDomLeft = left;
+		this.positionDomTop = top;
+
+
+
 		this.svgYesId = svgYesId;
 		this.svgCloseId = svgCloseId;
 
@@ -102,6 +115,7 @@ class bodyStyle{
 	//创建遮罩层
 	[createZZ](){
 		let div = $("<div></div>");
+
 		div.css({
 			width:"100%",
 			height:"100%",
@@ -111,24 +125,43 @@ class bodyStyle{
 			'z-index':1000
 		});
 
+
 		this.domZZ = div;
 	}
 
 	//创建主体层
 	[createMain](){
 		let div = $("<div></div>");
-		div.css3({
-			width:"100%",
-			"height":"50%",
-			position:"absolute",
-			left:0,bottom:0,
-			background:this.bg,
-			// display:"box",
-			// "box-orient":"vertical",
-			color:this.fontColor,
-			"font-size":this.fontSize+"px",
-			'z-index':1001
-		}).addClass('box_slt');
+		if(app.isPhone){
+			div.css3({
+				width:"100%",
+				"height":"50%",
+				position:"absolute",
+				left:0,bottom:0,
+				background:this.bg,
+				// display:"box",
+				// "box-orient":"vertical",
+				color:this.fontColor,
+				"font-size":this.fontSize+"px",
+				'z-index':1001
+			}).addClass('box_slt');
+		}else{
+			div.css3({
+				width:"400px",
+				"height":'300px',
+				position:"absolute",
+				left:this.positionDomLeft+'px',
+				top:this.positionDomTop+'px',
+				background:this.bg,
+				// display:"box",
+				// "box-orient":"vertical",
+				color:this.fontColor,
+				"font-size":this.fontSize+"px",
+				'z-index':1001,
+				border:'1px solid #ccc'
+			}).addClass('box_slt');
+		}
+
 
 		this.domMain = div;
 	}
@@ -162,7 +195,8 @@ class bodyStyle{
 			"text-align":"center",
 			"line-height":this.titleHeight+"px",
 			"font-size":this.closeBtnFontSize+"px",
-			color:this.closeBtnColor
+			color:this.closeBtnColor,
+			cursor:'pointer'
 		});
 		div.html(installSvg.get(svgCloseId));
 
@@ -181,7 +215,8 @@ class bodyStyle{
 			"text-align":"center",
 			"line-height":this.titleHeight+"px",
 			"font-size":this.yesBtnFontSize+"px",
-			color:this.yesBtnColor
+			color:this.yesBtnColor,
+			cursor:'pointer'
 		});
 		div.html(installSvg.get(svgYesId));
 

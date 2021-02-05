@@ -3,6 +3,7 @@
 
 // let date = require("date");
 // new date({
+//  positionDom:'',             //@param:jqDom  定位用的dom，pc时需要传，默认body
 // 	titleText:"请选择日期",       //@param:str    标题
 // 	selected:"2016-12-12",      //@param:str    初始显示的日期， 默认：当前日期
 // 	minDate:"1950-1-1",         //@param:str    最小显示时间 默认：1950-1-1
@@ -16,11 +17,13 @@
 //          //取消选择
 //  }
 // })
-
-
+//background:linear-gradient(to left,rgba(255,255,255,1) 10px,rgba(255,255,255,0));
+// background:linear-gradient(to right,rgba(255,255,255,1) 10px,rgba(255,255,255,0));
 
 require('../css/all');
 require("../jq/extend");
+require('../jq/mouseWheel');
+require('../jq/cssAnimate');
 let zz = require("./bodyStyle"),
 	app = require("../device"),
 	touchEvent = require("../event/simpleSlide"),
@@ -96,9 +99,10 @@ class dateChoose extends zz{
 		//点击的列对象是哪一个
 		this[touchDomN] = 0;
 		//滚动列的宽度
+		let bodyWidth  = this.domBody.width();
 		this[celWidth] = (this.isShowDay)?
-							window.innerWidth/3 :
-						    window.innerWidth/2;
+							bodyWidth/3 :
+							bodyWidth/2;
 
 		//dom排列顺序，用于判断点击的是年月日中的哪一列
 		this[touchDomList] = [];
@@ -216,7 +220,8 @@ class dateChoose extends zz{
 		divZZ.css3({
 			width:"100%", height:"50%",
 			"margin-top":-this.rowHeight/2+"px",
-			background:"rgba(255,255,255,0.4)",
+			background:'linear-gradient(to bottom,rgba(255,255,255,1) 20px,rgba(255,255,255,0))',
+			// background:"rgba(255,255,255,0.4)",
 			position:"absolute",left:0,top:0,
 			"z-index":100
 		});
@@ -225,7 +230,8 @@ class dateChoose extends zz{
 		let divZZ1 = $("<div class='__temp__zz__'></div>");
 		divZZ1.css3({
 			width:"100%", height:"50%",
-			background:"rgba(255,255,255,0.4)",
+			background:'linear-gradient(to top,rgba(255,255,255,1) 10px,rgba(255,255,255,0))',
+			// background:"rgba(255,255,255,0.4)",
 			position:"absolute",left:0,
 			bottom:-this.rowHeight/2+"px",
 			"z-index":100
@@ -523,7 +529,7 @@ class dateChoose extends zz{
 
 				//获取点击的是哪一列
 				var touch = (e.touches)? e.touches[0] : e,
-					x = touch.clientX;
+					x = touch.clientX - _this.positionDomLeft;
 
 				_this[touchDomN] = parseInt(x/_this[celWidth]);
 			},   //@param:fn      手指按下时执行
@@ -590,6 +596,41 @@ class dateChoose extends zz{
 			useDirection:"y"        //@param:str    "x","y","xy"
 		                            //使用哪个方向的滑动   默认：x
 		});
+
+
+		if(!app.isPhone){
+			let mouseOnCel = 0;
+			this.domBody.mousemove(function(e){
+				let x = e.offsetX;
+				mouseOnCel = parseInt(x/_this[celWidth]);
+			});
+			this.domBody.mousewheel(function(e){
+				e.preventDefault();
+				let m;
+				if(e.deltaY<0){
+					//下滚
+					m = -_this.rowHeight;
+				}else{
+					//上滚
+					m = _this.rowHeight;
+				}
+				let n = mouseOnCel,
+					// s = _this[touchDomY][n],
+					y = _this[touchDomY][n] + m;
+
+				y = app.getBetweenNumber(y,-_this[maxScrollValue][n],0);
+				_this[touchDomY][n] = y;
+
+
+				_this[touchDomList][n].find("p").cssAnimate({
+					transform:"translate3d(0,"+y+"px,0)"
+				},100);
+
+				_this[changeList](n);
+				// _this[animateFn](n,s,y,500);
+			})
+		}
+
 	}
 
 	//释放时自动定位到要显示到值
