@@ -1,23 +1,84 @@
 let device = require('../device');
 
+let format = function(date,fmt) {
+												//y 年份
+	let o = {
+		"M+" : date.getMonth()+1,                 //月份
+		"d+" : date.getDate(),                    //日
+		"h+" : date.getHours(),                   //小时
+		"m+" : date.getMinutes(),                 //分
+		"s+" : date.getSeconds(),                 //秒
+		"q+" : Math.floor((date.getMonth()+3)/3), //季度
+		"S"  : date.getMilliseconds()             //毫秒
+	};
+	if(/(y+)/.test(fmt)) {
+		fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+	}
+	for(let k in o) {
+		if(new RegExp("("+ k +")").test(fmt)){
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ?
+				(o[k]) :
+				(("00"+ o[k]).substr((""+ o[k]).length)));
+		}
+	}
+	return fmt;
+}
+
+//时间戳、日期格式 转 日期对象
+let _str2Obj = function(date){
+	if(date.indexOf('-')>-1 || date.indexOf('\/')>-1){
+		date = date.split(/-|\//g);
+		let newDate = [];
+
+		//Safari 月日  必须是：01 不能是：1
+		date.map(rs=>{
+			if(parseInt(rs)<10){
+				newDate.push('0'+parseInt(rs))
+			}else{
+				newDate.push(parseInt(rs));
+			}
+		});
+		date = newDate.join('-');
+	}else{
+		date = parseInt(date);
+	}
+
+	date = new Date(date);
+
+	return date;
+};
+
+//chrome ios自动转换格式  -或/ 设置日期控件显示用
+let getSetDate = function(date){
+	if(!date){return '';}
+
+	date = _str2Obj(date);
+
+	if(device.isSafari){
+		return format(date,'yyyy/MM/dd');
+	}else{
+		return format(date,'yyyy-MM-dd');
+	}
+};
 
 //stamp2time和time2stamp   2个时间转换的毫秒数会被忽略。
 let getDateTime = function(b){
 	b = b || new Date().getTime();
 	var a = new Date(parseInt(b));
-	var year=a.getFullYear();
-	var month=parseInt(a.getMonth())+1;
-	month= (month<10)? "0"+month : month;
-	var date=a.getDate();
-	date= (date<10)? "0"+date : date;
-	var hours=a.getHours();
-	hours= (hours<10)? "0"+hours : hours;
-	var minutes=a.getMinutes();
-	minutes= (minutes<10)? "0"+minutes : minutes;
-	var seconds=a.getSeconds();
-	seconds= (seconds<10)? "0"+seconds : seconds;
-
-	return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+	// var year=a.getFullYear();
+	// var month=parseInt(a.getMonth())+1;
+	// month= (month<10)? "0"+month : month;
+	// var date=a.getDate();
+	// date= (date<10)? "0"+date : date;
+	// var hours=a.getHours();
+	// hours= (hours<10)? "0"+hours : hours;
+	// var minutes=a.getMinutes();
+	// minutes= (minutes<10)? "0"+minutes : minutes;
+	// var seconds=a.getSeconds();
+	// seconds= (seconds<10)? "0"+seconds : seconds;
+	//
+	// return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+	return format(a,'yyyy-MM-dd hh:mm:ss');
 };
 
 let getDateTime1 = function(b){
@@ -39,19 +100,19 @@ let getDateTime1 = function(b){
 let getDateTime2 = function(b){
 	b = b || new Date().getTime();
 	var a = new Date(parseInt(b));
-	var year=a.getFullYear();
-	var month=parseInt(a.getMonth())+1;
-	month= (month<10)? "0"+month : month;
-	var date=a.getDate();
-	date= (date<10)? "0"+date : date;
-	var hours=a.getHours();
-	hours= (hours<10)? "0"+hours : hours;
-	var minutes=a.getMinutes();
-	minutes= (minutes<10)? "0"+minutes : minutes;
-	var seconds=a.getSeconds();
-	seconds= (seconds<10)? "0"+seconds : seconds;
-
-	return year+"-"+month+"-"+date+" "+hours+":"+minutes;
+	// var year=a.getFullYear();
+	// var month=parseInt(a.getMonth())+1;
+	// month= (month<10)? "0"+month : month;
+	// var date=a.getDate();
+	// date= (date<10)? "0"+date : date;
+	// var hours=a.getHours();
+	// hours= (hours<10)? "0"+hours : hours;
+	// var minutes=a.getMinutes();
+	// minutes= (minutes<10)? "0"+minutes : minutes;
+	// var seconds=a.getSeconds();
+	// seconds= (seconds<10)? "0"+seconds : seconds;
+	return format(a,'yyyy-MM-dd hh:mm');
+	// return year+"-"+month+"-"+date+" "+hours+":"+minutes;
 };
 
 
@@ -59,28 +120,30 @@ let getDateTime2 = function(b){
 let getDate = function (b) {
 	b = b || new Date().getTime();
 	var a = new Date(parseInt(b));
-	var year = a.getFullYear();
-	var month = parseInt(a.getMonth()) + 1;
-	month = (month < 10) ? "0" + month : month;
-	var date = a.getDate();
-	date = (date < 10) ? "0" + date : date;
-	return year + "-" + month + "-" + date;
+	// var year = a.getFullYear();
+	// var month = parseInt(a.getMonth()) + 1;
+	// month = (month < 10) ? "0" + month : month;
+	// var date = a.getDate();
+	// date = (date < 10) ? "0" + date : date;
+	// return year + "-" + month + "-" + date;
+	return format(a,'yyyy-MM-dd');
 };
 let getDate1 = function (b) {
 	if(!b){
 		return '';
 	}
-
-	b = (b.indexOf('-')>-1 || b.indexOf('\/')>-1)? b : parseInt(b);
-
+	let a = _str2Obj(b);
+	// b = (b.indexOf('-')>-1 || b.indexOf('\/')>-1)? b : parseInt(b);
+	// b = getSetDate(b);
 	// b = b || new Date().getTime();
-	var a = new Date(b);
-	var year = a.getFullYear();
-	var month = parseInt(a.getMonth()) + 1;
-	month = (month < 10) ? "0" + month : month;
-	var date = a.getDate();
-	date = (date < 10) ? "0" + date : date;
-	return year + "-" + month + "-" + date;
+	// var a = new Date(b);
+	// var year = a.getFullYear();
+	// var month = parseInt(a.getMonth()) + 1;
+	// month = (month < 10) ? "0" + month : month;
+	// var date = a.getDate();
+	// date = (date < 10) ? "0" + date : date;
+	// return year + "-" + month + "-" + date;
+	return format(a,'yyyy-MM-dd');
 };
 
 
@@ -198,4 +261,4 @@ let getNowMonthDay = function(){
 }
 
 
-module.exports = {getDateTime,getDateTime1,getDate1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3,getNowMonthDay};
+module.exports = {getDateTime,getDateTime1,getDate1,getDateTime2,getDate,getStamp,getStamp1,getDataTime3,getNowMonthDay,getSetDate};
