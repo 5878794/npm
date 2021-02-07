@@ -55,6 +55,7 @@ class bodyStyle{
 		//确定按钮大小 图标是字体
 		this.yesBtnFontSize = app.rem2Px(this.viewPort,(opt.yesBtnFontSize || 0.4));
 
+		this.close = opt.close || function(){};
 
 		//遮罩层dom
 		this.domZZ = null;
@@ -250,6 +251,7 @@ class bodyStyle{
 			_this.destroy();
 		});
 		$$(this.domZZ).myclickok(function(){
+			_this.closeFn();
 			_this.destroy();
 		}).myclickdown(function(){})
 			.myclickup(function(){});
@@ -314,6 +316,10 @@ class bodyStyle{
 
 	cancel(){
 
+	}
+
+	closeFn(){
+		this.close();
 	}
 
 

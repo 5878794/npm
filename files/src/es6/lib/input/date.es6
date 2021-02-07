@@ -529,7 +529,10 @@ class dateChoose extends zz{
 
 				//获取点击的是哪一列
 				var touch = (e.touches)? e.touches[0] : e,
-					x = touch.clientX - _this.positionDomLeft;
+					x = touch.clientX;
+
+				x = (app.isPhone)? x : x-_this.positionDomLeft;
+
 
 				_this[touchDomN] = parseInt(x/_this[celWidth]);
 			},   //@param:fn      手指按下时执行

@@ -12,7 +12,8 @@
 
 let publishInput = require('./_input-all'),
 	t2s = require('../../../lib/fn/timeAndStamp'),
-	dateClass = require('../../../lib/input/date');
+	dateClass = require('../../../lib/input/date'),
+	device = require('../../../lib/device');
 
 
 
@@ -25,6 +26,7 @@ class bInputDate extends publishInput{
 			this.createInput(true);
 		}else{
 			this.createInput(false);
+			this.crateInputZZ();
 			this.bindJs();
 		}
 
@@ -64,30 +66,54 @@ class bInputDate extends publishInput{
 		}
 	}
 
+	crateInputZZ(){
+		this.inputBodyDom.css({
+			position:'relative'
+		});
+
+		let div = $('<div></div>');
+		div.css({
+			position: 'absolute', left:0,top:0,right:0,bottom:0
+		});
+
+		this.inputBodyDom.append(div);
+
+		this.inputZZ = div;
+	}
+
 	bindJs(){
-		let _this = this;
-		this.inputDom.click(function(){
-			let dom = $(this);
+		let _this = this,
+			input = this.inputDom;
+
+		this.inputZZ.click(function(){
+			let dom = $(input);
 
 			new dateClass({
 				positionDom:_this.inputBodyDom,   //
 				titleText:"请选择日期",       //@param:str    标题
-				selected:t2s.getDate1($(this).val()),      //@param:str    初始显示的日期， 默认：当前日期
-				minDate:t2s.getDate1($(this).attr('min')),         //@param:str    最小显示时间 默认：1950-1-1
-				maxDate:t2s.getDate1($(this).attr('max')),       //@param:str    最大显示时间 默认：2050-12-12
+				selected:t2s.getDate1($(input).val()),      //@param:str    初始显示的日期， 默认：当前日期
+				minDate:t2s.getDate1($(input).attr('min')),         //@param:str    最小显示时间 默认：1950-1-1
+				maxDate:t2s.getDate1($(input).attr('max')),       //@param:str    最大显示时间 默认：2050-12-12
 				isShowDay:true,               //@param:bool   是否显示日,默认：true
-				viewPort:'1280',                //@param:number 设置psd的大小，布局需要使用rem 默认：750
+				viewPort:(device.isPhone)? '750' : '1280',                //@param:number 设置psd的大小，布局需要使用rem 默认：750
 				success:function(rs){
 					//rs返回选择的年月日   yyyy-mm-dd
 					rs = t2s.getDate1(rs);
 					dom.val(rs);
 					_this.changeFunction.call(_this, rs);
+					_this.blurFunction.call(_this);
 				},
 				error:function(){
 					//取消选择
 					dom.val('');
+					_this.blurFunction.call(_this);
+				},
+				close:function(){
+					_this.blurFunction.call(_this);
 				}
-			})
+			});
+
+			_this.focusFunction.call(_this);
 		})
 	}
 
