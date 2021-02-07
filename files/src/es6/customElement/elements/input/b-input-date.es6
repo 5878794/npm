@@ -22,7 +22,10 @@ class bInputDate extends publishInput{
 	constructor() {
 		super();
 
-		if(this.hasAttribute('system')){
+		this.useSysyem = this.hasAttribute('system');
+		this.isShow = false;
+
+		if(this.useSysyem){
 			this.createInput(true);
 		}else{
 			this.createInput(false);
@@ -82,39 +85,56 @@ class bInputDate extends publishInput{
 	}
 
 	bindJs(){
-		let _this = this,
-			input = this.inputDom;
+		let _this = this;
 
 		this.inputZZ.click(function(){
-			let dom = $(input);
-
-			new dateClass({
-				positionDom:_this.inputBodyDom,   //
-				titleText:"请选择日期",       //@param:str    标题
-				selected:t2s.getDate1($(input).val()),      //@param:str    初始显示的日期， 默认：当前日期
-				minDate:t2s.getDate1($(input).attr('min')),         //@param:str    最小显示时间 默认：1950-1-1
-				maxDate:t2s.getDate1($(input).attr('max')),       //@param:str    最大显示时间 默认：2050-12-12
-				isShowDay:true,               //@param:bool   是否显示日,默认：true
-				viewPort:(device.isPhone)? '750' : '1280',                //@param:number 设置psd的大小，布局需要使用rem 默认：750
-				success:function(rs){
-					//rs返回选择的年月日   yyyy-mm-dd
-					rs = t2s.getDate1(rs);
-					dom.val(rs);
-					_this.changeFunction.call(_this, rs);
-					_this.blurFunction.call(_this);
-				},
-				error:function(){
-					//取消选择
-					dom.val('');
-					_this.blurFunction.call(_this);
-				},
-				close:function(){
-					_this.blurFunction.call(_this);
-				}
-			});
-
-			_this.focusFunction.call(_this);
+			_this.showDiv();
+			_this.inputDom.focus();
 		})
+	}
+
+	showDiv(){
+		if(this.isShow){
+			return;
+		}
+		this.isShow = true;
+
+		let _this = this,
+			input = this.inputDom,
+			dom = $(input);
+
+		this.tempNewFn = new dateClass({
+			positionDom:_this.inputBodyDom,   //
+			titleText:"请选择日期",       //@param:str    标题
+			selected:t2s.getDate1($(input).val()),      //@param:str    初始显示的日期， 默认：当前日期
+			minDate:t2s.getDate1($(input).attr('min')),         //@param:str    最小显示时间 默认：1950-1-1
+			maxDate:t2s.getDate1($(input).attr('max')),       //@param:str    最大显示时间 默认：2050-12-12
+			isShowDay:true,               //@param:bool   是否显示日,默认：true
+			viewPort:(device.isPhone)? '750' : '1280',                //@param:number 设置psd的大小，布局需要使用rem 默认：750
+			success:function(rs){
+				//rs返回选择的年月日   yyyy-mm-dd
+				rs = t2s.getDate1(rs);
+				dom.val(rs);
+				_this.changeFunction.call(_this, rs);
+				_this.blurFunction.call(_this);
+				_this.isShow = false;
+				_this.inputDom.blur();
+			},
+			error:function(){
+				//取消选择
+				dom.val('');
+				_this.blurFunction.call(_this);
+				_this.isShow = false;
+				_this.inputDom.blur();
+			},
+			close:function(){
+				_this.blurFunction.call(_this);
+				_this.isShow = false;
+				_this.inputDom.blur();
+			}
+		});
+
+		_this.focusFunction.call(_this);
 	}
 
 
@@ -123,9 +143,17 @@ class bInputDate extends publishInput{
 			_this = this;
 
 		input.addEventListener('focus',function(){
-			_this.focusFunction.call(_this);
+			if(!_this.useSysyem){
+				_this.showDiv();
+			}else{
+				_this.focusFunction.call(_this);
+			}
 		});
 		input.addEventListener('blur',function(){
+			if(!_this.useSysyem && _this.tempNewFn){
+				_this.tempNewFn.destroy();
+				_this.isShow = false;
+			}
 			_this.blurFunction.call(_this);
 		});
 	}

@@ -634,6 +634,11 @@ class dateChoose extends zz{
 			})
 		}
 
+
+		this.domZZ.get(0).addEventListener(app.START_EV,function(e){
+			e.preventDefault();
+		},false);
+
 	}
 
 	//释放时自动定位到要显示到值
@@ -738,6 +743,10 @@ class dateChoose extends zz{
 
 	destroy(){
 		this[touchEventFn].destroy();
+		this.domBody.unbind('mousemove');
+		this.domBody.unmousewheel();
+
+
 		super.destroy();
 	}
 }

@@ -51,16 +51,11 @@ module.exports = {
 
 
 
-	//单独表单控件样式
+	//单独表单控件样式  text、password、money
 	inputTextStyle:{
 		background:'none',
 		border:'none',
 		fontSize:'12px'
-	},
-	inputPasswordStyle:{
-		background:'none',
-		border:'none',
-		fontSize:'12px',
 	},
 	inputTextareaStyle:{
 		lineHeight:'120%',
@@ -91,6 +86,7 @@ module.exports = {
 	},
 	blurFunction:function(){
 		this.inputBodyDom.removeClass('focus_style');
+		this.checkPass();
 	}
 
 

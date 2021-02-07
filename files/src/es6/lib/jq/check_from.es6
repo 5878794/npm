@@ -17,6 +17,7 @@
 //nickname  中文、英文、数字、下划线
 //fileType  文件类型  eg:image
 //fileSize  文件大小  eg:3     单位M
+//money     金额 +-123123.123123123
 
 
 //验证时执行
@@ -48,6 +49,10 @@
 		//判断非空
 		must:function(str){
 			return(str.length != 0);
+		},
+		money:function(str){
+			let reg = /^[+-]?\d+(\.\d+)?$/;
+			return reg.test(str);
 		},
 		//字符串，数字和下划线
 		str:function(str){
