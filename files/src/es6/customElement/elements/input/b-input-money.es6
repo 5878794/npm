@@ -1,5 +1,6 @@
 
-
+//同 b-input-text
+//添加  @param：accuracy  小数位数
 
 
 let publishInput = require('./_input-all'),
@@ -75,7 +76,6 @@ class bInputMoney extends publishInput{
 		let val = this.inputDom.val().toString();
 		val = val.replace(/\,/ig,'');
 
-		console.log('check')
 		if(this.checkIsMoney(val)){
 			this.errDom.css({display:'none'});
 			return val;
