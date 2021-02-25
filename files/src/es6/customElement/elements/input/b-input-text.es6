@@ -15,7 +15,6 @@
 // unit='m'					// 输入框后面显示单位
 // iconWidth=20
 // iconHeight=20
-// disabled=disabled          //是否可编辑
 // value=123                    //初始值
 // )
 

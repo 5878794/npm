@@ -76,7 +76,29 @@ module.exports = {
 		fontSize:'12px',
 		paddingLeft:'2px'
 	},
+	//文件上传时 显示文件的框的大小  不要改小
+	inputFileStyle:{
+		fileWidth:80,
+		fileHeight:80,
+		uploadServerUrl:'http://47.105.184.219:8089//api/file/upload',
+		uploadOnload:function(e,success,error){
+			let body = e.target.responseText;
+			body = JSON.parse(body);
+			let code = body.code;
+			// {"code":200,"msg":null,"data":[{"fileName":"files","fileSize":39359,"fileUrl":"328618dd-e368-4e7a-9b86-f5a6c63d6345"}]}
 
+			if(code == 200){
+				let data = body.data;
+				console.log(data)
+				success(data);
+			}else{
+				error(body.data);
+			}
+		},
+		uploadOnerror:function(e,error){
+			error(e);
+		}
+	},
 
 
 
