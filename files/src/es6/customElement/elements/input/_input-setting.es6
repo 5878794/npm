@@ -89,10 +89,9 @@ module.exports = {
 
 			if(code == 200){
 				let data = body.data;
-				console.log(data)
 				success(data);
 			}else{
-				error(body.data);
+				error(body);
 			}
 		},
 		uploadOnerror:function(e,error){
