@@ -33,8 +33,8 @@
 //可以嵌套使用， 子元素直接在  data-data上指定上层的数据对象，元素内会自动取其下面的数据
 
 
-let addStyleFile = require('./fn/addStyleFile');
-require('../lib/jq/extend');
+let addStyleFile = require('../../fn/addStyleFile');
+require('../../../lib/jq/extend');
 
 class bBindObj extends HTMLElement{
 	//注册要监听的属性

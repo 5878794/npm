@@ -32,8 +32,8 @@
 // @attr:dataIsString    数组中为字符串时，  设置后自动添加属性  index,item
 
 
-let bBindObj = require('./b_bind_obj_new');
-require('../lib/jq/extend');
+let bBindObj = require('./b_bind_obj');
+require('../../../lib/jq/extend');
 
 
 
