@@ -43,7 +43,8 @@ let renderFn = function(){
                 catchMd5 = currentMd5;
             }
 
-            let dir = newFile.substr(0,newFile.lastIndexOf('/'));
+            // let dir = newFile.substr(0,newFile.lastIndexOf('/'));
+	        let dir = path.dirname(newFile);
             fn.dirIsExistOrCreate(dir);
 
             if(type == 'pug'){
