@@ -5,8 +5,12 @@ let fs = require('fs'),
 
 
 module.exports = {
-	runExec(cmdText){
-		exec(cmdText);
+	runExec(cmdText,showInfo){
+		if(showInfo){
+			exec(cmdText, {stdio: 'inherit'});
+		}else{
+			exec(cmdText);
+		}
 	},
 	readFile(filePath){
 		return fs.readFileSync(filePath,'utf-8');

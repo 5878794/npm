@@ -19,7 +19,8 @@ let renderFn = function(tt){
         newFileSrc = newFileSrc.substr(0,newFileSrc.lastIndexOf('.'))+'.html';
 
 
-        let dir = newFileSrc.substr(0,newFileSrc.lastIndexOf('/'));
+        // let dir = newFileSrc.substr(0,newFileSrc.lastIndexOf('/'));
+	    let dir = path.dirname(newFileSrc);
         fn.dirIsExistOrCreate(dir);
 
         let pugCode = fn.readPugFileAndCompile(rs,tt);
