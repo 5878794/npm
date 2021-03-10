@@ -99,6 +99,37 @@ module.exports = {
 		}
 	},
 
+	//搜索框
+	inputSearch:{
+		//容器
+		bodyStyle:{
+			position:'absolute',
+			// top:this.userStyle.rowHeight+'px',
+			left:0,
+			width:'100%',
+			zIndex:100,
+			borderRadius:'5px',
+			boxShadow:'0 0 3px 3px #ccc',
+			background:'#fff'
+		},
+		//列表
+		listStyle:{
+			width:'100%',
+			height:'45px',
+			lineHeight:'45px',
+			borderBottom:'1px solid #ccc',
+			padding:'0 10px',
+			cursor: 'pointer',
+			background:'#fff'
+		},
+		listHoverStyle:{
+			background:'#fbd6d8'
+		},
+		listNotHoverStyle:{
+			background:'#fff'
+		}
+	},
+
 
 
 	//焦点事件  this指向自定义元素
