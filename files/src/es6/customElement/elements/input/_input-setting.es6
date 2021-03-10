@@ -137,6 +137,12 @@ module.exports = {
 	},
 
 
+	inputSmsStyle:{
+		background:'none',
+		border:'none',
+		fontSize:'12px'
+	},
+
 
 	//焦点事件  this指向自定义元素
 	focusFunction:function(){
