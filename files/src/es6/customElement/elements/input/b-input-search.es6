@@ -30,6 +30,8 @@ class bInputSearch extends publishInput{
 	constructor() {
 		super();
 
+		this.unitDom.text('');
+
 		this.createLoadingCss();
 		this.showLoadingNumber = 0;
 
