@@ -100,6 +100,12 @@ module.exports = {
 	},
 
 	//搜索框
+	inputSearchStyle:{
+		background:'none',
+		border:'none',
+		fontSize:'12px',
+		paddingRight:'10px'
+	},
 	inputSearch:{
 		//容器
 		bodyStyle:{

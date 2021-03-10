@@ -17,13 +17,21 @@
 //   }
 
 
+//删除
+//@ unit属性  unit已改为loading
 
 
-let publishInput = require('./_input-all');
+
+
+let publishInput = require('./_input-all'),
+	addStyleStyle = require('../../fn/addStyleText');
 
 class bInputSearch extends publishInput{
 	constructor() {
 		super();
+
+		this.createLoadingCss();
+		this.showLoadingNumber = 0;
 
 		this.awaitTime = 100;  //ms
 		this.awaitFn = null;
@@ -36,6 +44,78 @@ class bInputSearch extends publishInput{
 		this.value = this.setValue;
 	}
 
+	createLoadingCss(){
+		let style = '.load5{\n' +
+			'  font-size: 12px;\n' +
+			'  width: 1em;\n' +
+			'  height: 1em;\n' +
+			'  border-radius: 50%;\n' +
+			'  position: relative;\n' +
+			'  text-indent: -9999em;\n' +
+			'  -webkit-animation: load5 1.1s infinite ease;\n' +
+			'  animation: load5 1.1s infinite ease;\n' +
+			'  -webkit-transform: translateZ(0);\n' +
+			'  -ms-transform: translateZ(0);\n' +
+			'  transform: translateZ(0);\n' +
+			'}\n' +
+			'@-webkit-keyframes load5 {\n' +
+			'  0%,\n' +
+			'  100% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em #000, 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.5), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.7);\n' +
+			'  }\n' +
+			'  12.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.5);\n' +
+			'  }\n' +
+			'  25% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.5), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.7), 2.5em 0em 0 0em #ffffff, 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  37.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.5), 2.5em 0em 0 0em rgba(0, 0, 0, 0.7), 1.75em 1.75em 0 0em #ffffff, 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  50% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.5), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.7), 0em 2.5em 0 0em #ffffff, -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  62.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.5), 0em 2.5em 0 0em rgba(0, 0, 0, 0.7), -1.8em 1.8em 0 0em #ffffff, -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  75% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.5), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.7), -2.6em 0em 0 0em #ffffff, -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  87.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.5), -2.6em 0em 0 0em rgba(0, 0, 0, 0.7), -1.8em -1.8em 0 0em #000;\n' +
+			'  }\n' +
+			'}\n' +
+			'@keyframes load5 {\n' +
+			'  0%,\n' +
+			'  100% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.5), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.7);\n' +
+			'  }\n' +
+			'  12.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.5);\n' +
+			'  }\n' +
+			'  25% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.5), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.7), 2.5em 0em 0 0em #ffffff, 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  37.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.5), 2.5em 0em 0 0em rgba(0, 0, 0, 0.7), 1.75em 1.75em 0 0em #ffffff, 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  50% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.5), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.7), 0em 2.5em 0 0em #ffffff, -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.2), -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  62.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.5), 0em 2.5em 0 0em rgba(0, 0, 0, 0.7), -1.8em 1.8em 0 0em #ffffff, -2.6em 0em 0 0em rgba(0, 0, 0, 0.2), -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  75% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.5), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.7), -2.6em 0em 0 0em #ffffff, -1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2);\n' +
+			'  }\n' +
+			'  87.5% {\n' +
+			'    box-shadow: 0em -2.6em 0em 0em rgba(0, 0, 0, 0.2), 1.8em -1.8em 0 0em rgba(0, 0, 0, 0.2), 2.5em 0em 0 0em rgba(0, 0, 0, 0.2), 1.75em 1.75em 0 0em rgba(0, 0, 0, 0.2), 0em 2.5em 0 0em rgba(0, 0, 0, 0.2), -1.8em 1.8em 0 0em rgba(0, 0, 0, 0.5), -2.6em 0em 0 0em rgba(0, 0, 0, 0.7), -1.8em -1.8em 0 0em #ffffff;\n' +
+			'  }\n' +
+			'}';
+
+		let styleDom = addStyleStyle(style);
+		$(this.shadowRoot).prepend(styleDom);
+	}
 
 	createInput(){
 		let input = $(`<input autocomplete="off" class="boxflex1 __input__" type="text" placeholder="${this.placeholder}" data-rule="${this.rule}" />`);
@@ -43,9 +123,10 @@ class bInputSearch extends publishInput{
 			display:'block',
 			height:this.userStyle.rowHeight+'px',
 			lineHeight:this.userStyle.rowHeight+'px',
-			paddingLeft:'4px'
+			paddingLeft:'4px',
+			paddingRight:'10px'
 		});
-		input.css(this.setting.inputTextStyle);
+		input.css(this.setting.inputSearchStyle);
 
 		let searchDom = $('<div class="hidden"></div>');
 		searchDom.css({
@@ -102,7 +183,9 @@ class bInputSearch extends publishInput{
 
 
 			_this.awaitFn = setTimeout(async function(){
+				_this.showLoading();
 				let data = await _this.userSearchFn(val);
+				_this.hideLoading();
 				_this.showList(data);
 				_this.userInputFn(val);
 				_this.awaitFn = null;
@@ -116,6 +199,28 @@ class bInputSearch extends publishInput{
 
 	}
 
+	showLoading() {
+		this.showLoadingNumber ++;
+		this.unitDom.css({
+			display:'block',
+			width:'20px',
+			height:'20px',
+			padding:'0',
+			transform:'scale(0.2)'
+		}).addClass('load5');
+		this.searchBodyDom.css({display:'none'});
+	}
+
+	hideLoading(){
+		this.showLoadingNumber--;
+		if(this.showLoadingNumber <= 0){
+			this.unitDom.css({
+				display:'none'
+			})
+			this.searchBodyDom.css({display:'block'});
+		}
+	}
+
 	//显示结构
 	showList(data){
 		data = data || [];
@@ -127,9 +232,9 @@ class bInputSearch extends publishInput{
 		body.html('');
 
 		if(data.length == 0){
-			body.addClass('hidden');
+			body.css({display:'none'});
 		}else{
-			body.removeClass('hidden');
+			// body.removeClass('hidden');
 		}
 
 		data.map(rs=>{
@@ -151,7 +256,7 @@ class bInputSearch extends publishInput{
 	itemClick(dom){
 		let val = dom.text();
 		this.inputBodyDom.find('.__input__').val(val);
-		this.searchBodyDom.addClass('hidden');
+		this.searchBodyDom.css({display:'none'});
 		this.userInputFn(val);
 	}
 
