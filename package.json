@@ -1,6 +1,6 @@
 {
   "name": "bens",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "cmd test",
   "main": "index.js",
   "scripts": {
