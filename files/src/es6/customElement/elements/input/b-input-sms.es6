@@ -37,6 +37,7 @@ class bInputSms extends publishInput{
 		this.sendFunction = function(){};
 
 		this.createInput();
+		this.addEvent();
 
 		this.value = this.setValue;
 	}
@@ -159,7 +160,22 @@ class bInputSms extends publishInput{
 		},1000)
 	}
 
+	addEvent(){
+		let input = this.inputDom.get(0),
+			_this = this;
 
+		input.addEventListener('input',function(){
+			let val = $.trim($(this).val());
+			_this.changeFunction.call(_this,val);
+		},false)
+
+		input.addEventListener('focus',function(){
+			_this.focusFunction.call(_this);
+		});
+		input.addEventListener('blur',function(){
+			_this.blurFunction.call(_this);
+		});
+	}
 
 	set value(val){
 		this.inputDom.val(val);

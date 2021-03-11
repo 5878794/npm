@@ -77,6 +77,8 @@ class bodyStyle{
 			top = offset.top,
 			height = this.positionDom.height();
 		top += height;
+		top -= $(window).scrollTop();
+		left -= $(window).scrollLeft();
 		this.positionDomLeft = left;
 		this.positionDomTop = top;
 

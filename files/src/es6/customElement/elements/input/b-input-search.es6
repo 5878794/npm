@@ -197,7 +197,13 @@ class bInputSearch extends publishInput{
 
 		input.addEventListener('blur',function(){
 			_this.searchBodyDom.addClass('hidden');
+			_this.blurFunction.call(_this);
 		},false);
+
+		input.addEventListener('focus',function(){
+			_this.focusFunction.call(_this);
+		});
+
 
 	}
 
