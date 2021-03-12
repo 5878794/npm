@@ -3,9 +3,8 @@
 
 // let errorHandler = require('./lib/fn/errorHandler');
 
-let qt = require('qt.es6');
 
-
+let all = require('./all');
 
 
 let ajax = {
@@ -13,16 +12,11 @@ let ajax = {
 	run(url, data, type, success, error){
 		url = SETTING.serverUrl + url;
 
-		//预约挂号特有
-		// data.token = this.token;
-		// data.userToken = this.userToken;
-		// data.sign = this.sign(data);
-		// data.ver = SETTING.apiVer;
 
-		if(type=='post'){
-			data = JSON.stringify(data);
-			console.log(data)
-		}
+		// if(type=='post'){
+		// 	data = JSON.stringify(data);
+		// 	// console.log(data)
+		// }
 
 
 		$.ajax({
@@ -30,22 +24,22 @@ let ajax = {
 			cache: false,
 			url: url,
 			data: data,
-			contentType:"application/json",
+			contentType: "application/x-www-form-urlencoded;",
+			// contentType:"application/json",
 			dataType: "json",
 			timeout: 20000,     //20秒
 			headers: {
-				Authorization: window.token
+				token: window.token
 			},
 			success: async function(rs) {
 				if(rs.code == 200){
 					success(rs.data);
 				}else{
-					if(rs.code == 1000){
-						error('您还未登录或登录已过期！');
-						//关闭所有窗口或进入登录页
-						qt.reLogin();
+					if(rs.code == 700){
+						// 关闭所有窗口或进入登录页
+						all.clearToken('您还未登录或登录已过期');
 					}else{
-						error(rs.data);
+						error(rs.msg);
 					}
 				}
 			},
@@ -89,77 +83,93 @@ let ajax = {
 };
 
 let api = {
-	//登录
-	login:{url:'/api/user/login',type:'post'},
-	// //部门信息接口
-	// dept_list: {url:'/api/dept/list',type:'get'},
-	// dept_add:{url:'/api/dept/addOrUpdate',type:'post'},
-	// dept_del:{url:'/api/dept/{deptId}',type:'delete'},
+	indexCount:{url:'/index/indexCount',type:'get'},
+	index:{url:'/index/index',type:'get'},
+	news:{url:'/news/list',type:'get'},
+	newsInfo:{url:'/news/detail',type:'get'},
 
-	//角色
-	role_get_list:{url:'/api/role/list',type:'get'},
-	role_add:{url:'/api/role/addOrUpdate',type:'post'},
-	role_del:{url:'/api/role/{roleId}',type:'delete'},
+	//目录
+	dir_tags:{url:'/data-catalog/direction',type:'post'},
+	dir_nav:{url:'/data-catalog/type',type:'post'},
+	dir_list:{url:'/data-catalog/list',type:'post'},
 
-	//权限树
-	privilege_list:{url:'/api/privilege/tree/{roleId}',type:'get'},
-	privilege_mdf:{url:'/api/role/privilege/{roleId}/add/privileges',type:'post'},
+	//资源
+	res_tags:{url:'/index/resource/direction',type:'post'},
+	res_nav:{url:'/index/resource/category',type:'post'},
+	res_list:{url:'/index/resource/list',type:'post'},
 
-	//时间流程
-	data_process_list:{url:'/api/config/dictionary/listForTimeline',type:'get'},
-	data_process_mdf:{url:'/api/config/dictionary/addOrUpdate',type:'post'},
-
-	//机构
-	org_add:{url:'/api/organization/addOrUpdate',type:'post'},
-	org_del:{url:'/api/organization/{organizationId}',type:'delete'},
-	org_list:{url:'/api/organization/list',type:'get'},
-
-	//机构下的产品
-	org_product_add:{url:'/api/product/addOrUpdate',type:'post'},
-	org_product_del:{url:'/api/product/{productId}',type:'delete'},
-	org_product_list:{url:'/api/product/list',type:'get'},
-
-	//系统配置信息
-	//通道配置 type=6
-	//客户来源渠道 type=1
-	//档案室  type=11
-	setting_config_list:{url:'/api/config/dictionary/listByCondition',type:'get'},
-	setting_config_mdf:{url:'/api/config/dictionary/addOrUpdate',type:'post'},
-	setting_config_del:{url:'/api/config/dictionary/{configId}',type:'delete'},
-
-	//公司信息
-	company_list:{url:'/api/company/list',type:'get'},
-	company_add:{url:'/api/company/addOrUpdate',type:'post'},
-	company_del:{url:'/api/company/{companyId}',type:'delete'},
-
-	//部门信息
-	department_list:{url:'/api/dept/list',type:'get'},
-	department_add:{url:'/api/dept/addOrUpdate',type:'post'},
-	department_del:{url:'/api/dept/{deptId}',type:'delete'},
-
-	//新闻
-	news_list:{url:'/api/system/broad/list',type:'get'},
-	news_add:{url:'/api/system/broad/addOrUpdate',type:'post'},
-	news_del:{url:'/api/system/broad/{roleId}',type:'delete'},
-
-	//员工
-	staff_list:{url:'/api/user/list',type:'get'},
-	staff_add:{url:'/api/user/addOrUpdate',type:'post'},
-	// staff_del:{url:'/api/user/{userId}',type:'delete'}
+	//资源集 标签
+	resDir_tags:{url:'/index-group/queryCondition',type:'post'},
 
 
-	//档案
-	file_list:{url:'/api/customer/archive/list',type:'get'},
-	file_add:{url:'/api/customer/archive/addOrUpdate',type:'post'},
-	file_del:{url:'/api/customer/archive/{customerArchiveId}',type:'delete'},
-	file_out:{url:'/api/customer/archive/warehouse',type:'post'},
+	//获取目录、资源 获取数量
+	apply_list:{url:'/console/apply/findApplyCart',type:'post'},
 
 
-	//新建订单
-	order_add_step1:{url:'/api/orderBase/saveOrderBase',type:'post'},
-	order_add_step2:{url:'/api/orderBase/saveOrderPersonInfo',type:'post'},
-	order_add_step3:{url:'/api/orderBase/saveOrderOtherDetail',type:'post'},
-	order_get_byId:{url:'/api/orderBase/getOrderDetailById/{id}',type:'get'},
+	//申请 取消申请
+	add_apply:{url:'/console/apply/addApplyCart/{id}',type:'post'},
+	cancel_apply:{url:'/console/apply/cancelApplyCart/{id}',type:'post'},
+
+	//详情
+	//目录
+	dir_info:{url:'/console/catalog/detail/{id}',type:'post'},
+	//资源
+	res_info:{url:'/console/interface/detail/{id}',type:'post'},
+
+
+	//收藏 取消收藏
+	add_favorites:{url:'/console/interface/collectResource/{id}',type:'post'},
+	cancel_favorites:{url:'/console/interface/cancelCollectResource/{id}',type:'post'},
+
+	//目录收藏 取消收藏
+	dir_add_favorites:{url:'/console/catalog/collect/{id}',type:'post'},
+	dir_cancel_favorites:{url:'/console/catalog/cancel/{id}',type:'post'},
+
+	//获取目录的2级目录
+	getLv2Nav:{url:'/console/interface/listByCatalogId',type:'post'},
+
+
+	//保存工单
+	saveOrder:{url:'/console/apply/saveResource',type:'post'},
+	//提交申请
+	submitOrder:{url:'/console/apply/applyResource',type:'post'},
+	//取消申请
+	cancelOrder:{url:'/console/apply/cancelApplyResource/{id}',type:'post'},
+
+
+	//首页 应用场景
+	indexDirList:{url:'/data-catalog/index',type:'post'},
+
+	//首页 金融大数据带搜索
+	indexNewList:{url:'/index/list',type:'post'},
+
+	//首页 金融大数据 工具、增值服务
+	index11Res:{url:'/index-group/productList',type:'post'},
+
+	//首页 金融增值数据列表
+	indexAddResList:{url:'/index-group/indexList',type:'post'},
+	//我的数据集列表
+	myResList:{url:'/console/data-group/list',type:'post'},
+
+
+	//数据集 -- 添加到我的数据集
+	addRes:{url:'/console/data-group/collect/{id}',type:'post'},
+	delRes:{url:'/console/data-group/cancelCollect/{id}',type:'post'},
+
+	//资源集详情
+	resDirInfo:{url:'/index-group/detail/{id}',type:'post'},
+	//我的资源集详情
+	myResDirInfo:{url:'/console/data-group/detail/{id}',type:'post'},
+
+	//一键申请资源包中的资源
+	addAllResToOrder:{url:'/console/data-group/applyDataGroup/{id}',type:'post'},
+	//我的资源包中移除资源
+	removeResFromDir:{url:'/console/data-group/removeResource',type:'post'},
+	//添加资源到资源包
+	addResToDir:{url:'/console/data-group/addResource',type:'post'},
+
+	//企业图谱
+	resMap:{url:'/index/resource/map',type:'get'}
 
 };
 
@@ -188,12 +198,6 @@ api = new Proxy(api, {
 				delArray.map(rs=>{
 					delete data[rs];
 				});
-
-				//特殊处理不要key的  哎
-				if(key == 'privilege_mdf'){
-					data = data.privileges;
-				}
-
 
 				ajax.run(url, data, type, success, error);
 			})
