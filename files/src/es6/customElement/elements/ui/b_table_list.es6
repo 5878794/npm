@@ -91,7 +91,7 @@
 // });
 
 
-let addStyleFile = require('../fn/addStyleFile');
+let addStyleFile = require('../../fn/addStyleFile');
 
 let createTitleRow = Symbol(),
 	getTitleRowStyle = Symbol(),
