@@ -33,13 +33,17 @@ img{
 }
 
 
+b-input-text{
+    visibility: hidden;
+}
+
 input,button,select,textarea{
     outline:none; border: none;
 }
 
 
 .input_disabled{
-    background: rgb(230,231,232) !important;
+    background-color: rgb(230,231,232) !important;
     border-color: rgb(214,213,207) !important;
 }
 
@@ -152,10 +156,12 @@ a:active{
 .boxflex1{
     -webkit-flex:1 1 0 !important;
     flex:1 1 0 !important;
+    min-width: 0;
 }
 .boxflex2{
     -webkit-flex:2 1 0 !important;
     flex:2 1 0 !important;
+    min-width: 0;
 }
 
 
