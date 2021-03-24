@@ -366,7 +366,7 @@ class bTableList extends HTMLElement{
 				width:'100%',
 				overflowX:'hidden',
 				overflowY:'scroll'
-			});
+			}).addClass('scroll_style1');
 			this.listBody.css({
 				width:'100%',
 				overflowX:'auto',
@@ -380,7 +380,7 @@ class bTableList extends HTMLElement{
 				width:'100%',
 				overflowX:'hidden',
 				overflowY:'scroll'
-			});
+			}).addClass('scroll_style1');
 			this.listBody.css({
 				width:'100%',
 				overflowX:'auto',
