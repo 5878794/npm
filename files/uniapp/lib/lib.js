@@ -1,10 +1,18 @@
 let lib = {
+	//获取当前页面对象
+	getNowPageObj(){
+		let pages = getCurrentPages(), //当前页面栈
+			l = pages.length;
+		let nowPage = pages[l - 1]; //获取上一个页面实例对象  
+		return nowPage.$vm; //触发父页面中的方法change()  
+		
+	},
 	//调用父页面方法
 	runParentPageFn(fnName,param){
 		let pages = getCurrentPages(), //当前页面栈
 			l = pages.length;
 		if (l > 1) {  
-		    var beforePage = pages[l - 2]; //获取上一个页面实例对象  
+		    let beforePage = pages[l - 2]; //获取上一个页面实例对象  
 		    beforePage.$vm[fnName](param); //触发父页面中的方法change()  
 		}
 	},
@@ -50,14 +58,38 @@ let lib = {
 	},
 	//显示loading 
 	loading:{
+		tempFn:null,
+		n:0,
+		start:0,
+		//loading 显示时间
+		loadingShowTime:1000,
 		show(title,showMask=true){
-			uni.showLoading({
-				title:title,
-				mask:showMask
-			})
+			this.n++;
+			let _this = this;
+			if(!this.tempFn){
+				this.tempFn = setTimeout(function(){
+					_this.start = new Date().getTime();
+					uni.showLoading({
+						title:title,
+						mask:showMask
+					})
+				},1000)
+			}
 		},
 		hide(){
-			uni.hideLoading();
+			this.n--;
+			if(this.n == 0){
+				if(this.tempFn){
+					let now = new Date().getTime(),
+						t = now - this.start;
+					t = (t>this.loadingShowTime)? 0 : this.loadingShowTime-t;
+					setTimeout(function(){
+						uni.hideLoading();
+					},t)
+				}
+				clearTimeout(this.tempFn);
+				this.tempFn = false;
+			}
 		}
 	},
 	
@@ -190,15 +222,39 @@ let lib = {
 				});
 			})
 		}
-	}
+	},
 	
-	
-	
-	
-	
-	
+	isRunAjax:false,
+	showLoadingRun(obj,fn,param,showLoading=true,text='加载中...'){
+		if(this.isRunAjax){
+			return;
+		}
+		this.isRunAjax = true;
+		let _this = this,
+			endFn = function(){
+				setTimeout(function(){
+					_this.isRunAjax = false;
+				},500);
+		};
+		
+		if(showLoading){
+			this.loading.show(text);
+		}
+		
+		fn.call(obj,param).then(()=>{
+			if(showLoading){
+				this.loading.hide();
+			}
+			endFn();
+		}).catch(e=>{
+			if(showLoading){
+				this.loading.hide();
+			}
+			endFn();
+			this.alert(e);
+		})
+	},
 };
-
 
 
 
