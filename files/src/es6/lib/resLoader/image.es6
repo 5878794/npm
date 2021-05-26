@@ -14,13 +14,8 @@
 // );
 
 
-// if(imgObj.state == 1){
-//      //输出{key,imgObj对象, ...}
-//      console.log(imgObj.data)
-// }else{
-//      //返回出错的图片地址
-//      console.log(imgObj.msg)
-// }
+//注：加载失败的图片也会返回img对象
+
 
 
 let data = Symbol(),
@@ -71,7 +66,11 @@ class imageLoader{
 				_this.propFn(_this[loaded],_this[dataLength]);
 				success({key,val:this})
 			};
-			img.onerror = function(){error(val)};
+			img.onerror = function(){
+				_this[loaded]++;
+				_this.propFn(_this[loaded],_this[dataLength]);
+				success({key,val:this})
+			};
 			img.src = val;
 		})
 	}
@@ -100,17 +99,11 @@ class imageLoader{
 						let {key,val} = r;
 						obj[key] = val;
 					});
-					success({
-						state:1,
-						data:obj
-					})
+					success(obj);
 				})
 				.catch(e=>{
 					//失败返回出错的图片地址
-					success({
-						state:0,
-						msg:e
-					})
+					success({});
 				})
 		})
 	}
