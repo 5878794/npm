@@ -24,28 +24,20 @@
 // @param:   rightBtnId
 // @param:   notShowPoint  不显示下面的指示点  'true'  'false'
 
-let addStyleFile = require('../fn/addStyleFile'),
-	bannerFn = require('../../lib/ui/bannerScroll_customElement');
+let addStyleFile = require('../../fn/addStyleFile'),
+	bannerFn = require('../../../lib/ui/bannerScroll_customElement');
 
 let createDom = Symbol(),
 	autoHeight = Symbol();
 
 class bBanner extends HTMLElement{
-	constructor() {
-		super();
+	connectedCallback(){
 
-		this.shadow = this.attachShadow({mode: 'open'});
-
-		let all = addStyleFile('../res/css/common.css');
-		this.shadow.appendChild(all);
-
-		this[createDom]();
-
-		this.body = $(this);
 		this.body.css({
 			overflow:'hidden',
 			display:'block'
-		})
+		});
+
 
 
 		let jg = parseInt($(this).attr('jg')) || 5000,
@@ -62,25 +54,6 @@ class bBanner extends HTMLElement{
 		let leftBtn = (leftBtnId)? $('#'+leftBtnId) : null,
 			rightBtn = (rightBtnId)? $('#'+rightBtnId) : null;
 
-
-		this.bannerObj = new bannerFn({
-			win: this.body,                      //@param:jqobj    外层窗口
-			body: this.main,        //@param:jqobj    滑动层
-			pointBody:$(this.shadow),
-			time: jg,                     //@param:number   滑动间隔时间
-			dir:animateDir,
-			animateTime: animateTime,         //@param:number   滑动动画时间
-			showPoint:notShowPoint,                //@param:number   是否显示下面的小点
-			pointBg:pointColor[0],
-			pointSelectBg:pointColor[1],
-			pointMarginBottom:'60px',
-			leftBtn:leftBtn,  //@param:jqobj    左滑动按钮
-			rightBtn:rightBtn  //@param:jqobj    右滑动按钮
-		 // changeStartFn:function(page){}, //@param:fn       滑动开始时执行函数，传递当前要滑动到的页面number
-		 // changeEndFn:function(page){}    //@param:fn       滑动结束时执行函数，传递当前要滑动到的页面number
-		});
-
-
 		if(imgWidthHeight){
 			let val = imgWidthHeight.split(':');
 			if(val.length == 2){
@@ -88,6 +61,48 @@ class bBanner extends HTMLElement{
 			}
 
 		}
+
+
+		let _this = this;
+		setTimeout(function(){
+			_this.bannerObj = new bannerFn({
+				win: _this.body,                      //@param:jqobj    外层窗口
+				body: _this.main,        //@param:jqobj    滑动层
+				pointBody:$(_this.shadow),
+				time: jg,                     //@param:number   滑动间隔时间
+				dir:animateDir,
+				animateTime: animateTime,         //@param:number   滑动动画时间
+				showPoint:notShowPoint,                //@param:number   是否显示下面的小点
+				pointBg:pointColor[0],
+				pointSelectBg:pointColor[1],
+				pointMarginBottom:'60px',
+				leftBtn:leftBtn,  //@param:jqobj    左滑动按钮
+				rightBtn:rightBtn  //@param:jqobj    右滑动按钮
+				// changeStartFn:function(page){}, //@param:fn       滑动开始时执行函数，传递当前要滑动到的页面number
+				// changeEndFn:function(page){}    //@param:fn       滑动结束时执行函数，传递当前要滑动到的页面number
+			});
+		},0)
+	}
+
+	constructor() {
+		super();
+
+
+
+		this.shadow = this.attachShadow({mode: 'open'});
+
+
+
+		let all = addStyleFile('../res/css/common.css');
+		this.shadow.appendChild(all);
+
+		this[createDom]();
+
+		this.body = $(this);
+
+
+
+
 	}
 
 	[createDom](){

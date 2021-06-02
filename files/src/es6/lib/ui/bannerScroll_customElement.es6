@@ -42,9 +42,9 @@ var scrollBanner = function (data) {
 	this.pointMarginBottom = data.pointMarginBottom || '40px';
 	this.dir = data.dir || 'row';
 
-
 	this.winWidth = parseInt(this.win.width());
 	this.winHeight = parseInt(this.win.height());
+
 
 	this.page = 0;
 	this.maxPage = this.imgLength - 1;
@@ -56,6 +56,9 @@ var scrollBanner = function (data) {
 	this.touchStartTime = 0;
 	this.touchPoints = [];
 	this.leftPx = 0;
+
+
+
 	this.init();
 };
 scrollBanner.prototype = {
@@ -79,6 +82,7 @@ scrollBanner.prototype = {
 			left: 0,
 			top: 0
 		});
+
 
 		this.win.children().css({
 			// display: "block",
