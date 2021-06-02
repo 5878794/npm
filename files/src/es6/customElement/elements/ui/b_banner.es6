@@ -51,8 +51,7 @@ class bBanner extends HTMLElement{
 		notShowPoint = (notShowPoint=='true')? false : true;
 		pointColor = pointColor.split(':');
 
-		let leftBtn = (leftBtnId)? $('#'+leftBtnId) : null,
-			rightBtn = (rightBtnId)? $('#'+rightBtnId) : null;
+
 
 		if(imgWidthHeight){
 			let val = imgWidthHeight.split(':');
@@ -65,6 +64,9 @@ class bBanner extends HTMLElement{
 
 		let _this = this;
 		setTimeout(function(){
+			let leftBtn = (leftBtnId)? $('#'+leftBtnId) : null,
+				rightBtn = (rightBtnId)? $('#'+rightBtnId) : null;
+
 			_this.bannerObj = new bannerFn({
 				win: _this.body,                      //@param:jqobj    外层窗口
 				body: _this.main,        //@param:jqobj    滑动层
