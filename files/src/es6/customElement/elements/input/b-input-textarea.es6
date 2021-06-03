@@ -42,6 +42,7 @@ class bInputTextarea extends bInputText{
 			height:this.userStyle.rowHeight*3+'px',
 			paddingLeft:'4px'
 		});
+		input.css(this.setting.inputTextareaStyle);
 
 		this.autoHeight = ($(this).attr('autoHeight') == 'true');
 		if(this.autoHeight){
