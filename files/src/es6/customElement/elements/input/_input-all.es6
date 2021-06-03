@@ -9,6 +9,17 @@ let addStyleFile = require('../../fn/addStyleFile'),
 require('../../../lib/jq/check_from');
 
 class inputAll extends HTMLElement{
+	connectedCallback(){
+		let _this = this;
+		setTimeout(function(){
+			$(_this).css({display:'block'});
+
+			if($(_this).css('visibility') == 'hidden'){
+				$(_this).css({visibility:'visible'})
+			}
+		},0)
+	}
+
 	constructor() {
 		super();
 
@@ -39,9 +50,7 @@ class inputAll extends HTMLElement{
 
 		this.shadow.appendChild(this.body.get(0));
 
-		if($(this).css('visibility') == 'hidden'){
-			$(this).css({visibility:'visible'})
-		}
+
 	}
 
 	getDefaultStyle(){
@@ -80,7 +89,7 @@ class inputAll extends HTMLElement{
 	}
 
 	createDefaultDom(){
-		$(this).css({display:'block'});
+
 
 		let dom = $('<div class="box_slt"></div>'),
 			inputBody = $('<div class="box_hlt"></div>'),
