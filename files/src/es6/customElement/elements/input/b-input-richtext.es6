@@ -54,9 +54,22 @@ let menu = [
 
 
 class bInputRichText extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
 
+
+	}
+
+	init(){
 		this.useUploadImage = this.hasAttribute('imageUpload');
 		this.uploadFunction = function(){};
 		this.editor = null;

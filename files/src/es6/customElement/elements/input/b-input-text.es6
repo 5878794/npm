@@ -51,13 +51,23 @@
 let publishInput = require('./_input-all');
 
 class bInputText extends publishInput{
+	connectedCallback(){
+		super.connectedCallback();
+
+
+		let _this = this;
+		setTimeout(function(){
+			_this.createInput();
+			_this.addEvent();
+
+			_this.value = _this.setValue;
+		},0)
+	}
+
 	constructor() {
 		super();
 
-		this.createInput();
-		this.addEvent();
 
-		this.value = this.setValue;
 	}
 
 

@@ -14,6 +14,20 @@ class inputAll extends HTMLElement{
 		setTimeout(function(){
 			$(_this).css({display:'block'});
 
+			//获取并设置默认参数
+			_this.setDefaultParam();
+
+			//创建dom
+			_this.createDefaultDom();
+
+			//根据参数处理元素
+			_this.paramCheck();
+
+			//公共事件注册
+			_this.setDefaultFunction();
+
+			_this.shadow.appendChild(_this.body.get(0));
+
 			if($(_this).css('visibility') == 'hidden'){
 				$(_this).css({visibility:'visible'})
 			}
@@ -34,21 +48,9 @@ class inputAll extends HTMLElement{
 
 		//增加默认样式
 		let styleText = this.getDefaultStyle();
-		this.shadow.appendChild(styleText)
+		this.shadow.appendChild(styleText);
 
-		//获取并设置默认参数
-		this.setDefaultParam();
 
-		//创建dom
-		this.createDefaultDom();
-
-		//根据参数处理元素
-		this.paramCheck();
-
-		//公共事件注册
-		this.setDefaultFunction();
-
-		this.shadow.appendChild(this.body.get(0));
 
 
 	}
@@ -86,6 +88,7 @@ class inputAll extends HTMLElement{
 			nameWidth:setting.nameDomWidth,      //标题字段宽度
 			rowHeight:setting.rowHeight        //行高
 		};
+
 	}
 
 	createDefaultDom(){

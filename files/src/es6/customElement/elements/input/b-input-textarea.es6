@@ -24,6 +24,10 @@ $.fn.autoHeight = function(){
 
 
 class bInputTextarea extends bInputText{
+	connectedCallback() {
+		super.connectedCallback();
+	}
+
 	constructor() {
 		super();
 	}

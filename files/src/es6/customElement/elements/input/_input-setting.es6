@@ -150,7 +150,7 @@ module.exports = {
 	},
 	blurFunction:function(){
 		this.inputBodyDom.removeClass('focus_style');
-		this.checkPass();
+		// this.checkPass();
 	}
 
 

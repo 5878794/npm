@@ -27,9 +27,22 @@ let publishInput = require('./_input-all'),
 	addStyleStyle = require('../../fn/addStyleText');
 
 class bInputSearch extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
 
+
+	}
+
+	init(){
 		this.unitDom.text('');
 
 		this.createLoadingCss();

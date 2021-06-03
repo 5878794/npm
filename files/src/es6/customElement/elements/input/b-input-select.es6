@@ -26,9 +26,22 @@ let publishInput = require('./_input-all');
 
 
 class bInputSelect extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
 
+
+	}
+
+	init(){
 		this.createInput();
 		this.addEvent();
 	}

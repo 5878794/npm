@@ -36,9 +36,22 @@ let allowFileType = {
 
 
 class bInputFile extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
 
+
+	}
+
+	init(){
 		this.divWidth = this.setting.inputFileStyle.fileWidth;
 		this.divHeight = this.setting.inputFileStyle.fileHeight;
 		//已经存在的文件对象

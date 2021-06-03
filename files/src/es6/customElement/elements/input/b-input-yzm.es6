@@ -17,9 +17,21 @@
 let publishInput = require('./_input-all');
 
 class bInputYZM extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
 
+	}
+
+	init(){
 		this.getYzmFunction = async function(){};
 
 		this.createInput();
@@ -28,10 +40,7 @@ class bInputYZM extends publishInput{
 		this.addEvent();
 
 		this.value = this.setValue;
-
-
 	}
-
 
 	createInput(){
 		let rule = this.rule || '',

@@ -19,9 +19,20 @@ let publishInput = require('./_input-all'),
 
 
 class bInputDate extends publishInput{
+	connectedCallback() {
+		super.connectedCallback();
+
+		let _this = this;
+		setTimeout(function(){
+			_this.init();
+		},0)
+	}
+
 	constructor() {
 		super();
+	}
 
+	init(){
 		this.useSysyem = this.hasAttribute('system');
 		this.isShow = false;
 

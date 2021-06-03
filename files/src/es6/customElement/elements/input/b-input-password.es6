@@ -5,6 +5,12 @@ let bInputText = require('./b-input-text');
 
 
 class bInputPassword extends bInputText{
+	connectedCallback() {
+		super.connectedCallback();
+
+	}
+
+
 	constructor() {
 		super();
 
