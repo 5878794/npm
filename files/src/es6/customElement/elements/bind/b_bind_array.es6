@@ -38,6 +38,14 @@ require('../../../lib/jq/extend');
 
 
 class bBIndArray extends bBindObj{
+	connectedCallback(){
+		let _this = this;
+		setTimeout(function(){
+			_this.tempInit();
+		},0);
+	}
+
+
 	//注册要监听的属性
 	static get observedAttributes() {
 		//监听的属性需要全部小写
@@ -48,25 +56,34 @@ class bBIndArray extends bBindObj{
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		//data-data属性不能传入对象  所以通过jq的data属性传值
-		let data = $(this).data('data')??'';
-		if($.isArray(data)){
-			this.data = data;
-		}else if($.isString(data) && data !='') {
 
-		}else{
-			this.data = [];
-		}
+
+		let _this = this;
+		setTimeout(function(){
+			let data = $(_this).data('data')??'';
+			if($.isArray(data)){
+				_this.data = data;
+			}else if($.isString(data) && data !='') {
+
+			}else{
+				_this.data = [];
+			}
+		},0);
+
+
 	}
 
 	constructor(){
 		super();
+		// console.log(this.outerHTML)
+	}
 
+	tempInit(){
+		super.tempInit();
 		this.createdDoms = [];
 
 		this.notShowNoDataDom = ($(this).attr('notShowNoData') == 'yes')? true : false;
 		this.dataIsString = ($(this).attr('isString') == 'yes')? true : false;
-
-		// console.log(this.outerHTML)
 	}
 
 	init(){
@@ -76,6 +93,9 @@ class bBIndArray extends bBindObj{
 
 
 	getCloneDom(data){
+		if(!this.template){
+			return;
+		}
 		let cloneDom = this.template.innerHTML;
 		cloneDom = $(cloneDom);
 
@@ -95,7 +115,6 @@ class bBIndArray extends bBindObj{
 	}
 
 	set data(data){
-		// console.log('array',data,this.outerHTML)
 		data = data??[];
 		//清空列表
 		this.clearAll();
@@ -114,9 +133,13 @@ class bBIndArray extends bBindObj{
 	}
 
 	clearAll(){
+		if(!this.createdDoms){
+			this.createdDoms = [];
+		}
+
 		this.createdDoms.map(rs=>{
 			rs.remove();
-		})
+		});
 		this.createdDoms = [];
 		this.paramCatchs = [];
 	}

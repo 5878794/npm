@@ -37,6 +37,15 @@ let addStyleFile = require('../../fn/addStyleFile');
 require('../../../lib/jq/extend');
 
 class bBindObj extends HTMLElement{
+	connectedCallback(){
+		//css中设置咯初始visible:hidden 避免初始的时候页面闪烁
+		let _this = this;
+		setTimeout(function(){
+			_this.tempInit();
+		},0);
+
+	}
+
 	//注册要监听的属性
 	static get observedAttributes() {
 		//监听的属性需要全部小写
@@ -65,6 +74,13 @@ class bBindObj extends HTMLElement{
 		let all = addStyleFile('../res/css/all.css');
 		this.shadow.appendChild(all);
 
+
+
+
+
+	}
+
+	tempInit(){
 		this.createDom();
 		this.slotToTemplate();
 
@@ -72,11 +88,9 @@ class bBindObj extends HTMLElement{
 
 		this.init();
 
-		//css中设置咯初始visible:hidden 避免初始的时候页面闪烁
 		$(this).css({
 			visibility:'visible'
 		});
-
 	}
 
 	createDom(){
