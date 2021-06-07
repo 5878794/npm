@@ -38,13 +38,6 @@ require('../../../lib/jq/extend');
 
 
 class bBIndArray extends bBindObj{
-	connectedCallback(){
-		let _this = this;
-		setTimeout(function(){
-			_this.tempInit();
-		},0);
-	}
-
 
 	//注册要监听的属性
 	static get observedAttributes() {
@@ -56,7 +49,6 @@ class bBIndArray extends bBindObj{
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		//data-data属性不能传入对象  所以通过jq的data属性传值
-
 
 		let _this = this;
 		setTimeout(function(){

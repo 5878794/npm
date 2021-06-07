@@ -42,6 +42,10 @@ class bBindObj extends HTMLElement{
 		let _this = this;
 		setTimeout(function(){
 			_this.tempInit();
+
+			//dom准备好咯
+			_this.isReady = true;
+			_this.domReady.ok = true;
 		},0);
 
 	}
@@ -68,15 +72,32 @@ class bBindObj extends HTMLElement{
 	constructor(){
 		super();
 
+		this.isReady = false;
+		this.ready();
+
+		this.paramCatch = {};
 
 		//创建shadow容器
 		this.shadow = this.attachShadow({mode: 'open'});
 		let all = addStyleFile('../res/css/all.css');
 		this.shadow.appendChild(all);
 
+	}
 
+	//做dom准备好的监听事件
+	ready(){
+		return new Promise(success=>{
+			if(this.isReady){
+				success();
+			}
 
-
+			this.domReady = new Proxy({},{
+				set(target, key,val, receiver){
+					success();
+					return Reflect.set(target, key, val, receiver);
+				}
+			});
+		});
 
 	}
 
@@ -123,7 +144,6 @@ class bBindObj extends HTMLElement{
 
 	init(){
 		//分析dom中的变量
-		this.paramCatch = {};
 
 		let cloneDom = this.template.innerHTML;
 		cloneDom = $(cloneDom);
