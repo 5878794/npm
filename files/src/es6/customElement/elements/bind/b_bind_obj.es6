@@ -258,10 +258,22 @@ class bBindObj extends HTMLElement{
 
 	//缓存变量及方法
 	saveParamForCatch(param,fn){
-		let reg = new RegExp('(?<='+this.bindName+'\.)\\w+','g'),
-			keys = param.match(reg);
+		// let reg = new RegExp('(?<='+this.bindName+'\.)\\w+','g'),
+		// 	keys = param.match(reg);
 
-		keys.map(key=>{
+		// let reg = new RegExp('(?<='+this.bindName+'\.)\\w+','g'),
+		// 	keys = param.match(reg);
+
+		let reg = new RegExp(this.bindName+'\\.(\\w+)','g'),
+			keys = param.match(reg),
+			newKeys = [];
+		keys.map(rs=>{
+			let t = rs.replace(this.bindName+'.','');
+			newKeys.push(t);
+		});
+
+
+		newKeys.map(key=>{
 			if(!this.paramCatch[key]){
 				this.paramCatch[key] = [];
 			}
@@ -271,6 +283,7 @@ class bBindObj extends HTMLElement{
 			obj[key] = '';
 			fn(obj);
 		});
+
 	}
 
 
