@@ -174,15 +174,22 @@ const ts2md = {
 
 };
 
+// 直接执行 node ts2md
 // ts2md.init('./src/test/index.ts');
 
-const readline = require('readline').createInterface({
-	input: process.stdin,
-	output: process.stdout
-})
 
-readline.question(`请输入要生成md的文件路径： `, name => {
-	ts2md.init(name);
-	readline.close()
-})
+// 通过提示输入执行   node ts2md  会提示输入文件名
+// const readline = require('readline').createInterface({
+// 	input: process.stdin,
+// 	output: process.stdout
+// })
+//
+// readline.question(`请输入要生成md的文件路径： `, name => {
+// 	ts2md.init(name);
+// 	readline.close()
+// })
 
+
+// 通过命令后面的参数执行   node ts2md ./src/test/index.ts
+const fileName = process.argv[2];
+ts2md.init(fileName);
