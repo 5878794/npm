@@ -54,6 +54,8 @@ const ts2md = {
 			const newLine = [];
 			lineArr.map(line=>{
 				line = line.replace(/\r/g,'');
+				//转换表格符号|
+				line = line.replace(/\|/g,'&#124;');
 				if(line.indexOf('example') === -1){
 					line = line.split('\n')[0];
 				}else{
