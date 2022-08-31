@@ -17,16 +17,20 @@ const path = require('path');
 
 const ts2md = {
 	init(filePath){
-		const outFilePath = this.getOutFilePath(filePath);
-		const fullOutFilePath = path.resolve(__dirname, outFilePath);
+		try{
+			const outFilePath = this.getOutFilePath(filePath);
+			const fullOutFilePath = path.resolve(__dirname, outFilePath);
 
-		const text = fs.readFileSync(filePath);
-		const notes = this.getNotes(text.toString());
-		const notesObj = this.getNotesObj(notes);
-		const markdownText = this.createMarkdownText(notesObj);
-		fs.writeFileSync(fullOutFilePath, markdownText, 'utf8');
+			const text = fs.readFileSync(filePath);
+			const notes = this.getNotes(text.toString());
+			const notesObj = this.getNotesObj(notes);
+			const markdownText = this.createMarkdownText(notesObj);
+			fs.writeFileSync(fullOutFilePath, markdownText, 'utf8');
 
-		console.log(`[ok]文件：${fullOutFilePath}`);
+			console.log(`[ok]文件：${fullOutFilePath}`);
+		}catch(e){
+			console.log(e.toString());
+		}
 	},
 	//获取输出的md的完整路径
 	getOutFilePath(filePath){
@@ -169,4 +173,16 @@ const ts2md = {
 	}
 
 };
-ts2md.init('./src/test/index.ts');
+
+// ts2md.init('./src/test/index.ts');
+
+const readline = require('readline').createInterface({
+	input: process.stdin,
+	output: process.stdout
+})
+
+readline.question(`请输入要生成md的文件路径： `, name => {
+	ts2md.init(name);
+	readline.close()
+})
+
