@@ -9,7 +9,7 @@
  * @return {Element}
  * @example
  *  var a = .....;
- */
+ * */
 
 
 const fs = require('fs');
@@ -92,6 +92,7 @@ const ts2md = {
 		let defaultVal = '';
 		if(category === 'example'){
 			text = str.split('@example')[1];
+			text = text.replaceAll('&#124;','|');
 		}
 		if(name.indexOf('=')>-1){
 			const temp = name.split('=');
