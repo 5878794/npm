@@ -53,6 +53,7 @@ const ts2md = {
 			lineArr.shift();
 			const newLine = [];
 			lineArr.map(line=>{
+				line = line.replace(/\r/g,'');
 				if(line.indexOf('example') === -1){
 					line = line.split('\n')[0];
 				}else{
