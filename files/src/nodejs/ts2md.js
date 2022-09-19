@@ -75,7 +75,7 @@ const ts2md = {
 		// 获取参数类型
 		let paramTypeReg = /^.+?\{(.+?)\}.*$/
 		// 获取参数名称
-		let paramNameReg = /^.+?\[(.+?)\].*$/
+		// let paramNameReg = /^.+?\[(.+?)\].*$/
 		// 获取参数文案reg.exec(str)
 		let paramTextReg = /\s((\w|[\u4e00-\u9fa5]).*)/
 
@@ -85,19 +85,47 @@ const ts2md = {
 			return res ? res[1] : '';
 		}
 
+		const getName = (str) =>{
+			const vals = str.split(/\s+/);
+			let name = vals[3] || '';
+			let defaultVal = '';
+			if(name.indexOf('[') === 0){
+				name = name.substring(1,name.length-1);
+				if(name.indexOf('=')>-1){
+					const temp = name.split('=');
+					name = temp[0]+'?';
+					defaultVal = temp[1]
+				}else{
+					name = name+'?';
+				}
+			}else{
+				if(name.indexOf('=')>-1){
+					const temp = name.split('=');
+					name = temp[0];
+					defaultVal = temp[1];
+				}
+			}
+			return {name,defaultVal}
+		}
+		const getText = (str) => {
+			let vals = str.split(/\s+/);
+			if(vals.length >= 4){
+				vals = vals.splice(4);
+				return vals.join(' ');
+			}else{
+				return regCommonExec(paramTextReg, str);
+			}
+		}
+
 		const category = regCommonExec(annotationReg, str);
-		let name = regCommonExec(paramNameReg, str);
+		// let name = regCommonExec(paramNameReg, str);
+		let {name,defaultVal} = getName(str);
 		const type = regCommonExec(paramTypeReg, str);
-		let text = regCommonExec(paramTextReg, str);
-		let defaultVal = '';
+		// let text = regCommonExec(paramTextReg, str);
+		let text = getText(str);
 		if(category === 'example'){
 			text = str.split('@example')[1];
 			text = text.replaceAll('&#124;','|');
-		}
-		if(name.indexOf('=')>-1){
-			const temp = name.split('=');
-			name = temp[0];
-			defaultVal = temp[1];
 		}
 
 		return {category,name,type,text,default:defaultVal};
