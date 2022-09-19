@@ -107,10 +107,13 @@ const ts2md = {
 			}
 			return {name,defaultVal}
 		}
+
 		const type = regCommonExec(paramTypeReg, str);
+		const category = regCommonExec(annotationReg, str);
+
 		const getText = (str) => {
 			let vals = str.split(/\s+/);
-			if(type==='param'){
+			if(category==='param'){
 				vals = vals.splice(4);
 				return vals.join(' ');
 			}else{
@@ -118,7 +121,7 @@ const ts2md = {
 			}
 		}
 
-		const category = regCommonExec(annotationReg, str);
+
 		// let name = regCommonExec(paramNameReg, str);
 		let {name,defaultVal} = getName(str);
 
