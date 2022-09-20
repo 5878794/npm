@@ -175,7 +175,7 @@ const ts2md = {
 	createText(lineObj){
 		const str = lineObj.category;
 		let tempObj = {
-			'method': `###${lineObj.text||''}\n`,
+			'method': `### ${lineObj.text||''}\n`,
 			'author': `作者：${lineObj.text||''}\n`,
 			'description': `功能描述：${lineObj.text||''}\n`,
 			'param': `| ${lineObj.name||''} | ${lineObj.text|| ''} | ${lineObj.type||''}  |${lineObj.default || ''}|\n`,
