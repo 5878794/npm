@@ -1,5 +1,10 @@
 //获取vue组件的参数
-import {ComputedOptions, createApp, VueElementConstructor} from "vue";
+import {
+    ComponentOptions,
+    ComponentPublicInstanceConstructor,
+    createApp,
+    FunctionalComponent
+} from "vue";
 
 const fn = {
     init(obj: any) {
@@ -44,7 +49,7 @@ const fn = {
                 required: required,
                 default: defaultVal,
                 selects: objs.selects,
-                des: objs.des
+                desc: objs.desc
             })
         }
         return backData;
@@ -64,7 +69,7 @@ const fn = {
  *          name:{
  *              type:String,
  *              selects:['a','b'],  //新增用于组件设别能输入的字符串（可选）
- *              des:'名字选择'      //新增用于组件设别 说明文字
+ *              desc:'名字选择'      //新增用于组件设别 说明文字
  *          },...
  *      },
  *      api:{
@@ -73,6 +78,6 @@ const fn = {
  *      ...
  *   })
  * */
-export default function (com: VueElementConstructor | ComputedOptions) {
+export default function (com: ComponentOptions | FunctionalComponent | ComponentPublicInstanceConstructor) {
     return fn.init(com);
 }
